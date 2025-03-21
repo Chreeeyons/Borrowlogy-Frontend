@@ -7,7 +7,7 @@ const MasterList = () => {
   const { setHeaderTitle } = useHeader();
 
   useEffect(() => {
-    setHeaderTitle("Master List");
+    setHeaderTitle("Borrower's Masterlist");
   }, []);
 
   return (

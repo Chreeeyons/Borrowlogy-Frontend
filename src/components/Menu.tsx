@@ -64,7 +64,7 @@ export default function Menu({ userType, style }: MenuProps) {
               href="/admin/masterlist"
               className="block p-2 hover:bg-red-700 rounded transition-all duration-200"
             >
-              Master's List
+              Borrower's Masterlist
             </Link>
           </li>
           <li>

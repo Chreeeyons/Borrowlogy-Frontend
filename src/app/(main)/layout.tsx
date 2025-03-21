@@ -17,12 +17,17 @@ const poppins = Poppins({
 
 export function Header() {
   const { headerTitle } = useHeader();
-  return (
-    <div className="text-white text-center text-xl font-bold">
-      {headerTitle}
-    </div>
-  );
+  return headerTitle;
 }
+
+// export function Header() {
+//   const { headerTitle } = useHeader();
+//   return (
+//     <div className="">
+//       {headerTitle}
+//     </div>
+//   );
+// }
 
 const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
@@ -33,8 +38,8 @@ const Layout = ({ children }: LayoutProps) => {
       <div
         className={`${poppins.className} grid gap-2 h-screen text-gray-800`}
         style={{
-          gridTemplateColumns: "0.5fr 2fr",
-          gridTemplateRows: "0.4fr 3fr",
+          gridTemplateColumns: "0.2fr 3.5fr",
+          gridTemplateRows: "0.2fr 3.5fr",
           gridTemplateAreas: `
             'sidebar header'
             'sidebar main'`,
@@ -42,18 +47,27 @@ const Layout = ({ children }: LayoutProps) => {
       >
       <Menu userType={userType} style={{ gridArea: 'sidebar' }} />
 
-        {/* Header */}
-        <section
-          className="bg-[#F6B82F] text-white font-bold text-xl flex items-center justify-center shadow-lg rounded-lg p-5 m-3 tracking-wide"
-          style={{ gridArea: "header", height: "70px" }}
-        >
-          <Header />
-        </section>
+      {/* Header */}
+      <section
+        className="bg-[#F6B82F] text-white font-medium text-xl flex items-center px-5 shadow-lg rounded-lg m-3 tracking-wider"
+        style={{ gridArea: "header", height: "70px" }}
+      >
+        <Header />
+      </section>
+
 
         {/* Main Content */}
         <main
-          className="flex-grow p-6 m-3 h-full bg-white rounded-lg shadow-2xl text-base leading-relaxed"
-          style={{ gridArea: "main", minHeight: "75vh" }}
+          className="p-6 m-3 bg-white rounded-lg shadow-2xl text-base leading-relaxed"
+          style={{
+            gridArea: "main",
+            display: "flex",
+            flexDirection: "column",
+            height: "calc(100vh - 115px)", // Adjusted height
+            maxHeight: "calc(100vh - 70px)", // Ensures it doesn’t exceed
+            overflowY: "auto",
+            margin: "0 1rem 1rem 1rem",
+          }}
         >
           {children}
         </main>
