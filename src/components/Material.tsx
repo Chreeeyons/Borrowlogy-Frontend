@@ -64,7 +64,7 @@ const Material = ({
             </div>
           )}
           {user_type === "admin" ? (
-            <button className="bg-white text-[#8C1931] px-5 py-2 rounded hover:bg-red-500 hover:text-white">
+            <button className="bg-white text-[#8C1931] px-5 py-2 rounded hover:bg-gray-300">
               Edit
             </button>
           ) : material.quantity > 0 ? (
