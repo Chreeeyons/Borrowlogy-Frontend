@@ -4,8 +4,9 @@ import { useState } from "react";
 import Material from "@/components/Material";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import AddMaterialModal from "@/components/AddMaterialModal";
 
-const materials = [
+const initialMaterials = [
   { id: 1, name: "Microscope", quantity: 5 },
   { id: 2, name: "Test Tube", quantity: 0 },
   { id: 3, name: "Bunsen Burner", quantity: 3 },
@@ -16,6 +17,18 @@ const materials = [
 
 const MaterialContainer = ({ user_type }: { user_type: string }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [materials, setMaterials] = useState(initialMaterials);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // Function to handle adding new materials
+  const handleAddMaterial = (name: string, quantity: number) => {
+    const newMaterial = {
+      id: materials.length + 1, // Generate a new ID
+      name,
+      quantity,
+    };
+    setMaterials([...materials, newMaterial]);
+  };
 
   const filteredMaterials = materials.filter((material) =>
     material.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -27,11 +40,11 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
         <input
           type="text"
           placeholder="Search for materials..."
-          className="w-full p-2 border border-gray-300 rounded" 
+          className="w-full p-2 border border-gray-300 rounded"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        
+
         {user_type === "borrower" && (
           <Link href="/cart">
             <button className="flex items-center gap-2 ml-5 px-8 py-2 bg-[#8C1931] text-white rounded hover:bg-blue-700">
@@ -42,19 +55,36 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
         )}
 
         {user_type === "admin" && (
-          <button className="ml-2 px-6 py-2 bg-[#04543C] text-white rounded hover:bg-green-700">
-            Add
-          </button>
+          <button
+          className="ml-2 px-6 py-2 bg-[#04543C] text-white rounded hover:bg-green-700 flex items-center gap-1"
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          <span className="text-lg">+</span>  Add
+        </button>              
         )}
       </div>
 
       {/* Show message if no materials match */}
       {filteredMaterials.length === 0 ? (
-        <p className="text-gray-500 text-sm text-center mt-4">Oops! No materials match your search</p>
+        <p className="text-gray-500 text-sm text-center mt-4">
+          Oops! No materials match your search
+        </p>
       ) : (
         filteredMaterials.map((material) => (
-          <Material key={material.id} user_type={user_type} material={material} />
+          <Material
+            key={material.id}
+            user_type={user_type}
+            material={material}
+          />
         ))
+      )}
+
+      {/* Render Add Material Modal */}
+      {isAddModalOpen && (
+        <AddMaterialModal
+          onClose={() => setIsAddModalOpen(false)}
+          onSave={handleAddMaterial}
+        />
       )}
     </div>
   );

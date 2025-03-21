@@ -27,11 +27,7 @@ const Material = ({
             {material.name}
           </h2>
           <p className="text-sm font-normal flex items-center gap-2">
-            <span
-              className={
-                quantity > 0 ? "text-green-500" : "text-red-500"
-              }
-            >
+            <span className={quantity > 0 ? "text-green-500" : "text-red-500"}>
               {quantity > 0 ? "Available" : "Out of Stock"}
             </span>
             <span className="text-white">| Quantity: {quantity}</span>
