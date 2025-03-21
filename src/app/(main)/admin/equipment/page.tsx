@@ -11,7 +11,7 @@ const Equipments = () => {
   , []);
   return (
     <div id="laboratory-materials" className="section">
-      <p className="text-white text-center">ADMIN</p>
+      <p className="text-white text-center"></p>
       <Materials user_type="admin" />
     </div>
   );

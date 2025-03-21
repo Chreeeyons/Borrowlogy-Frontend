@@ -15,12 +15,12 @@ const Equipments = () => {
 
 const Home = () => {
   return (
-    <div id="laboratory-materials" className="section bg-red-500">
+    <div id="laboratory-materials" className="section">
       <Equipments /> {}
       <Materials user_type="borrower" />
-      <Link href="/cart" className="hover:underline text-center block mt-4">
+      {/* <Link href="/cart" className="hover:underline text-center block mt-4">
         Cart
-      </Link>
+      </Link> */}
     </div>
   );
 };

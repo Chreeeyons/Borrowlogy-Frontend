@@ -2,37 +2,60 @@
 
 import { useState } from "react";
 import Material from "@/components/Material";
+import { ShoppingCart } from "lucide-react";
+import Link from "next/link";
 
 const materials = [
   { id: 1, name: "Microscope", quantity: 5 },
   { id: 2, name: "Test Tube", quantity: 0 },
   { id: 3, name: "Bunsen Burner", quantity: 3 },
+  { id: 4, name: "Erlenmeyer Flask", quantity: 3 },
+  { id: 5, name: "Funnel", quantity: 3 },
+  { id: 6, name: "Graduated Cylinder", quantity: 0 },
 ];
 
 const MaterialContainer = ({ user_type }: { user_type: string }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  console.log(user_type);
+
   const filteredMaterials = materials.filter((material) =>
     material.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="p-8 ml-64">
-      <h1 className="text-3xl font-bold mb-4">Laboratory Materials</h1>
-      <input
-        type="text"
-        placeholder="Search for materials..."
-        className="w-full p-2 border border-gray-300 rounded mb-4"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      {filteredMaterials.map((material) => (
-        <Material
-          key={material.id}
-          user_type={user_type}
-          material={material}
-        ></Material>
-      ))}
+    <div className="p-1 w-full max-w-full">
+      <div className="flex items-center mb-4">
+        <input
+          type="text"
+          placeholder="Search for materials..."
+          className="w-full p-2 border border-gray-300 rounded" 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        
+        {user_type === "borrower" && (
+          <Link href="/cart">
+            <button className="flex items-center gap-2 ml-5 px-8 py-2 bg-[#8C1931] text-white rounded hover:bg-blue-700">
+              <ShoppingCart size={20} />
+              Cart
+            </button>
+          </Link>
+        )}
+
+        {user_type === "admin" && (
+          <button className="ml-2 px-6 py-2 bg-[#04543C] text-white rounded hover:bg-green-700">
+            Add
+          </button>
+        )}
+      </div>
+
+      {/* Show message if no materials match */}
+      {filteredMaterials.length === 0 ? (
+        <p className="text-gray-500 text-sm text-center mt-4">Oops! No materials match your search</p>
+      ) : (
+        filteredMaterials.map((material) => (
+          <Material key={material.id} user_type={user_type} material={material} />
+        ))
+      )}
     </div>
   );
 };
