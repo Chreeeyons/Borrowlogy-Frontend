@@ -8,9 +8,9 @@ const materials = [
   { id: 3, name: "Bunsen Burner", quantity: 3 },
 ];
 
-const Materials = () => {
+const Materials = ({ user_type }: { user_type: string }) => {
   const [searchTerm, setSearchTerm] = useState("");
-
+  console.log(user_type);
   const filteredMaterials = materials.filter((material) =>
     material.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -41,18 +41,22 @@ const Materials = () => {
             </p>
             <p className="text-gray-500">Quantity: {material.quantity}</p>
           </div>
-          {material.quantity > 0 ? (
+          {user_type === "admin" ? (
             <button className="bg-red-800 text-white px-4 py-2 rounded hover:bg-red-600">
+              Edit
+            </button>
+          ) : ( material.quantity > 0 ? (
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded cursor-not-allowed"
+            >
               Add to Cart
             </button>
-          ) : (
-            <button
-              className="bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed"
-              disabled
-            >
-              Out of Stock
-            </button>
-          )}
+          ): <button
+          className="bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed"
+          disabled
+        >
+          Add to Cart
+        </button>)}
         </div>
       ))}
     </div>
