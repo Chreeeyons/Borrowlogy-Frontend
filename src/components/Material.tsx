@@ -1,4 +1,5 @@
 import { useState } from "react";
+import EditMaterialModal from "./EditMaterialModal";
 
 const Material = ({
   user_type,
@@ -7,14 +8,12 @@ const Material = ({
   user_type: string;
   material: { id: number; name: string; quantity: number };
 }) => {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(material.quantity);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleDecrease = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
-
-  const handleIncrease = () => {
-    if (quantity < material.quantity) setQuantity(quantity + 1);
+  const handleSave = (newQuantity: number) => {
+    setQuantity(newQuantity); // Update UI
+    setIsModalOpen(false); // Close modal
   };
 
   return (
@@ -30,44 +29,24 @@ const Material = ({
           <p className="text-sm font-normal flex items-center gap-2">
             <span
               className={
-                material.quantity > 0 ? "text-green-500" : "text-red-500"
+                quantity > 0 ? "text-green-500" : "text-red-500"
               }
             >
-              {material.quantity > 0 ? "Available" : "Out of Stock"}
+              {quantity > 0 ? "Available" : "Out of Stock"}
             </span>
-            {material.quantity > 0 && (
-              <span className="text-white">| Quantity: {material.quantity}</span>
-            )}
+            <span className="text-white">| Quantity: {quantity}</span>
           </p>
         </div>
+
         <div className="flex items-center gap-5">
-          {user_type !== "admin" && material.quantity > 0 && (
-            <div className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white">
-              <button
-                onClick={handleDecrease}
-                className="px-3 py-2 text-[#8C1931] hover:bg-gray-300"
-              >
-                -
-              </button>
-              <input
-                type="text"
-                value={quantity}
-                readOnly
-                className="w-12 h-9 text-center bg-gray-200 text-[#8C1931]"
-              />
-              <button
-                onClick={handleIncrease}
-                className="px-3 py-2 text-[#8C1931] hover:bg-gray-300"
-              >
-                +
-              </button>
-            </div>
-          )}
           {user_type === "admin" ? (
-            <button className="bg-white text-[#8C1931] px-5 py-2 rounded hover:bg-gray-300">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-white text-[#8C1931] px-5 py-2 rounded hover:bg-gray-300"
+            >
               Edit
             </button>
-          ) : material.quantity > 0 ? (
+          ) : quantity > 0 ? (
             <button className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700">
               Add to Cart
             </button>
@@ -81,6 +60,15 @@ const Material = ({
           )}
         </div>
       </div>
+
+      {/* Render Modal if Open */}
+      {isModalOpen && (
+        <EditMaterialModal
+          material={material}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 };
