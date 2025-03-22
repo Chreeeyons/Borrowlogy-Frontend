@@ -31,21 +31,21 @@ const AddMaterialModal = ({
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-md"
+      className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
       onClick={onClose} // Close when clicking outside modal
     >
       <div
-        className="bg-white p-6 rounded-lg shadow-lg w-96"
+        className="bg-white p-8 rounded-lg shadow-lg w-[420px] transition-opacity duration-200 opacity-100"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
       >
-        <h2 className="text-xl font-semibold mb-4 text-center">Add Material</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-900 mb-4">Add Material</h2>
 
         <input
           type="text"
           placeholder="Material Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#04543C]"
         />
 
         <input
@@ -53,19 +53,19 @@ const AddMaterialModal = ({
           placeholder="Quantity"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#04543C]"
         />
 
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-3 mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+            className="px-5 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition font-medium"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-[#04543C] text-white rounded hover:bg-green-700"
+            className="px-5 py-2 bg-[#04543C] text-white rounded-lg hover:bg-green-700 transition font-medium"
           >
             Save
           </button>
