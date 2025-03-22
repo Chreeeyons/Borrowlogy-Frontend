@@ -38,7 +38,7 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose
 
       {/* Modal Content */}
       <div className="relative bg-white p-6 rounded-lg shadow-lg z-10 w-96">
-        <h2 className="text-lg font-semibold">Edit Material</h2>
+        <h2 className="text-lg font-semibold text-center">Edit Material</h2>
         <input
           type="text"
           className="w-full mt-4 p-2 border rounded"
