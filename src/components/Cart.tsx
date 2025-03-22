@@ -76,7 +76,7 @@ const Cart = () => {
         <button onClick={() => setShowModal(true)} className="bg-white text-[#8C1931] px-4 py-2 rounded">
           Remove
         </button>
-        <button className="bg-white text-[#8C1931] px-4 py-2 rounded">CONFIRM</button>
+        <button className="bg-white text-[#8C1931] px-4 py-2 rounded">Confirm</button>
       </div>
 
       {/* 🔹 Confirmation Modal */}
