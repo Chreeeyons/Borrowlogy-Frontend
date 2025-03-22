@@ -8,29 +8,29 @@ const Material = ({
   user_type: string;
   material: { id: number; name: string; quantity: number };
 }) => {
-  const [quantity, setQuantity] = useState(material.quantity);
+  const [materialState, setMaterialState] = useState(material);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSave = (newQuantity: number) => {
-    setQuantity(newQuantity); // Update UI
+  const handleSave = (newName: string, newQuantity: number) => {
+    setMaterialState({ ...materialState, name: newName, quantity: newQuantity }); // Update UI
     setIsModalOpen(false); // Close modal
   };
 
   return (
     <div>
       <div
-        key={material.id}
+        key={materialState.id}
         className="p-4 mb-2 bg-[#8C1931] shadow-md flex justify-between items-center rounded-lg"
       >
         <div>
           <h2 className="text-white text-xl font-semibold mb-2 tracking-wide">
-            {material.name}
+            {materialState.name}
           </h2>
           <p className="text-sm font-normal flex items-center gap-2">
-            <span className={quantity > 0 ? "text-green-500" : "text-red-500"}>
-              {quantity > 0 ? "Available" : "Out of Stock"}
+            <span className={materialState.quantity > 0 ? "text-green-500" : "text-red-500"}>
+              {materialState.quantity > 0 ? "Available" : "Out of Stock"}
             </span>
-            <span className="text-white">| Quantity: {quantity}</span>
+            <span className="text-white">| Quantity: {materialState.quantity}</span>
           </p>
         </div>
 
@@ -42,7 +42,7 @@ const Material = ({
             >
               Edit
             </button>
-          ) : quantity > 0 ? (
+          ) : materialState.quantity > 0 ? (
             <button className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700">
               Add to Cart
             </button>
@@ -60,7 +60,7 @@ const Material = ({
       {/* Render Modal if Open */}
       {isModalOpen && (
         <EditMaterialModal
-          material={material}
+          material={materialState}
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
         />
