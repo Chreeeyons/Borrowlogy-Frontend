@@ -17,15 +17,16 @@ const initialMaterials = [
 
 const MaterialContainer = ({ user_type }: { user_type: string }) => {
   const [searchTerm, setSearchTerm] = useState("");
-<<<<<<< .merge_file_cyWs7W
   const [cart, setCart] = useState<{ id: number; name: string; quantity: number }[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [materials, setMaterials] = useState(initialMaterials);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const handleAddToCart = (material: { id: number; name: string; quantity: number }, quantity: number) => {
     const existingItem = cart.find((item) => item.id === material.id);
     const currentQuantity = existingItem ? existingItem.quantity : 0;
-    
+
     if (currentQuantity + quantity > material.quantity) {
       setErrorMessage(`Cannot borrow more than available quantity (${material.quantity} left).`);
       setShowModal(true);
@@ -41,9 +42,7 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
         return [...prevCart, { ...material, quantity }];
       }
     });
-=======
-  const [materials, setMaterials] = useState(initialMaterials);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  };
 
   // Function to handle adding new materials
   const handleAddMaterial = (name: string, quantity: number) => {
@@ -58,7 +57,6 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
   // Function to handle removing a material
   const handleRemoveMaterial = (id: number) => {
     setMaterials((prevMaterials) => prevMaterials.filter((material) => material.id !== id));
->>>>>>> .merge_file_vwX0G0
   };
 
   const filteredMaterials = materials.filter((material) =>
@@ -101,8 +99,13 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
         </p>
       ) : (
         filteredMaterials.map((material) => (
-<<<<<<< .merge_file_cyWs7W
-          <Material key={material.id} user_type={user_type} material={material} onAddToCart={handleAddToCart} />
+          <Material
+            key={material.id}
+            user_type={user_type}
+            material={material}
+            onAddToCart={handleAddToCart}
+            onRemoveMaterial={handleRemoveMaterial} // ✅ Pass delete function
+          />
         ))
       )}
 
@@ -119,23 +122,11 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
             </button>
           </div>
         </div>
-=======
-          <Material
-            key={material.id}
-            user_type={user_type}
-            material={material}
-            onRemoveMaterial={handleRemoveMaterial} // ✅ Pass delete function
-          />
-        ))
       )}
 
       {/* Render Add Material Modal */}
       {isAddModalOpen && (
-        <AddMaterialModal
-          onClose={() => setIsAddModalOpen(false)}
-          onSave={handleAddMaterial}
-        />
->>>>>>> .merge_file_vwX0G0
+        <AddMaterialModal onClose={() => setIsAddModalOpen(false)} onSave={handleAddMaterial} />
       )}
     </div>
   );
