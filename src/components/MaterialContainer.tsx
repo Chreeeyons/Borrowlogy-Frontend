@@ -58,7 +58,7 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
 
         {user_type === "borrower" && (
           <Link href={{ pathname: "/cart", query: { cart: JSON.stringify(cart) } }}>
-            <button className="flex items-center gap-2 ml-15 px-5 py-3 bg-[#8C1931] text-white rounded hover:bg-blue-700 min-w-max whitespace-nowrap">
+            <button className="flex items-center gap-2 ml-15 px-5 py-3 bg-[#8C1931] text-white rounded hover:bg-[#6A1426] min-w-max whitespace-nowrap">
               <ShoppingCart size={20} />
               <span className="justify-center">Cart ({cart.length})</span>
             </button>

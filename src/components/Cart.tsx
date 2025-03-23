@@ -12,22 +12,28 @@ interface CartItem {
 const Cart = () => {
   const searchParams = useSearchParams();
   const cartData = searchParams.get("cart");
+
   const [transactionNumber, setTransactionNumber] = useState(1);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [showModal, setShowModal] = useState(false); // 🔹 State for modal visibility
+  const [remarks, setRemarks] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
   const effectRan = useRef(false);
 
+  // Load transaction number from localStorage
   useEffect(() => {
     if (effectRan.current) return;
     effectRan.current = true;
 
     const lastTransaction = localStorage.getItem("lastTransactionNumber");
-    let newTransactionNumber = lastTransaction ? parseInt(lastTransaction, 10) + 1 : 1;
+    const newTransactionNumber = lastTransaction ? parseInt(lastTransaction, 10) + 1 : 1;
 
     setTransactionNumber(newTransactionNumber);
     localStorage.setItem("lastTransactionNumber", newTransactionNumber.toString());
   }, []);
 
+  // Parse cart data from URL params
   useEffect(() => {
     if (cartData) {
       try {
@@ -41,12 +47,32 @@ const Cart = () => {
     }
   }, [cartData]);
 
-  // 🔹 Function to confirm cancellation
+  // Function to confirm the transaction
+  const confirmTransaction = () => {
+    const transactionHistory = JSON.parse(localStorage.getItem("transactionHistory") || "[]");
+    const newTransaction = {
+      transactionNumber,
+      date: new Date().toLocaleString(),
+      cart,
+      remarks,
+    };
+    transactionHistory.push(newTransaction);
+    localStorage.setItem("transactionHistory", JSON.stringify(transactionHistory));
+
+    // Clear cart and close modal
+    setCart([]);
+    setRemarks("");
+    setShowConfirmModal(false);
+    console.log("Transaction confirmed");
+  };
+
+  // Function to confirm transaction cancellation
   const confirmCancelTransaction = () => {
     setCart([]);
     localStorage.removeItem("lastTransactionNumber");
     setTransactionNumber(1);
-    setShowModal(false); // Close modal after canceling
+    setRemarks("");
+    setShowModal(false);
   };
 
   if (cart.length === 0) return null;
@@ -67,6 +93,8 @@ const Cart = () => {
       <label className="font-medium block mt-4">
         Remarks:
         <textarea
+          value={remarks}
+          onChange={(e) => setRemarks(e.target.value)}
           className="w-full border rounded p-2 mt-2 font-normal text-black bg-white"
           placeholder="Enter remarks here..."
         ></textarea>
@@ -76,19 +104,38 @@ const Cart = () => {
         <button onClick={() => setShowModal(true)} className="bg-white text-[#8C1931] px-4 py-2 rounded">
           Remove
         </button>
-        <button className="bg-white text-[#8C1931] px-4 py-2 rounded">Confirm</button>
+        <button onClick={() => setShowConfirmModal(true)} className="bg-white text-[#8C1931] px-4 py-2 rounded">
+          Confirm
+        </button>
       </div>
 
-      {/* 🔹 Confirmation Modal */}
+      {/* Confirmation Modal for Cancelling */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
           <div className="bg-white text-black p-6 rounded-md shadow-lg">
-            <p className="text-normal font-normal">Are you sure you want to cancel this transaction?</p>
+            <p className="text-lg font-normal">Are you sure you want to cancel this transaction?</p>
             <div className="flex justify-end mt-4">
               <button onClick={() => setShowModal(false)} className="mr-2 px-4 py-2 bg-gray-300 rounded">
                 No
               </button>
               <button onClick={confirmCancelTransaction} className="px-4 py-2 bg-red-500 text-white rounded">
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal for Completing Transaction */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white text-black p-6 rounded-md shadow-lg">
+            <p className="text-lg font-semibold">Are you sure you want to confirm this transaction?</p>
+            <div className="flex justify-end mt-4">
+              <button onClick={() => setShowConfirmModal(false)} className="mr-2 px-4 py-2 bg-gray-300 rounded">
+                No
+              </button>
+              <button onClick={confirmTransaction} className="px-4 py-2 bg-green-500 text-white rounded">
                 Yes
               </button>
             </div>
