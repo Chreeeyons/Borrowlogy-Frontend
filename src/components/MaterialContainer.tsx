@@ -4,8 +4,9 @@ import { useState } from "react";
 import Material from "@/components/Material";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import AddMaterialModal from "@/components/AddMaterialModal";
 
-const materials = [
+const initialMaterials = [
   { id: 1, name: "Microscope", quantity: 5 },
   { id: 2, name: "Test Tube", quantity: 0 },
   { id: 3, name: "Bunsen Burner", quantity: 3 },
@@ -16,6 +17,7 @@ const materials = [
 
 const MaterialContainer = ({ user_type }: { user_type: string }) => {
   const [searchTerm, setSearchTerm] = useState("");
+<<<<<<< .merge_file_cyWs7W
   const [cart, setCart] = useState<{ id: number; name: string; quantity: number }[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -39,6 +41,24 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
         return [...prevCart, { ...material, quantity }];
       }
     });
+=======
+  const [materials, setMaterials] = useState(initialMaterials);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // Function to handle adding new materials
+  const handleAddMaterial = (name: string, quantity: number) => {
+    const newMaterial = {
+      id: materials.length + 1, // Generate a new ID
+      name,
+      quantity,
+    };
+    setMaterials([...materials, newMaterial]);
+  };
+
+  // Function to handle removing a material
+  const handleRemoveMaterial = (id: number) => {
+    setMaterials((prevMaterials) => prevMaterials.filter((material) => material.id !== id));
+>>>>>>> .merge_file_vwX0G0
   };
 
   const filteredMaterials = materials.filter((material) =>
@@ -66,16 +86,22 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
         )}
 
         {user_type === "admin" && (
-          <button className="ml-2 px-6 py-2 bg-[#04543C] text-white rounded hover:bg-green-700">
-            Add
+          <button
+            className="ml-2 px-6 py-2 bg-[#04543C] text-white rounded hover:bg-green-700 flex items-center gap-1"
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            <span className="text-lg">+</span> Add
           </button>
         )}
       </div>
 
       {filteredMaterials.length === 0 ? (
-        <p className="text-gray-500 text-sm text-center mt-4">Oops! No materials match your search</p>
+        <p className="text-gray-500 text-sm text-center mt-4">
+          Oops! No materials match your search
+        </p>
       ) : (
         filteredMaterials.map((material) => (
+<<<<<<< .merge_file_cyWs7W
           <Material key={material.id} user_type={user_type} material={material} onAddToCart={handleAddToCart} />
         ))
       )}
@@ -93,6 +119,23 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
             </button>
           </div>
         </div>
+=======
+          <Material
+            key={material.id}
+            user_type={user_type}
+            material={material}
+            onRemoveMaterial={handleRemoveMaterial} // ✅ Pass delete function
+          />
+        ))
+      )}
+
+      {/* Render Add Material Modal */}
+      {isAddModalOpen && (
+        <AddMaterialModal
+          onClose={() => setIsAddModalOpen(false)}
+          onSave={handleAddMaterial}
+        />
+>>>>>>> .merge_file_vwX0G0
       )}
     </div>
   );
