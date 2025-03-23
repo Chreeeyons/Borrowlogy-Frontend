@@ -10,9 +10,10 @@ interface EditMaterialModalProps {
   material: Material;
   onClose: () => void;
   onSave: (newName: string, newQuantity: number) => void;
+  onDelete: () => void;
 }
 
-const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose, onSave }) => {
+const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose, onSave, onDelete }) => {
   const [newName, setNewName] = useState<string>(material.name);
   const [newQuantity, setNewQuantity] = useState<number>(material.quantity);
 
@@ -29,7 +30,7 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [newName, newQuantity, onClose, onSave]); // Dependencies ensure it updates correctly
+  }, [newName, newQuantity, onClose, onSave]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50" onClick={onClose}>
@@ -49,19 +50,27 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose
           value={newQuantity}
           onChange={(e) => setNewQuantity(Number(e.target.value))}
         />
-        <div className="flex justify-end gap-3 mt-6">
+        <div className="flex justify-between mt-6">
           <button
-            onClick={onClose}
-            className="px-5 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition font-medium"
+            onClick={onDelete}
+            className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition font-medium"
           >
-            Cancel
+            Delete
           </button>
-          <button
-            onClick={() => onSave(newName, newQuantity)}
-            className="px-5 py-2 bg-[#8C1931] text-white rounded-lg hover:bg-[#6f1427] transition font-medium"
-          >
-            Save
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="px-5 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => onSave(newName, newQuantity)}
+              className="px-5 py-2 bg-[#8C1931] text-white rounded-lg hover:bg-[#6f1427] transition font-medium"
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>

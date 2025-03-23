@@ -4,9 +4,11 @@ import EditMaterialModal from "./EditMaterialModal";
 const Material = ({
   user_type,
   material,
+  onRemoveMaterial,
 }: {
   user_type: string;
   material: { id: number; name: string; quantity: number };
+  onRemoveMaterial: (id: number) => void;
 }) => {
   const [materialState, setMaterialState] = useState(material);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,6 +65,7 @@ const Material = ({
           material={materialState}
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
+          onDelete={() => onRemoveMaterial(materialState.id)} // ✅ Handle delete
         />
       )}
     </div>

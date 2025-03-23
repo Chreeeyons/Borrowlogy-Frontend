@@ -30,6 +30,11 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
     setMaterials([...materials, newMaterial]);
   };
 
+  // Function to handle removing a material
+  const handleRemoveMaterial = (id: number) => {
+    setMaterials((prevMaterials) => prevMaterials.filter((material) => material.id !== id));
+  };
+
   const filteredMaterials = materials.filter((material) =>
     material.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -56,11 +61,11 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
 
         {user_type === "admin" && (
           <button
-          className="ml-2 px-6 py-2 bg-[#04543C] text-white rounded hover:bg-green-700 flex items-center gap-1"
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          <span className="text-lg">+</span>  Add
-        </button>              
+            className="ml-2 px-6 py-2 bg-[#04543C] text-white rounded hover:bg-green-700 flex items-center gap-1"
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            <span className="text-lg">+</span> Add
+          </button>
         )}
       </div>
 
@@ -75,6 +80,7 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
             key={material.id}
             user_type={user_type}
             material={material}
+            onRemoveMaterial={handleRemoveMaterial} // ✅ Pass delete function
           />
         ))
       )}
