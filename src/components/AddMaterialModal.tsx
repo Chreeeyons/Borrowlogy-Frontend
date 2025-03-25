@@ -1,18 +1,16 @@
 "use client";
 
+import { addEquipment } from "@/services/equipmentService";
 import { useState, useEffect } from "react";
 
-const AddMaterialModal = ({
-  onClose,
-  onSave,
-}: {
+interface AddMaterialModalProps {
   onClose: () => void;
-  onSave: (name: string, quantity: number) => void;
-}) => {
-  const [name, setName] = useState("");
-  const [quantity, setQuantity] = useState("");
+  onSave: () => void; // Simplified to just trigger refresh
+}
 
-  // Close modal on Esc key or clicking outside
+const AddMaterialModal: React.FC<AddMaterialModalProps> = ({ onClose, onSave }) => {
+  const [form, setForm] = useState({ name: "", quantity: "" });
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -20,53 +18,51 @@ const AddMaterialModal = ({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [name, quantity]);
+  }, [form]);
 
-  const handleSave = () => {
-    if (name.trim() && !isNaN(Number(quantity))) {
-      onSave(name, Number(quantity));
-      onClose();
+  const handleSave = async () => {
+    if (form.name.trim() && !isNaN(Number(form.quantity))) {
+      try {
+        const response = await addEquipment({ name: form.name, quantity: Number(form.quantity) });
+
+        if (response?.equipment) {
+          onSave(); // Refresh the list
+          onClose();
+        } else {
+          console.error("Unexpected API response:", response);
+        }
+      } catch (error) {
+        console.error("Error adding equipment:", error);
+      }
     }
   };
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onClick={onClose} // Close when clicking outside modal
-    >
-      <div
-        className="bg-white p-8 rounded-lg shadow-lg w-[420px] transition-opacity duration-200 opacity-100"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
-      >
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-white p-8 rounded-lg shadow-lg w-[420px]" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-4">Add Material</h2>
 
         <input
           type="text"
           placeholder="Material Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#04543C]"
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
         />
 
         <input
           type="number"
           placeholder="Quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#04543C]"
+          value={form.quantity}
+          onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
         />
 
         <div className="flex justify-end gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="px-5 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition font-medium"
-          >
+          <button onClick={onClose} className="px-5 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
             Cancel
           </button>
-          <button
-            onClick={handleSave}
-            className="px-5 py-2 bg-[#04543C] text-white rounded-lg hover:bg-green-700 transition font-medium"
-          >
+          <button onClick={handleSave} className="px-5 py-2 bg-[#04543C] text-white rounded-lg hover:bg-green-700">
             Save
           </button>
         </div>

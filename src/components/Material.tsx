@@ -1,41 +1,47 @@
 import { useState } from "react";
 import EditMaterialModal from "./EditMaterialModal";
 
-const Material = ({
-  user_type,
-  material,
-  onRemoveMaterial,
-}: {
+interface MaterialProps {
   user_type: string;
   material: { id: number; name: string; quantity: number };
-  onRemoveMaterial: (id: number) => void;
-}) => {
-  const [materialState, setMaterialState] = useState(material);
+  refreshEquipmentList: () => void;
+}
+
+const Material = ({ user_type, material, refreshEquipmentList }: MaterialProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSave = (newName: string, newQuantity: number) => {
-    setMaterialState({ ...materialState, name: newName, quantity: newQuantity }); // Update UI
-    setIsModalOpen(false); // Close modal
+  const handleDelete = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/equipment/delete_equipment/", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pk: material.id }),
+      });
+
+      if (response.ok) {
+        refreshEquipmentList(); // Refresh the list after deletion
+      } else {
+        console.error("Failed to delete material");
+      }
+    } catch (error) {
+      console.error("Error deleting material:", error);
+    }
   };
 
   return (
     <div>
-      <div
-        key={materialState.id}
-        className="p-4 mb-2 bg-[#8C1931] shadow-md flex justify-between items-center rounded-lg"
-      >
+      <div className="p-4 mb-2 bg-[#8C1931] shadow-md flex justify-between items-center rounded-lg">
         <div>
-          <h2 className="text-white text-xl font-semibold mb-2 tracking-wide">
-            {materialState.name}
-          </h2>
+          <h2 className="text-white text-xl font-semibold mb-2 tracking-wide">{material.name}</h2>
           <p className="text-sm font-normal flex items-center gap-2">
-            <span className={materialState.quantity > 0 ? "text-green-500" : "text-red-500"}>
-              {materialState.quantity > 0 ? "Available" : "Out of Stock"}
+            <span className={material.quantity > 0 ? "text-green-500" : "text-red-500"}>
+              {material.quantity > 0 ? "Available" : "Out of Stock"}
             </span>
-            <span className="text-white">| Quantity: {materialState.quantity}</span>
+            <span className="text-white">| Quantity: {material.quantity}</span>
           </p>
         </div>
 
+        {/* Action Buttons */}
         <div className="flex items-center gap-5">
           {user_type === "admin" ? (
             <button
@@ -44,28 +50,25 @@ const Material = ({
             >
               Edit
             </button>
-          ) : materialState.quantity > 0 ? (
+          ) : material.quantity > 0 ? (
             <button className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700">
               Add to Cart
             </button>
           ) : (
-            <button
-              className="bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed"
-              disabled
-            >
+            <button className="bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed" disabled>
               Add to Cart
             </button>
           )}
         </div>
       </div>
 
-      {/* Render Modal if Open */}
+      {/* Edit Modal */}
       {isModalOpen && (
         <EditMaterialModal
-          material={materialState}
+          material={material}
           onClose={() => setIsModalOpen(false)}
-          onSave={handleSave}
-          onDelete={() => onRemoveMaterial(materialState.id)} // ✅ Handle delete
+          onSave={refreshEquipmentList}
+          onDelete={handleDelete}
         />
       )}
     </div>
