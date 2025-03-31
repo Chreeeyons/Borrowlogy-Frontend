@@ -58,10 +58,10 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
         />
 
         {user_type === "borrower" && (
-          <Link href={{ pathname: "/cart", query: { cart: JSON.stringify(cart) } }}>
-            <button className="flex items-center gap-2 ml-15 px-5 py-3 bg-[#8C1931] text-white rounded hover:bg-[#6A1426] min-w-max whitespace-nowrap">
+          <Link href="/cart">
+            <button className="flex items-center gap-2 ml-5 px-8 py-2 bg-[#8C1931] text-white rounded hover:bg-blue-700">
               <ShoppingCart size={20} />
-              <span className="justify-center">Cart ({cart.length})</span>
+              Cart
             </button>
           </Link>
         )}
@@ -74,7 +74,6 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
           </button>
         )}
       </div>
-
 
       {/* Equipment List */}
       {filteredEquipment.length === 0 ? (
