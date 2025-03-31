@@ -9,19 +9,6 @@ interface MaterialProps {
 
 const Material = ({ user_type, material, refreshEquipmentList }: MaterialProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [materialState, setMaterialState] = useState(material);
-
-  const handleDecrease = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
-
-  const handleIncrease = () => {
-    if (quantity < material.quantity) {
-      setQuantity(quantity + 1);
-    } else {
-      setShowModal(true);
-    }
-  };
 
   const handleDelete = async () => {
     try {
@@ -56,15 +43,11 @@ const Material = ({ user_type, material, refreshEquipmentList }: MaterialProps) 
 
         {/* Action Buttons */}
         <div className="flex items-center gap-5">
-          {user_type !== "admin" && material.quantity > 0 && (
-            <div className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white">
-              <button onClick={handleDecrease} className="px-3 py-2 text-[#8C1931] hover:bg-gray-300">-</button>
-              <input type="text" value={quantity} readOnly className="w-12 h-9 text-center bg-gray-200 text-[#8C1931]" />
-              <button onClick={handleIncrease} className="px-3 py-2 text-[#8C1931] hover:bg-gray-300">+</button>
-            </div>
-          )}
           {user_type === "admin" ? (
-            <button onClick={() => setIsModalOpen(true)} className="bg-white text-[#8C1931] px-5 py-2 rounded hover:bg-gray-300">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-white text-[#8C1931] px-5 py-2 rounded hover:bg-gray-300"
+            >
               Edit
             </button>
           ) : material.quantity > 0 ? (
@@ -78,7 +61,6 @@ const Material = ({ user_type, material, refreshEquipmentList }: MaterialProps) 
           )}
         </div>
       </div>
-
 
       {/* Edit Modal */}
       {isModalOpen && (
