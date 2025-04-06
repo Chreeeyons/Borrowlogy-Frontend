@@ -47,9 +47,9 @@ const Equipments = () => {
         <table className="w-full text-center">
           <thead>
             <tr>
-              <th className="p-2">Name</th>
-              <th className="p-2">Email</th>
-              <th className="p-2">Status</th>
+              <th className="p-2 tracking-wider text-lg">Name</th>
+              <th className="p-2 tracking-wider text-lg">Email</th>
+              <th className="p-2 tracking-wider text-lg">Status</th>
             </tr>
           </thead>
           <tbody>
