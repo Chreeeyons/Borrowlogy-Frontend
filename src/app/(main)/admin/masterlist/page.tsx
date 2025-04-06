@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useHeader } from "@/utils/HeaderContext";
 
+// Placeholder data for borrowers
+// You can replace this with actual data from your API or state management
 const Equipments = () => {
   const { setHeaderTitle } = useHeader();
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,10 +16,12 @@ const Equipments = () => {
   const [showModal, setShowModal] = useState(false);
   const [newBorrower, setNewBorrower] = useState({ name: "", email: "" });
 
+  // Set the header title when the component mounts
   useEffect(() => {
     setHeaderTitle("Borrower's Master List");
   }, []);
 
+  // Filter borrowers based on the search query
   const filteredBorrowers = borrowers.filter((borrower) =>
     borrower.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -81,6 +85,7 @@ const Equipments = () => {
                       borrower.status === "RETURNED" ? "bg-green-500" : borrower.status === "" ? "bg-[#8C1931]" : "bg-yellow-500"
                     }`}
                   >
+                    {/* Display status for newly added borrowers (Default status: Empty with bg-[#8C1931]) */}
                     {borrower.status === "" ? "" : borrower.status}
                   </span>
                 </td>
