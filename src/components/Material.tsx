@@ -9,6 +9,7 @@ interface MaterialProps {
 
 const Material = ({ user_type, material, refreshEquipmentList }: MaterialProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   const handleDelete = async () => {
     try {
@@ -28,6 +29,18 @@ const Material = ({ user_type, material, refreshEquipmentList }: MaterialProps) 
     }
   };
 
+  const handleIncrease = () => {
+    if (quantity < material.quantity) {
+      setQuantity((prev) => prev + 1);
+    }
+  };
+
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
+
   return (
     <div>
       <div className="p-4 mb-2 bg-[#8C1931] shadow-md flex justify-between items-center rounded-lg">
@@ -43,6 +56,19 @@ const Material = ({ user_type, material, refreshEquipmentList }: MaterialProps) 
 
         {/* Action Buttons */}
         <div className="flex items-center gap-5">
+          {user_type !== "admin" && material.quantity > 0 && (
+            <div className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white">
+              <button onClick={handleDecrease} className="px-3 py-2 text-[#8C1931] hover:bg-gray-300">-</button>
+              <input
+                type="text"
+                value={quantity}
+                readOnly
+                className="w-12 h-9 text-center bg-gray-200 text-[#8C1931]"
+              />
+              <button onClick={handleIncrease} className="px-3 py-2 text-[#8C1931] hover:bg-gray-300">+</button>
+            </div>
+          )}
+
           {user_type === "admin" ? (
             <button
               onClick={() => setIsModalOpen(true)}
