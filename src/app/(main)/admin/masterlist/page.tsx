@@ -28,7 +28,7 @@ const Equipments = () => {
   );
 
   return (
-    <div id="borrow-master-list" className="section p-4 text-white">
+    <div id="borrow-master-list" className="section p-2 text-white">
       <div className="bg-[#8C1931] p-4 rounded-lg shadow-md">
         <div className="flex justify-between mb-4">
           <input
@@ -38,8 +38,12 @@ const Equipments = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded text-white border border-white p-1"
           />
-          <button className="bg-white text-[#8C1931] ml-14 px-6 py-2 rounded">Add</button>
-        </div>
+          <button
+            className="ml-2 px-6 py-2 bg-[#04543C] text-white rounded hover:bg-green-700 flex items-center gap-1"
+          >
+            <span className="text-lg">+</span> Add
+          </button>        
+          </div>
         <table className="w-full text-center">
           <thead>
             <tr>
