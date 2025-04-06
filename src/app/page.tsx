@@ -1,10 +1,35 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import './globals.css';
+import Image from "next/image";
+import Link from "next/link";
+import "./globals.css";
+import { signIn } from "next-auth/react";
+// import { signIn, signOut } from "next-auth/react";
 
 export default function Home() {
+  const handleLogin = async () => {
+    try {
+      // Redirects the user to Google authentication and then to /equipment
+      await signIn("google", { callbackUrl: "/equipment" });
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+    }
+  };
+
+  const clearCookies = () => {
+    const cookies = document.cookie.split("; ");
+    for (const cookie of cookies) {
+      const [name] = cookie.split("=");
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    }
+    console.log("All cookies cleared!");
+  };
+
+  // const handleLogout = () => {
+  //   clearCookies(); // Clear all cookies
+  //   signOut({ callbackUrl: "/" }); // Redirect to homepage after logout
+  // };
+
   return (
     <div className="relative w-full h-screen overflow-hidden bg-white">
       {/* Top and Bottom Borders */}
@@ -33,12 +58,7 @@ export default function Home() {
 
       {/* RBC */}
       <div className="rbc fixed top-[-10px] right-[250px] w-[800px] h-[300px] z-20">
-        <Image
-          src="/images/rbc 1.png"
-          alt="RBC"
-          width={800}
-          height={300}
-        />
+        <Image src="/images/rbc 1.png" alt="RBC" width={800} height={300} />
       </div>
 
       {/* Logo */}

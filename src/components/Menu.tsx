@@ -1,6 +1,8 @@
 'use client';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
+
 
 interface MenuProps {
   userType: 'admin' | 'borrower';
@@ -13,6 +15,17 @@ export default function Menu({ userType, style }: MenuProps) {
     router.push(path);
   };
 
+  const handleLogout = async () => {
+    // Clear client-side storage if needed
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Sign out from NextAuth and redirect
+    await signOut({
+      callbackUrl: '/', // Where to redirect after logout
+      redirect: true // Let NextAuth handle the redirect
+    });
+  };
   return (
   <div
     className="w-64 bg-red-900 text-white ml-8 p-5 my-3 h-[calc(100vh-1.5rem)] rounded-lg shadow-lg overflow-hidden"
@@ -45,6 +58,13 @@ export default function Menu({ userType, style }: MenuProps) {
             >
               History Log
             </Link>
+          </li>
+          <li>
+            <button onClick={handleLogout}
+              className="block p-2 hover:bg-red-700 rounded transition-all duration-200"
+            >
+              Log out
+            </button>
           </li>
         </ul>
       )}
