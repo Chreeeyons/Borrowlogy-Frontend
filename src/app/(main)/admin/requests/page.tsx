@@ -11,9 +11,9 @@ const Equipments = () => {
 
   const [requests, setRequests] = useState([
     // Example data
-    { borrowerName: "Janna Maureen Bantugan", date: "2023-04-01", items: 3 },
-    { borrowerName: "Angelinne Trocio", date: "2023-02-15", items: 2 },
-    { borrowerName: "Chraine Paul Tuazon", date: "2023-05-30", items: 1 },
+    { borrowerName: "Janna Maureen Bantugan", date: "2023-04-01" },
+    { borrowerName: "Angelinne Trocio", date: "2023-02-15" },
+    { borrowerName: "Chraine Paul Tuazon", date: "2023-05-30"},
   ]);
 
   useEffect(() => {
@@ -77,10 +77,12 @@ const Equipments = () => {
             <div
               key={index}
               className="border p-4 bg-[#8C1931] rounded-md text-white cursor-pointer"
-              onClick={() => toggleCard(index)}
+              // onClick={() => toggleCard(index)}
             >
               {/* Header with icon */}
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center cursor-pointer"
+                onClick={() => toggleCard(index)}
+              >
                 <div>
                   <p className="text-2xl font-semibold tracking-wider">
                     {request.borrowerName}
@@ -104,12 +106,34 @@ const Equipments = () => {
               {/* Expandable content: Items, Remarks, Confirm Button */}
               {isExpanded && (
                 <>
-                  <ul className="mt-4 list-disc pl-5">
-                    <li className="py-2 flex items-center">
-                      <span className="w-64 truncate">Item Name 1</span>
-                      <span className="w-20 text-right">{request.items} pcs</span>
+                <ul className="mt-4">
+                  {[
+                    { name: "Beaker", quantity: 1 },
+                    { name: "Microscope", quantity: 2 },
+                    { name: "Test Tube", quantity: 4 },
+                  ].map((item, itemIndex) => (
+                    <li key={itemIndex} className="py-2 flex items-center ml-10">
+                      <div className="flex items-center w-64 space-x-2 truncate">
+                        <input
+                          type="checkbox"
+                          id={`item-${index}-${itemIndex}`}
+                          className="form-checkbox accent-white w-4 h-4"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <label
+                          htmlFor={`item-${index}-${itemIndex}`}
+                          className="text-white tracking-wide"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {item.name.toUpperCase()}
+                        </label>
+                      </div>
+                      <span className="w-20 text-white text-right">{item.quantity} pcs</span>
                     </li>
-                  </ul>
+                  ))}
+                </ul>
+
+
 
                   <label className="font-normal block mt-4">
                     Remarks:
