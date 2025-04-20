@@ -35,3 +35,18 @@ export const viewAllHistoryBorrower = async (user_id: number) => {
     return null;
   }
 };
+
+export const viewAllHistory = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/get_all_history_borrower/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    if (!response.ok) throw new Error("Failed to fetch equipment");
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching equipment:", error);
+    return null;
+  }
+};

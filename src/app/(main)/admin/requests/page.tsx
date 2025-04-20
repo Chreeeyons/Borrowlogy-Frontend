@@ -1,7 +1,13 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { useHeader } from "@/utils/HeaderContext";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import {
+  viewAllHistory,
+  viewAllHistoryBorrower,
+} from "@/services/historyService";
+import { approveCart } from "@/services/cartService";
+import { get } from "http";
 
 const Equipments = () => {
   const { setHeaderTitle } = useHeader();
@@ -11,9 +17,15 @@ const Equipments = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [activeBorrower, setActiveBorrower] = useState<string | null>(null);
-  const [selectedItems, setSelectedItems] = useState<{ name: string; quantity: number }[]>([]);
-  const [activeRequestIndex, setActiveRequestIndex] = useState<number | null>(null);
-  const [checkedItems, setCheckedItems] = useState<{ [requestIndex: number]: Set<number> }>({});
+  const [selectedItems, setSelectedItems] = useState<
+    { equipment: any; quantity: number }[]
+  >([]);
+  const [activeRequestIndex, setActiveRequestIndex] = useState<number | null>(
+    null
+  );
+  const [checkedItems, setCheckedItems] = useState<{
+    [requestIndex: number]: Set<number>;
+  }>({});
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +48,8 @@ const Equipments = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setShowModal(false);
-      if (e.key === "Enter" && showModal && selectedItems.length === 0) setShowModal(false);
+      if (e.key === "Enter" && showModal && selectedItems.length === 0)
+        setShowModal(false);
     };
 
     const handleClickOutside = (e: MouseEvent) => {
@@ -53,6 +66,42 @@ const Equipments = () => {
       window.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showModal, selectedItems]);
+
+  const handleGetAllHistory = async () => {
+    const data = await viewAllHistory(); // Placeholder for user_id
+    setHistoryData(data);
+    console.log(data);
+  };
+
+  useEffect(() => {
+    handleGetAllHistory();
+  }, []);
+
+  const [historyData, setHistoryData] = useState<any>([]);
+  const [filteredHistoryData, setFilteredHistoryData] = useState<any>([]);
+
+  const [selectedHistoryId, setSelectedHistoryId] = useState<number | null>(
+    null
+  );
+  useEffect(() => {
+    let filteredData = historyData;
+
+    // Filter by search query if provided
+    if (searchQuery) {
+      filteredData = filteredData.filter((history: any) =>
+        history.cart.user.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Sort by date_created based on sortOrder
+    filteredData = filteredData.sort((a: any, b: any) => {
+      const dateA = new Date(a.date_created).getTime();
+      const dateB = new Date(b.date_created).getTime();
+      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+    });
+
+    setFilteredHistoryData(filteredData);
+  }, [historyData, searchQuery, sortOrder]);
 
   const toggleCard = (index: number) => {
     setExpandedCards((prev) =>
@@ -75,21 +124,38 @@ const Equipments = () => {
   const handleCheckboxChange = (requestIndex: number, itemIndex: number) => {
     setCheckedItems((prev) => {
       const current = new Set(prev[requestIndex] || []);
-      current.has(itemIndex) ? current.delete(itemIndex) : current.add(itemIndex);
+      current.has(itemIndex)
+        ? current.delete(itemIndex)
+        : current.add(itemIndex);
       return { ...prev, [requestIndex]: current };
     });
   };
 
-  const openConfirmModal = (requestIndex: number, borrowerName: string) => {
+  const openConfirmModal = (
+    historyId: number,
+    requestIndex: number,
+    cartItems: any,
+    borrowerName: string
+  ) => {
+    console.log(requestIndex, cartItems);
     const selected = [...(checkedItems[requestIndex] || [])].map(
-      (itemIndex) => itemData[itemIndex]
+      (itemIndex) => cartItems[itemIndex]
     );
+    const filteredSelected = selected.filter((item) => item !== undefined);
     setActiveBorrower(borrowerName);
-    setSelectedItems(selected);
+    setSelectedItems(filteredSelected);
     setActiveRequestIndex(requestIndex);
     setShowModal(true);
+    setSelectedHistoryId(historyId);
   };
 
+  const handleApproveCart = async () => {
+    await approveCart({
+      cartItems: selectedItems,
+      historyId: selectedHistoryId,
+    });
+    handleGetAllHistory();
+  };
   return (
     <div id="laboratory-materials" className="section">
       <div className="flex items-center space-x-4 mb-4">
@@ -111,20 +177,34 @@ const Equipments = () => {
       </div>
 
       <div className="space-y-4">
-        {filteredRequests.map((request, index) => {
+        {filteredHistoryData.map((history: any, index: any) => {
           const isExpanded = expandedCards.includes(index);
           return (
-            <div key={index} className="border p-4 bg-[#8C1931] rounded-md text-white cursor-pointer">
-              <div className="flex justify-between items-center" onClick={() => toggleCard(index)}>
+            <div
+              key={index}
+              className="border p-4 bg-[#8C1931] rounded-md text-white cursor-pointer"
+            >
+              <div
+                className="flex justify-between items-center"
+                onClick={() => toggleCard(index)}
+              >
                 <div>
-                  <p className="text-2xl font-semibold tracking-wider">{request.borrowerName}</p>
-                  <p className="text-sm font-normal tracking-wider mt-1">
-                    {request.borrowerName.split(" ").join("").toLowerCase()}@up.edu.ph
+                  <p className="text-2xl font-semibold tracking-wider">
+                    {history.cart.user.name}
                   </p>
-                  <p className="text-xs font-light mt-1">Date: {request.date}</p>
+                  <p className="text-sm font-normal tracking-wider mt-1">
+                    {history.cart.user.email}
+                  </p>
+                  <p className="text-xs font-light mt-1">
+                    Date: {new Date(history.borrow_date).toDateString()}
+                  </p>
                 </div>
                 <div className="ml-2">
-                  {isExpanded ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
+                  {isExpanded ? (
+                    <ChevronUp className="w-6 h-6" />
+                  ) : (
+                    <ChevronDown className="w-6 h-6" />
+                  )}
                 </div>
               </div>
 
@@ -135,9 +215,9 @@ const Equipments = () => {
                       type="checkbox"
                       id={`check-all-${index}`}
                       className="form-checkbox accent-white w-4 h-4"
-                      checked={
-                        itemData.every((_, i) => checkedItems[index]?.has(i))
-                      }
+                      checked={itemData.every((_, i) =>
+                        checkedItems[index]?.has(i)
+                      )}
                       onChange={(e) => {
                         const allChecked = e.target.checked;
                         setCheckedItems((prev) => {
@@ -160,15 +240,22 @@ const Equipments = () => {
                   </div>
                   <hr className="border-white/30 mx-10 mb-2" />
                   <ul className="mt-4">
-                    {itemData.map((item, itemIndex) => (
-                      <li key={itemIndex} className="py-2 flex items-center ml-10">
+                    {history.cart.items.map((item: any, itemIndex: any) => (
+                      <li
+                        key={itemIndex}
+                        className="py-2 flex items-center ml-10"
+                      >
                         <div className="flex items-center w-64 space-x-2 truncate">
                           <input
                             type="checkbox"
                             id={`item-${index}-${itemIndex}`}
                             className="form-checkbox accent-white w-4 h-4"
-                            checked={checkedItems[index]?.has(itemIndex) || false}
-                            onChange={() => handleCheckboxChange(index, itemIndex)}
+                            checked={
+                              checkedItems[index]?.has(itemIndex) || false
+                            }
+                            onChange={() =>
+                              handleCheckboxChange(index, itemIndex)
+                            }
                             onClick={(e) => e.stopPropagation()}
                           />
                           <label
@@ -176,17 +263,19 @@ const Equipments = () => {
                             className="text-white tracking-wide"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            {item.name.toUpperCase()}
+                            {item.equipment.name.toUpperCase()}
                           </label>
                         </div>
-                        <span className="w-20 text-white text-right">{item.quantity} pcs</span>
+                        <span className="w-20 text-white text-right">
+                          {item.quantity} pcs
+                        </span>
                       </li>
                     ))}
                   </ul>
                   <label className="font-normal block mt-4">
                     Remarks:
                     <textarea
-                      value={"No remarks provided"}
+                      value={history.remarks ?? "No remarks provided"}
                       className="w-full border rounded p-2 mt-2 font-normal text-black bg-white"
                       readOnly
                     />
@@ -195,7 +284,14 @@ const Equipments = () => {
                   <div className="flex justify-end mt-4">
                     <button
                       className="bg-white text-[#8C1931] px-4 py-2 rounded"
-                      onClick={() => openConfirmModal(index, request.borrowerName)}
+                      onClick={() =>
+                        openConfirmModal(
+                          history.id,
+                          index,
+                          history.cart.items,
+                          history.cart.user.name
+                        )
+                      }
                     >
                       Confirm
                     </button>
@@ -217,12 +313,15 @@ const Equipments = () => {
             {selectedItems.length > 0 ? (
               <>
                 <p className="mb-2">
-                  Confirm borrow request from <span className="font-bold">{activeBorrower}</span>?
+                  Confirm borrow request from{" "}
+                  <span className="font-bold">{activeBorrower}</span>?
                 </p>
                 <p className="mb-2">Selected Items:</p>
                 <ul className="list-disc pl-5 mb-4">
                   {selectedItems.map((item, i) => (
-                    <li key={i}>{item.name} - {item.quantity} pcs</li>
+                    <li key={i}>
+                      {item.equipment.name} - {item.quantity} pcs
+                    </li>
                   ))}
                 </ul>
                 <div className="flex justify-end space-x-4">
@@ -233,7 +332,15 @@ const Equipments = () => {
                     Cancel
                   </button>
                   <button
-                    onClick={() => setShowModal(false)}
+                    onClick={() => {
+                      handleApproveCart();
+                      setCheckedItems((prev) => ({
+                        ...prev,
+                        [activeRequestIndex!]: new Set(),
+                      }));
+                      setActiveRequestIndex(null);
+                      setShowModal(false);
+                    }}
                     className="px-4 py-2 bg-[#8C1931] text-white rounded hover:bg-[#a31f3c]"
                   >
                     Confirm

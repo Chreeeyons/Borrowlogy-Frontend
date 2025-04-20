@@ -49,3 +49,25 @@ export const clearCart = async (cart_id: number) => {
     return null;
   }
 };
+
+export const approveCart = async ({
+  cartItems,
+  historyId,
+}: {
+  cartItems: any;
+  historyId: any;
+}) => {
+  try {
+    const response = await fetch(`${BASE_URL}/approve_cart/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cart_items: cartItems, history_id: historyId }),
+    });
+
+    if (!response.ok) throw new Error("Failed to add to cart");
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding equipment:", error);
+    return null;
+  }
+};
