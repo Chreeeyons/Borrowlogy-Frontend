@@ -34,6 +34,7 @@ export const addEquipment = async (equipmentData: { name: string; quantity: numb
   }
 };
 
+
 /**
  * Edit existing equipment.
  * @param {object} equipmentData - { pk: number, name?: string, quantity?: number }

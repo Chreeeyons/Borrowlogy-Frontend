@@ -86,7 +86,7 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
             key={material.id}
             user_type={user_type}
             material={material}
-            refreshEquipmentList={fetchEquipment}
+            refreshEquipmentList={async () => await fetchEquipment()}
           />
         ))
       )}
