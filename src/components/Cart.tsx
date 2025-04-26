@@ -5,10 +5,19 @@ import { use, useEffect, useState } from "react";
 const Cart = () => {
   const [cartItems, setCartItems] = useState<any>([]);
   const [remarks, setRemarks] = useState<string>("");
+  const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>({});
+
   const fetchCartData = async () => {
     try {
       const data = await getCart(1); // Assuming user_id is 1 for demo purposes
       setCartItems(data);
+
+      // Initialize checked state for each item
+      const initialCheckedState = data?.items?.reduce((acc: any, item: any, index: number) => {
+        acc[index] = false;
+        return acc;
+      }, {});
+      setCheckedItems(initialCheckedState);
     } catch (error) {
       console.error("Error fetching cart data:", error);
     }
@@ -17,6 +26,13 @@ const Cart = () => {
   useEffect(() => {
     fetchCartData();
   }, []);
+
+  const handleCheckboxChange = (index: number) => {
+    setCheckedItems((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
+  };
 
   const handleSubmit = async () => {
     await addHistory({
@@ -43,8 +59,14 @@ const Cart = () => {
 
       {/* Items in cart placeholder */}
       <ul className="mt-2 list-disc pl-20">
-        {cartItems?.items?.map((item: any, index: any) => (
+        {cartItems?.items?.map((item: any, index: number) => (
           <li key={index} className="py-2 flex items-center">
+            <input
+              type="checkbox"
+              className="mr-3"
+              checked={checkedItems[index] || false}
+              onChange={() => handleCheckboxChange(index)}
+            />
             <span className="w-64 truncate">{item.equipment_name}</span>
             <span className="w-20 text-right">{item.total_quantity} pcs</span>
           </li>
