@@ -32,7 +32,7 @@ export default function LandingPage() {
           </h1>
 
           {/* Tagline */}
-          <p className="tagline text-[1rem] sm:text-[1.2rem] md:text-[1.4rem] lg:text-[1.5rem] font-normal mt-1 mb-1 text-[#5E0708]">
+          <p className="tagline text-[1rem] sm:text-[1.2rem] md:text-[1.4rem] lg:text-[1.5rem] font-normal mt-5 mb-1 text-[#5E0708]">
             Borrowing your Biology Lab Materials made easier!
           </p>
 
