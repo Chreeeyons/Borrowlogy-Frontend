@@ -104,6 +104,7 @@ const handleClearCart = async () => {
       </p>
 
       {/* Select All */}
+     {cartItems.items.length > 0 && (
       <div className="pl-20 mt-4">
         <label className="flex items-center space-x-2">
           <input
@@ -113,7 +114,8 @@ const handleClearCart = async () => {
           />
           <span>Select All</span>
         </label>
-      </div>
+     </div>
+    )}
 
       {/* Items in cart */}
       <ul className="mt-2 ml-12 list-disc pl-20">
