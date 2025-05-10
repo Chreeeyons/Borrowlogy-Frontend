@@ -1,4 +1,4 @@
-import { clearCart, getCart } from "@/services/cartService";
+import { clearCart, getCart, removeCartItems } from "@/services/cartService";
 import { addHistory } from "@/services/historyService";
 import { useEffect, useState } from "react";
 
@@ -65,10 +65,23 @@ const Cart = () => {
     setRemarks("");
   };
 
-  const handleClearCart = async () => {
-    await clearCart(cartItems?.cart_id);
-    fetchCartData();
-  };
+const handleClearCart = async () => {
+  const itemsToRemove = cartItems.items
+    .map((item: any, index: number) => (checkedItems[index] ? item.equipment_id : null))
+    .filter((id: number | null) => id !== null);
+
+  if (itemsToRemove.length === 0) {
+    alert("Please select items to remove.");
+    return;
+  }
+
+  await removeCartItems({
+    cart_id: cartItems?.cart_id,
+    equipment_ids: itemsToRemove,
+  });
+
+  fetchCartData();
+};
 
   const handleIncrease = (index: number) => {
     const updatedItems = [...cartItems.items];
