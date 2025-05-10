@@ -28,7 +28,7 @@ const Equipments = () => {
   });
 
   useEffect(() => {
-    setHeaderTitle("Borrower's Master List");
+    setHeaderTitle("BORROWER'S MASTERLIST");
   }, []);
 
   const filteredBorrowers = borrowers.filter((b) =>

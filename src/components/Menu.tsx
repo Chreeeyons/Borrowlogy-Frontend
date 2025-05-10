@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { LogOut } from 'lucide-react';
 
 
 interface MenuProps {
@@ -27,11 +28,17 @@ export default function Menu({ userType, style }: MenuProps) {
     });
   };
   return (
-  <div
-    className="w-64 bg-red-900 text-white ml-8 p-5 my-3 h-[calc(100vh-1.5rem)] rounded-lg shadow-lg overflow-hidden"
-    style={style}
-  >
-      <h1 className="text-2xl font-bold mb-6 border-b border-red-700 pb-2 text-center tracking-wider">Menu</h1>
+<div
+  className="w-64 bg-red-900 text-white ml-8 p-5 my-3 h-[calc(100vh-1.5rem)] rounded-lg shadow-lg overflow-hidden"
+  style={{
+    ...style,
+    boxShadow: `
+      inset 6px 0 8px -4px rgba(0, 0, 0, 0.5),   /* Left shadow */
+      inset 0 -6px 8px -4px rgba(0, 0, 0, 0.5)   /* Bottom shadow */
+    `,
+  }}
+>
+      <h1 className="text-2xl font-bold mb-6 border-b border-red-700 pb-2 text-center tracking-wider">MENU</h1>
       
       {userType === "borrower" && (
         <ul className="space-y-3">
@@ -59,13 +66,22 @@ export default function Menu({ userType, style }: MenuProps) {
               History Log
             </Link>
           </li>
-          <li>
-            <button onClick={handleLogout}
-              className="block p-2 hover:bg-red-700 rounded transition-all duration-200"
-            >
-              Log out
-            </button>
-          </li>
+          <li className="mt-80">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 py-2 rounded font-bold text-white transition-all duration-300 transform hover:scale-105 hover:bg-red-700 hover:shadow-xl"
+            style={{
+              backgroundColor: "#5e0708",
+              boxShadow: `
+                0 -2px 4px rgba(0, 0, 0, 0.4),  /* Top shadow */
+                0 2px 4px rgba(0, 0, 0, 0.4)    /* Bottom shadow */
+              `,
+            }}
+          >
+            <LogOut size={20} />
+            Log out
+          </button>
+        </li>
         </ul>
       )}
 
@@ -95,6 +111,22 @@ export default function Menu({ userType, style }: MenuProps) {
               Laboratory Materials
             </Link>
           </li>
+          <li className="mt-80">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 py-2 rounded font-bold text-white transition-all duration-300 transform hover:scale-105 hover:bg-red-700 hover:shadow-xl"
+            style={{
+              backgroundColor: "#5e0708",
+              boxShadow: `
+                0 -2px 4px rgba(0, 0, 0, 0.4),  /* Top shadow */
+                0 2px 4px rgba(0, 0, 0, 0.4)    /* Bottom shadow */
+              `,
+            }}
+          >
+            <LogOut size={20} />
+            Log out
+          </button>
+        </li>
         </ul>
       )}
     </div>

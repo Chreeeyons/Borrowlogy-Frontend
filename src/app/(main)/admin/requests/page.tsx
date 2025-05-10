@@ -42,7 +42,7 @@ const Equipments = () => {
   ];
 
   useEffect(() => {
-    setHeaderTitle("Borrower's Requests");
+    setHeaderTitle("BORROWER'S REQUESTS");
   }, []);
 
   useEffect(() => {

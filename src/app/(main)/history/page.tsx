@@ -7,7 +7,7 @@ const History = () => {
   const { setHeaderTitle } = useHeader();
 
   useEffect(() => {
-    setHeaderTitle("History Log");
+    setHeaderTitle("HISTORY LOG"); // ✅ Set the header title
   }, []);
 
   return <HistoryComponent />; // ✅ Use the imported component here

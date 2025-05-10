@@ -4,11 +4,12 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { useHeader } from "@/utils/HeaderContext";
 
+
 const Equipments = () => {
   const { setHeaderTitle } = useHeader();
 
   useEffect(() => {
-    setHeaderTitle("Laboratory Materials");
+    setHeaderTitle("LABORATORY MATERIALS");
   }, []);
   return null;
 };
