@@ -1,23 +1,29 @@
 import { clearCart, getCart } from "@/services/cartService";
 import { addHistory } from "@/services/historyService";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState<any>([]);
+  const [cartItems, setCartItems] = useState<any>({ items: [] });
   const [remarks, setRemarks] = useState<string>("");
   const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>({});
+  const [selectAll, setSelectAll] = useState<boolean>(false);
 
   const fetchCartData = async () => {
     try {
       const data = await getCart(1); // Assuming user_id is 1 for demo purposes
-      setCartItems(data);
+      const itemsWithQuantity = data?.items?.map((item: any) => ({
+        ...item,
+        quantity: item.total_quantity ?? 1,
+      })) ?? [];
 
-      // Initialize checked state for each item
-      const initialCheckedState = data?.items?.reduce((acc: any, item: any, index: number) => {
+      setCartItems({ ...data, items: itemsWithQuantity });
+
+      const initialCheckedState = itemsWithQuantity.reduce((acc: any, _item: any, index: number) => {
         acc[index] = false;
         return acc;
       }, {});
       setCheckedItems(initialCheckedState);
+      setSelectAll(false);
     } catch (error) {
       console.error("Error fetching cart data:", error);
     }
@@ -28,37 +34,76 @@ const Cart = () => {
   }, []);
 
   const handleCheckboxChange = (index: number) => {
-    setCheckedItems((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index],
-    }));
+    const updated = {
+      ...checkedItems,
+      [index]: !checkedItems[index],
+    };
+    setCheckedItems(updated);
+
+    const allChecked = Object.values(updated).every(Boolean);
+    setSelectAll(allChecked);
+  };
+
+  const handleSelectAllChange = () => {
+    const newValue = !selectAll;
+    const newChecked = Object.keys(checkedItems).reduce((acc: any, key: string) => {
+      acc[Number(key)] = newValue;
+      return acc;
+    }, {});
+    setCheckedItems(newChecked);
+    setSelectAll(newValue);
   };
 
   const handleSubmit = async () => {
     await addHistory({
-      user_id: 1, // Assuming user_id is 1 for demo purposes
-      cart_id: cartItems?.cart_id, // Assuming cart_id is available in cartItems
-      borrower_date: new Date(), // Current date
+      user_id: 1,
+      cart_id: cartItems?.cart_id,
+      borrower_date: new Date(),
       remarks: remarks ?? "",
-    }); // Replace with actual remarks input
-    fetchCartData(); // Refresh cart data after submission
-    setRemarks(""); // Clear remarks input
+    });
+    fetchCartData();
+    setRemarks("");
   };
 
   const handleClearCart = async () => {
-    await clearCart(cartItems?.cart_id); // Assuming cart_id is available in cartItems
-    fetchCartData(); // Refresh cart data after clearing
+    await clearCart(cartItems?.cart_id);
+    fetchCartData();
+  };
+
+  const handleIncrease = (index: number) => {
+    const updatedItems = [...cartItems.items];
+    updatedItems[index].quantity += 1;
+    setCartItems({ ...cartItems, items: updatedItems });
+  };
+
+  const handleDecrease = (index: number) => {
+    const updatedItems = [...cartItems.items];
+    if (updatedItems[index].quantity > 1) {
+      updatedItems[index].quantity -= 1;
+      setCartItems({ ...cartItems, items: updatedItems });
+    }
   };
 
   return (
     <div className="border p-4 bg-[#8C1931] rounded-md text-white">
-      {/* Transaction number placeholder */}
       <p className="text-2xl font-semibold tracking-wider">
         Transaction #{cartItems?.cart_id}
       </p>
 
-      {/* Items in cart placeholder */}
-      <ul className="mt-2 list-disc pl-20">
+      {/* Select All */}
+      <div className="pl-20 mt-4">
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={selectAll}
+            onChange={handleSelectAllChange}
+          />
+          <span>Select All</span>
+        </label>
+      </div>
+
+      {/* Items in cart */}
+      <ul className="mt-2 ml-12 list-disc pl-20">
         {cartItems?.items?.map((item: any, index: number) => (
           <li key={index} className="py-2 flex items-center">
             <input
@@ -68,12 +113,33 @@ const Cart = () => {
               onChange={() => handleCheckboxChange(index)}
             />
             <span className="w-64 truncate">{item.equipment_name}</span>
-            <span className="w-20 text-right">{item.total_quantity} pcs</span>
+
+            {/* Quantity Selector */}
+            <div className="ml-4 flex items-center bg-white rounded-lg overflow-hidden">
+              <button
+                onClick={() => handleDecrease(index)}
+                className="px-3 py-1 text-[#8C1931] hover:bg-gray-200"
+              >
+                -
+              </button>
+              <input
+                type="text"
+                value={item.quantity}
+                readOnly
+                className="w-12 h-9 text-center bg-white text-[#8C1931] font-bold" //bold or not bold
+              />
+              <button
+                onClick={() => handleIncrease(index)}
+                className="px-3 py-1 text-[#8C1931] hover:bg-gray-200"
+              >
+                +
+              </button>
+            </div>
           </li>
         ))}
       </ul>
 
-      {/* Remarks input placeholder */}
+      {/* Remarks input */}
       <label className="font-medium block mt-4">
         Remarks:
         <textarea
@@ -84,7 +150,7 @@ const Cart = () => {
         ></textarea>
       </label>
 
-      {/* Action buttons (placeholders) */}
+      {/* Action buttons */}
       <div className="flex justify-between mt-4">
         <button
           className="bg-white text-[#8C1931] px-4 py-2 rounded"
@@ -96,7 +162,7 @@ const Cart = () => {
           className="bg-white text-[#8C1931] px-4 py-2 rounded"
           onClick={handleSubmit}
         >
-          Confirm
+          Submit
         </button>
       </div>
     </div>
