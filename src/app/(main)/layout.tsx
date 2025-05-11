@@ -47,28 +47,36 @@ const Layout = ({ children }: LayoutProps) => {
 
         {/* Header */}
         <section
-        className="bg-[#83191c] text-white font-medium text-xl flex items-center px-5 shadow-lg rounded-lg m-3 tracking-wider"
-        style={{
-          gridArea: "header",
-          height: "90px",
-          boxShadow: "inset 0 -4px 6px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.1)", // Inner shadow added here
-        }}
-      >
-        <Header />
-      </section>
-
+          className="bg-[#83191c] text-white font-medium text-xl flex items-center px-5 shadow-lg rounded-lg m-3 tracking-wider"
+          style={{
+            borderRadius: "20px", 
+            gridArea: "header",
+            height: "90px",
+            boxShadow: `
+              inset 0px 4px 4px rgba(0, 0, 0, 0.25), 
+              inset 0px 4px 4px rgba(0, 0, 0, 0.25)
+            `
+          }}
+        >
+          <Header />
+        </section>
 
         {/* Main Content */}
         <main
-          className="p-6 m-3 bg-white rounded-lg shadow-2xl text-base leading-relaxed"
+          className="p-6 m-3 bg-white rounded-lg shadow-3xl text-base leading-relaxed"
           style={{
+            borderRadius: "20px",
             gridArea: "main",
             display: "flex",
             flexDirection: "column",
-            height: "calc(100vh - 115px)", // Adjusted height
-            maxHeight: "calc(100vh - 70px)", // Ensures it doesn’t exceed
+            height: "calc(100vh - 125px)",
+            maxHeight: "calc(100vh - 70px)",
             overflowY: "auto",
             margin: "0 1rem 1rem 1rem",
+            boxShadow: `
+              inset 0px 4px 4px rgba(0, 0, 0, 0.25), 
+              inset 0px 4px 4px rgba(0, 0, 0, 0.25)
+            `, // inner shadow added here
           }}
         >
           {children}
