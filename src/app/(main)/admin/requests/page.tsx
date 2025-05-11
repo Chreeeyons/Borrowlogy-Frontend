@@ -7,6 +7,7 @@ import {
   viewAllHistoryBorrower,
 } from "@/services/historyService";
 import { approveCart } from "@/services/cartService";
+
 import { get } from "http";
 
 const Equipments = () => {
@@ -157,216 +158,247 @@ const Equipments = () => {
     handleGetAllHistory();
   };
   return (
-    <div id="laboratory-materials" className="section">
-      <div className="flex items-center space-x-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search Borrower..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="p-2 border rounded-md w-full max-w-2xl"
-        />
-        <select
-          className="p-2 border rounded-md ml-21"
-          value={sortOrder}
-          onChange={(e) => handleSortChange(e.target.value)}
+<div id="laboratory-materials" className="section">
+  <div className="flex items-center space-x-4 mb-4">
+    <input
+      type="text"
+      placeholder="Search Borrower..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className="p-2 border rounded-md w-full max-w-2xl"
+    />
+    <select
+      className="p-2 border rounded-md ml-21"
+      value={sortOrder}
+      onChange={(e) => handleSortChange(e.target.value)}
+    >
+      <option value="asc">Sort by Date (Oldest to Newest)</option>
+      <option value="desc">Sort by Date (Newest to Oldest)</option>
+    </select>
+  </div>
+
+  <div className="space-y-4">
+    {filteredHistoryData.map((history: any, index: any) => {
+      const isExpanded = expandedCards.includes(index);
+      return (
+        <div
+          key={index}
+          style={{
+            backgroundColor: '#83191c',
+            borderRadius: '17px',
+            boxShadow: '6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset',
+            padding: '1rem',
+            color: '#FFF',
+            cursor: 'pointer',
+          }}
         >
-          <option value="asc">Sort by Date (Oldest to Newest)</option>
-          <option value="desc">Sort by Date (Newest to Oldest)</option>
-        </select>
-      </div>
-
-      <div className="space-y-4">
-        {filteredHistoryData.map((history: any, index: any) => {
-          const isExpanded = expandedCards.includes(index);
-          return (
-            <div
-              key={index}
-              className="border p-4 bg-[#8C1931] rounded-md text-white cursor-pointer"
-            >
-              <div
-                className="flex justify-between items-center"
-                onClick={() => toggleCard(index)}
-              >
-                <div>
-                  <p className="text-2xl font-semibold tracking-wider">
-                    {history.cart.user.name}
-                  </p>
-                  <p className="text-sm font-normal tracking-wider mt-1">
-                    {history.cart.user.email}
-                  </p>
-                  <p className="text-xs font-light mt-1">
-                    Date: {new Date(history.borrow_date).toDateString()}
-                  </p>
-                </div>
-                <div className="ml-2">
-                  {isExpanded ? (
-                    <ChevronUp className="w-6 h-6" />
-                  ) : (
-                    <ChevronDown className="w-6 h-6" />
-                  )}
-                </div>
-              </div>
-
-              {isExpanded && (
-                <>
-                  <div className="flex items-center ml-10 mt-4 mb-2">
-                    <input
-                      type="checkbox"
-                      id={`check-all-${index}`}
-                      className="form-checkbox accent-white w-4 h-4"
-                      checked={itemData.every((_, i) =>
-                        checkedItems[index]?.has(i)
-                      )}
-                      onChange={(e) => {
-                        const allChecked = e.target.checked;
-                        setCheckedItems((prev) => {
-                          const updated = new Set<number>();
-                          if (allChecked) {
-                            itemData.forEach((_, i) => updated.add(i));
-                          }
-                          return { ...prev, [index]: updated };
-                        });
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                    <label
-                      htmlFor={`check-all-${index}`}
-                      className="text-white tracking-wide ml-2"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      Select All Items
-                    </label>
-                  </div>
-                  <hr className="border-white/30 mx-10 mb-2" />
-                  <ul className="mt-4">
-                    {history.cart.items.map((item: any, itemIndex: any) => (
-                      <li
-                        key={itemIndex}
-                        className="py-2 flex items-center ml-10"
-                      >
-                        <div className="flex items-center w-64 space-x-2 truncate">
-                          <input
-                            type="checkbox"
-                            id={`item-${index}-${itemIndex}`}
-                            className="form-checkbox accent-white w-4 h-4"
-                            checked={
-                              checkedItems[index]?.has(itemIndex) || false
-                            }
-                            onChange={() =>
-                              handleCheckboxChange(index, itemIndex)
-                            }
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                          <label
-                            htmlFor={`item-${index}-${itemIndex}`}
-                            className="text-white tracking-wide"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {item.equipment.name.toUpperCase()}
-                          </label>
-                        </div>
-                        <span className="w-20 text-white text-right">
-                          {item.quantity} pcs
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                  <label className="font-normal block mt-4">
-                    Remarks:
-                    <textarea
-                      value={history.remarks ?? "No remarks provided"}
-                      className="w-full border rounded p-2 mt-2 font-normal text-black bg-white"
-                      readOnly
-                    />
-                  </label>
-
-                  <div className="flex justify-end mt-4">
-                    <button
-                      className="bg-white text-[#8C1931] px-4 py-2 rounded"
-                      onClick={() =>
-                        openConfirmModal(
-                          history.id,
-                          index,
-                          history.cart.items,
-                          history.cart.user.name
-                        )
-                      }
-                    >
-                      Confirm
-                    </button>
-                  </div>
-                </>
+          <div
+            className="flex justify-between items-center"
+            onClick={() => toggleCard(index)}
+          >
+            <div>
+              <p className="text-3xl font-semibold tracking-normal">
+                {history.cart.user.name}
+              </p>
+              <p className="text-sm font-normal tracking-wider mt-1">
+                {history.cart.user.email}
+              </p>
+              <p className="text-xs font-light mt-1">
+                Date: {new Date(history.borrow_date).toDateString()}
+              </p>
+            </div>
+            <div className="ml-2">
+              {isExpanded ? (
+                <ChevronUp className="w-6 h-6" />
+              ) : (
+                <ChevronDown className="w-6 h-6" />
               )}
             </div>
-          );
-        })}
-      </div>
-
-      {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
-          <div
-            ref={modalRef}
-            className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl text-black"
-          >
-            <h2 className="text-xl font-semibold mb-4">Confirm Request</h2>
-            {selectedItems.length > 0 ? (
-              <>
-                <p className="mb-2">
-                  Confirm borrow request from{" "}
-                  <span className="font-bold">{activeBorrower}</span>?
-                </p>
-                <p className="mb-2">Selected Items:</p>
-                <ul className="list-disc pl-5 mb-4">
-                  {selectedItems.map((item, i) => (
-                    <li key={i}>
-                      {item.equipment.name} - {item.quantity} pcs
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex justify-end space-x-4">
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleApproveCart();
-                      setCheckedItems((prev) => ({
-                        ...prev,
-                        [activeRequestIndex!]: new Set(),
-                      }));
-                      setActiveRequestIndex(null);
-                      setShowModal(false);
-                    }}
-                    className="px-4 py-2 bg-[#8C1931] text-white rounded hover:bg-[#a31f3c]"
-                  >
-                    Confirm
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <p className="text-sm text-gray-600 mb-4">
-                  Please select at least one item to proceed with confirmation.
-                </p>
-                <div className="flex justify-end">
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="px-4 py-2 bg-[#8C1931] text-white rounded hover:bg-[#a31f3c]"
-                  >
-                    OK
-                  </button>
-                </div>
-              </>
-            )}
           </div>
+
+          {isExpanded && (
+            <>
+              <div className="flex items-center ml-10 mt-4 mb-2">
+                <input
+                  type="checkbox"
+                  id={`check-all-${index}`}
+                  className="form-checkbox accent-white w-4 h-4"
+                  checked={itemData.every((_, i) =>
+                    checkedItems[index]?.has(i)
+                  )}
+                  onChange={(e) => {
+                    const allChecked = e.target.checked;
+                    setCheckedItems((prev) => {
+                      const updated = new Set<number>();
+                      if (allChecked) {
+                        itemData.forEach((_, i) => updated.add(i));
+                      }
+                      return { ...prev, [index]: updated };
+                    });
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <label
+                  htmlFor={`check-all-${index}`}
+                  className="text-white tracking-wide ml-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Select All Items
+                </label>
+              </div>
+              <hr className="border-white/30 mx-10 mb-2" />
+              <ul className="mt-4">
+                {history.cart.items.map((item: any, itemIndex: any) => (
+                  <li
+                    key={itemIndex}
+                    className="py-2 flex items-center ml-10"
+                  >
+                    <div className="flex items-center w-64 space-x-2 truncate">
+                      <input
+                        type="checkbox"
+                        id={`item-${index}-${itemIndex}`}
+                        className="form-checkbox accent-white w-4 h-4"
+                        checked={
+                          checkedItems[index]?.has(itemIndex) || false
+                        }
+                        onChange={() =>
+                          handleCheckboxChange(index, itemIndex)
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <label
+                        htmlFor={`item-${index}-${itemIndex}`}
+                        className="text-white tracking-wide"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {item.equipment.name.toUpperCase()}
+                      </label>
+                    </div>
+                    <span className="w-20 text-white text-right">
+                      {item.quantity} pcs
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <label className="font-normal block mt-4">
+                Remarks:
+                <textarea
+                  value={history.remarks ?? "No remarks provided"}
+                  className="w-full border rounded p-2 mt-2 font-normal text-black bg-white"
+                  readOnly
+                />
+              </label>
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() =>
+                    openConfirmModal(
+                      history.id,
+                      index,
+                      history.cart.items,
+                      history.cart.user.name
+                    )
+                  }
+                  style={{
+                    width: "138.509px",
+                    height: "38.234px",
+                    flexShrink: 0,
+                    borderRadius: "5.771px",
+                    background: "#FFF",
+                    boxShadow: "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset",
+                    color: "#8C1931",
+                    textAlign: "center",
+                    textShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
+                    fontFamily: "Jost",
+                    fontSize: "16px",
+                    fontWeight: 700,
+                    lineHeight: 'normal',
+                    fontStyle: "bold",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLButtonElement).style.background = "#03aa6c";
+                    (e.currentTarget as HTMLButtonElement).style.color = "#FFF";
+                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLButtonElement).style.background = "#FFF";
+                    (e.currentTarget as HTMLButtonElement).style.color = "#8C1931";
+                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset";
+                  }}
+                >
+                  CONFIRM
+                </button>
+              </div>
+            </>
+          )}
         </div>
-      )}
+      );
+    })}
+  </div>
+
+  {showModal && (
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+      <div
+        ref={modalRef}
+        className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl text-black"
+      >
+        <h2 className="text-xl font-semibold mb-4">Confirm Request</h2>
+        {selectedItems.length > 0 ? (
+          <>
+            <p className="mb-2">
+              Confirm borrow request from{" "}
+              <span className="font-bold">{activeBorrower}</span>?
+            </p>
+            <p className="mb-2">Selected Items:</p>
+            <ul className="list-disc pl-5 mb-4">
+              {selectedItems.map((item, i) => (
+                <li key={i}>
+                  {item.equipment.name} - {item.quantity} pcs
+                </li>
+              ))}
+            </ul>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  handleApproveCart();
+                  setCheckedItems((prev) => ({
+                    ...prev,
+                    [activeRequestIndex!]: new Set(),
+                  }));
+                  setActiveRequestIndex(null);
+                  setShowModal(false);
+                }}
+                className="px-4 py-2 bg-[#8C1931] text-white rounded hover:bg-[#a31f3c]"
+              >
+                Confirm
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-gray-600 mb-4">
+              Please select at least one item to proceed with confirmation.
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-[#8C1931] text-white rounded hover:bg-[#a31f3c]"
+              >
+                OK
+              </button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
-  );
-};
+  )}
+</div>
+);
+}
 
 export default Equipments;

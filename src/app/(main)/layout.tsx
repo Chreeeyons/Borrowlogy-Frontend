@@ -74,9 +74,9 @@ const Layout = ({ children }: LayoutProps) => {
             overflowY: "auto",
             margin: "0 1rem 1rem 1rem",
             boxShadow: `
-              inset 0px 4px 4px rgba(0, 0, 0, 0.25), 
-              inset 0px 4px 4px rgba(0, 0, 0, 0.25)
-            `, // inner shadow added here
+              inset 0px 4px 5px rgba(0, 0, 0, 0.5), 
+              inset 4px 4px 4px rgba(0, 0, 0, 0.6)
+            `,
           }}
         >
           {children}
