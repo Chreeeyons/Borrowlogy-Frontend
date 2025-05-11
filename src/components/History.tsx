@@ -29,7 +29,7 @@ const History = () => {
               color: '#FFF',
             }}
           >
-            <p className="text-3xl font-semibold tracking-normal">
+            <p className="text-4xl font-semibold tracking-normal">
               Transaction #{history.id}
             </p>
             <p>Date: {new Date(history.borrow_date).toDateString()}</p>

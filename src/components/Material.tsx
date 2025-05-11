@@ -114,25 +114,95 @@ const Material = ({
           )}
 
           {user_type === "admin" ? (
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-white text-[#8C1931] px-5 py-2 rounded hover:bg-gray-300"
-            >
-              Edit
-            </button>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          style={{
+            width: "138.509px",
+            height: "38.234px",
+            flexShrink: 0,
+            borderRadius: "5.771px",
+            background: "#FFF",
+            boxShadow: "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset",
+            color: "#8C1931",
+            textAlign: "center",
+            textShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
+            fontFamily: "Jost",
+            fontSize: "16px",
+            fontWeight: 700,
+            lineHeight: 'normal',
+            fontStyle: "bold",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#03aa6c";
+            (e.currentTarget as HTMLButtonElement).style.color = "#FFF";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#FFF";
+            (e.currentTarget as HTMLButtonElement).style.color = "#8C1931";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset";
+          }}
+        >
+          EDIT
+        </button>
+
           ) : material.quantity > 0 ? (
             <button
-              className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700"
               onClick={handleSave}
+              style={{
+                width: '138.509px',
+                height: '38.234px',
+                flexShrink: 0,
+                borderRadius: '5.771px',
+                background: '#FFF',
+                boxShadow: '0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.7) inset',
+                color: '#8C1931',
+                textAlign: 'center',
+                textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                fontFamily: 'Jost, sans-serif',
+                fontSize: '21.139px',
+                fontStyle: 'normal',
+                fontWeight: 700,
+                lineHeight: 'normal',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#03aa6c';
+                (e.currentTarget as HTMLButtonElement).style.color = '#FFF';
+                (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                  '6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#FFF';
+                (e.currentTarget as HTMLButtonElement).style.color = '#8C1931';
+                (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                  '0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.7) inset';
+              }}
             >
-              Add to Cart
+              ADD
             </button>
           ) : (
             <button
-              className="bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed"
               disabled
+              style={{
+                width: '138.509px',
+                height: '38.234px',
+                flexShrink: 0,
+                borderRadius: '5.771px',
+                background: '#B0B0B0',
+                boxShadow: 'inset 0px 2.886px 2.886px rgba(0, 0, 0, 0.25)',
+                color: '#FFFFFF',
+                textAlign: 'center',
+                textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                fontFamily: 'Jost, sans-serif',
+                fontSize: '21.139px',
+                fontStyle: 'normal',
+                fontWeight: 700,
+                lineHeight: 'normal',
+                cursor: 'not-allowed',
+                opacity: 0.8,
+              }}
             >
-              Add to Cart
+              ADD
             </button>
           )}
         </div>
