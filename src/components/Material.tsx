@@ -64,11 +64,18 @@ const Material = ({
 
   return (
     <div>
-      <div className="p-4 mb-2 bg-[#8C1931] shadow-md flex justify-between items-center rounded-lg">
+<div
+  className="p-4 mb-2 bg-[#83191c] shadow-md flex justify-between items-center rounded-lg"
+  style={{
+    borderRadius: "12px",
+    boxShadow:
+      "inset 0px 2px 4px rgba(0, 0, 0, 0.7), inset 0px 2px 6px rgba(0, 0, 0, 0.2)"
+  }}
+>
         <div>
-          <h2 className="text-white text-xl font-semibold mb-2 tracking-wide">
-            {material.name}
-          </h2>
+        <h2 className="text-white text-3xl font-semibold mb-2 tracking-normal">
+          {material.name}
+        </h2>
           <p className="text-sm font-normal flex items-center gap-2">
             <span
               className={

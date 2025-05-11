@@ -121,7 +121,7 @@ export default function Menu({ userType, style }: MenuProps) {
                 Laboratory Materials
               </Link>
             </li>
-            <li className="mt-80">
+            <li className="mt-70">
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center justify-center gap-2 py-2 rounded font-bold text-white transition-all duration-300 transform hover:scale-105 hover:bg-red-700 hover:shadow-x2"
