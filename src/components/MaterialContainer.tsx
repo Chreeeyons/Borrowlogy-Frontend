@@ -58,12 +58,12 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
         />
 
         {user_type === "borrower" && (
-          <Link href="/cart">
-            <button className="flex items-center gap-2 ml-5 px-8 py-2 bg-[#8C1931] text-white rounded hover:bg-blue-700">
+         <Link href="/cart">
+            <button className="flex items-center gap-2 ml-5 px-8 py-2 bg-[#8C1931] text-white rounded hover:bg-[#661222]">
               <ShoppingCart size={20} />
               Cart
             </button>
-          </Link>
+          </Link>       
         )}
         {user_type === "admin" && (
           <button
