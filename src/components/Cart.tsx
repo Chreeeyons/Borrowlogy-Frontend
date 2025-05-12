@@ -242,7 +242,7 @@ const Cart = () => {
             flexShrink: 0,
             borderRadius: "5.771px",
             background: "#FFF",
-            boxShadow: "0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.7) inset",
+            boxShadow: "0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
             color: "#8C1931",
             textAlign: "center",
             textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -253,7 +253,7 @@ const Cart = () => {
             lineHeight: "normal",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#03aa6c";
+            (e.currentTarget as HTMLButtonElement).style.background = "#5e0708";
             (e.currentTarget as HTMLButtonElement).style.color = "#FFF";
             (e.currentTarget as HTMLButtonElement).style.boxShadow =
               "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
@@ -262,8 +262,9 @@ const Cart = () => {
             (e.currentTarget as HTMLButtonElement).style.background = "#FFF";
             (e.currentTarget as HTMLButtonElement).style.color = "#8C1931";
             (e.currentTarget as HTMLButtonElement).style.boxShadow =
-              "0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.7) inset";
+              "0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25) inset";
           }}
+          disabled={cartItems.items.length === 0}
         >
           SUBMIT
         </button>
