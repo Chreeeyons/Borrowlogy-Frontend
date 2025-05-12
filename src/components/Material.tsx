@@ -59,7 +59,7 @@ const Material = ({
         equipment_id: material.id,
       });
 
-      setSuccessMessage("Item added to cart!");
+      setSuccessMessage("Successfully added to cart!");
 
       setTimeout(() => setSuccessMessage(""), 3000); // Auto-hide
 
