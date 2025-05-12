@@ -49,6 +49,8 @@ const Material = ({
     }
   };
 
+  const [successMessage, setSuccessMessage] = useState("");
+
   const handleSave = async () => {
     try {
       const response = await addtoCart({
@@ -56,7 +58,12 @@ const Material = ({
         quantity: quantity,
         equipment_id: material.id,
       });
-      refreshEquipmentList(); // Refresh the list
+
+      setSuccessMessage("Item added to cart!");
+
+      setTimeout(() => setSuccessMessage(""), 3000); // Auto-hide
+
+      refreshEquipmentList();
     } catch (error) {
       console.error("Error adding equipment:", error);
     }
@@ -64,18 +71,18 @@ const Material = ({
 
   return (
     <div>
-<div
-  className="p-4 mb-2 bg-[#83191c] shadow-md flex justify-between items-center rounded-lg"
-  style={{
-    borderRadius: "12px",
-    boxShadow:
-      "inset 0px 2px 4px rgba(0, 0, 0, 0.7), inset 0px 2px 6px rgba(0, 0, 0, 0.2)"
-  }}
->
+      <div
+        className="p-4 mb-2 bg-[#83191c] shadow-md flex justify-between items-center rounded-lg"
+        style={{
+          borderRadius: "12px",
+          boxShadow:
+            "inset 0px 2px 4px rgba(0, 0, 0, 0.7), inset 0px 2px 6px rgba(0, 0, 0, 0.2)",
+        }}
+      >
         <div>
-        <h2 className="text-white text-3xl font-semibold mb-2 tracking-normal">
-          {material.name}
-        </h2>
+          <h2 className="text-white text-3xl font-semibold mb-2 tracking-normal">
+            {material.name}
+          </h2>
           <p className="text-sm font-normal flex items-center gap-2">
             <span
               className={
@@ -114,91 +121,69 @@ const Material = ({
           )}
 
           {user_type === "admin" ? (
-        <button
-          onClick={() => setIsModalOpen(true)}
-          style={{
-            width: "138.509px",
-            height: "38.234px",
-            flexShrink: 0,
-            borderRadius: "5.771px",
-            background: "#FFF",
-            boxShadow: "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset",
-            color: "#8C1931",
-            textAlign: "center",
-            textShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-            fontFamily: "Jost",
-            fontSize: "16px",
-            fontWeight: 700,
-            lineHeight: 'normal',
-            fontStyle: "bold",
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#03aa6c";
-            (e.currentTarget as HTMLButtonElement).style.color = "#FFF";
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#FFF";
-            (e.currentTarget as HTMLButtonElement).style.color = "#8C1931";
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset";
-          }}
-        >
-          EDIT
-        </button>
-
-          ) : material.quantity > 0 ? (
             <button
-              onClick={handleSave}
+              onClick={() => setIsModalOpen(true)}
               style={{
-                width: '138.509px',
-                height: '38.234px',
+                width: "138.509px",
+                height: "38.234px",
                 flexShrink: 0,
-                borderRadius: '5.771px',
-                background: '#FFF',
-                boxShadow: '0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.7) inset',
-                color: '#8C1931',
-                textAlign: 'center',
-                textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                fontFamily: 'Jost, sans-serif',
-                fontSize: '21.139px',
-                fontStyle: 'normal',
+                borderRadius: "5.771px",
+                background: "#FFF",
+                boxShadow: "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset",
+                color: "#8C1931",
+                textAlign: "center",
+                textShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
+                fontFamily: "Jost",
+                fontSize: "16px",
                 fontWeight: 700,
-                lineHeight: 'normal',
+                lineHeight: "normal",
+                fontStyle: "bold",
               }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#03aa6c';
-                (e.currentTarget as HTMLButtonElement).style.color = '#FFF';
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  "#03aa6c";
+                (e.currentTarget as HTMLButtonElement).style.color = "#FFF";
                 (e.currentTarget as HTMLButtonElement).style.boxShadow =
-                  '6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset';
+                  "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
               }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#FFF';
-                (e.currentTarget as HTMLButtonElement).style.color = '#8C1931';
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  "#FFF";
+                (e.currentTarget as HTMLButtonElement).style.color = "#8C1931";
                 (e.currentTarget as HTMLButtonElement).style.boxShadow =
-                  '0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.7) inset';
+                  "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset";
               }}
             >
-              ADD
+              EDIT
             </button>
+          ) : material.quantity > 0 ? (
+            <div className="flex flex-col items-start">
+              <button
+                className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700"
+                onClick={handleSave}
+              >
+                Add to Cart
+              </button>
+            </div>
           ) : (
             <button
               disabled
               style={{
-                width: '138.509px',
-                height: '38.234px',
+                width: "138.509px",
+                height: "38.234px",
                 flexShrink: 0,
-                borderRadius: '5.771px',
-                background: '#B0B0B0',
-                boxShadow: 'inset 0px 2.886px 2.886px rgba(0, 0, 0, 0.25)',
-                color: '#FFFFFF',
-                textAlign: 'center',
-                textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                fontFamily: 'Jost, sans-serif',
-                fontSize: '21.139px',
-                fontStyle: 'normal',
+                borderRadius: "5.771px",
+                background: "#B0B0B0",
+                boxShadow: "inset 0px 2.886px 2.886px rgba(0, 0, 0, 0.25)",
+                color: "#FFFFFF",
+                textAlign: "center",
+                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                fontFamily: "Jost, sans-serif",
+                fontSize: "21.139px",
+                fontStyle: "normal",
                 fontWeight: 700,
-                lineHeight: 'normal',
-                cursor: 'not-allowed',
+                lineHeight: "normal",
+                cursor: "not-allowed",
                 opacity: 0.8,
               }}
             >
@@ -216,6 +201,18 @@ const Material = ({
           onSave={refreshEquipmentList}
           onDelete={handleDelete}
         />
+      )}
+      {successMessage && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+          <div className="bg-white/70 px-6 py-4 rounded-lg shadow-lg text-center backdrop-blur-sm">
+            <div className="flex flex-col items-center justify-center">
+              <span className="text-3xl text-green-700 mb-2">✓</span>
+              <p className="text-lg font-semibold text-[#04543C]">
+                {successMessage}
+              </p>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
