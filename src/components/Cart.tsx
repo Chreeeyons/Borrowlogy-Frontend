@@ -270,17 +270,16 @@ const Cart = () => {
         </button>
       </div>
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg text-center text-black">
-            <p className="text-lg font-semibold">Submission Successful!</p>
-            <p className="mt-2">Your transaction has been recorded.</p>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="mt-4 px-4 py-2 bg-[#8C1931] text-white rounded"
-            >
-              Close
-            </button>
-          </div>
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded shadow-lg text-center text-black">
+          <p className="text-lg font-semibold">Request Submitted!</p>
+          <p className="mt-2">Your transaction has been recorded.</p>
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="mt-4 px-4 py-2 bg-[#04543C] text-white rounded"
+          >
+            Close
+          </button>
         </div>
       )}
     </div>
