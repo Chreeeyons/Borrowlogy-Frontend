@@ -127,22 +127,22 @@ const Equipments = () => {
             </span>
           </div>
 
-          <table className="w-full mb-6 text-white">
+          <table className="w-full mb-6 text-white table-auto">
             <thead>
-              <tr>
-                <th className="text-left">Material</th>
-                <th>Quantity</th>
-                <th>Date Borrowed</th>
-                <th>Date Returned</th>
+              <tr className="text-left">
+                <th className="px-4 py-2">Material</th>
+                <th className="px-4 py-2">Quantity</th>
+                <th className="px-4 py-2">Date Borrowed</th>
+                <th className="px-4 py-2">Date Returned</th>
               </tr>
             </thead>
             <tbody>
               {selectedTransaction.materials.map((item, index) => (
                 <tr key={index}>
-                  <td className="py-2 cursor-pointer">{item.name}</td>
-                  <td>{item.quantity} pcs</td>
-                  <td>{selectedTransaction.borrowedDate}</td>
-                  <td>{selectedTransaction.returnedDate || "-"}</td>
+                  <td className="px-4 py-2">{item.name}</td>
+                  <td className="px-4 py-2">{item.quantity} pcs</td>
+                  <td className="px-4 py-2">{selectedTransaction.borrowedDate}</td>
+                  <td className="px-4 py-2">{selectedTransaction.returnedDate || "-"}</td>
                 </tr>
               ))}
             </tbody>
@@ -193,12 +193,12 @@ const Equipments = () => {
           </h2>
           <p className="text-md mb-6">{selectedBorrower.email}</p>
 
-          <table className="w-full mb-4 text-white">
+          <table className="w-full mb-4 text-white table-auto">
             <thead>
-              <tr>
-                <th className="text-left">Transaction no.</th>
-                <th>Date Borrowed</th>
-                <th>Status</th>
+              <tr className="text-left">
+                <th className="px-4 py-2">Transaction No.</th>
+                <th className="px-4 py-2">Date Borrowed</th>
+                <th className="px-4 py-2">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -208,9 +208,9 @@ const Equipments = () => {
                   className="cursor-pointer hover:bg-[#a63a4f]"
                   onClick={() => setSelectedTransaction(tx)}
                 >
-                  <td className="py-2">#{tx.transactionId}</td>
-                  <td>{tx.borrowedDate}</td>
-                  <td className={statusColor(!!tx.returnedDate)}>
+                  <td className="px-4 py-2">#{tx.transactionId}</td>
+                  <td className="px-4 py-2">{tx.borrowedDate}</td>
+                  <td className={`px-4 py-2 ${statusColor(!!tx.returnedDate)}`}>
                     {tx.returnedDate ? "Returned" : "Pending"}
                   </td>
                 </tr>
@@ -249,40 +249,40 @@ const Equipments = () => {
       </div>
 
       <div className="bg-[#EEE9E5] rounded-lg shadow-md text-[#8C1931] p-4">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="font-bold text-lg">
-              <th>NAME</th>
-              <th>EMAIL</th>
-              <th>STATUS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredBorrowers.map((borrower, index) => {
-              const status = getOverallStatus(borrower);
-              return (
-                <tr
-                  key={index}
-                  className="hover:bg-gray-200 cursor-pointer"
-                  onClick={() => setSelectedBorrower(borrower)}
-                >
-                  <td className="py-2">{borrower.name}</td>
-                  <td>{borrower.email}</td>
-                  <td className="flex items-center justify-between pr-4">
-                    <span
-                      className={`px-3 py-1 inline-block rounded text-white text-sm ${
-                        status === "RETURNED" ? "bg-green-700" : "bg-yellow-500"
-                      }`}
-                    >
-                      {status}
-                    </span>
-                    <span className="text-[#8C1931] text-4xl">▾</span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <table className="w-full text-left table-auto">
+        <thead>
+          <tr className="font-bold text-lg">
+            <th className="px-4 py-2">NAME</th>
+            <th className="px-4 py-2">EMAIL</th>
+            <th className="px-4 py-2">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredBorrowers.map((borrower, index) => {
+            const status = getOverallStatus(borrower);
+            return (
+              <tr
+                key={index}
+                className="hover:bg-gray-200 cursor-pointer"
+                onClick={() => setSelectedBorrower(borrower)}
+              >
+                <td className="px-4 py-2">{borrower.name}</td>
+                <td className="px-4 py-2">{borrower.email}</td>
+                <td className="px-4 py-2 flex items-center justify-between">
+                  <span
+                    className={`px-3 py-1 inline-block rounded text-white text-sm ${
+                      status === "RETURNED" ? "bg-green-700" : "bg-yellow-500"
+                    }`}
+                  >
+                    {status}
+                  </span>
+                  <span className="text-[#8C1931] text-4xl">▾</span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
       </div>
 
       {/* Add Modal */}
