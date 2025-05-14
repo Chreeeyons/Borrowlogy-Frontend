@@ -265,7 +265,7 @@ const Equipments = () => {
                 >
                   <td className="py-2">{borrower.name}</td>
                   <td>{borrower.email}</td>
-                  <td>
+                  <td className="flex items-center justify-between pr-4">
                     <span
                       className={`px-3 py-1 inline-block rounded text-white text-sm ${
                         status === "RETURNED" ? "bg-green-700" : "bg-yellow-500"
@@ -273,6 +273,7 @@ const Equipments = () => {
                     >
                       {status}
                     </span>
+                    <span className="text-[#8C1931] text-4xl">▾</span>
                   </td>
                 </tr>
               );
