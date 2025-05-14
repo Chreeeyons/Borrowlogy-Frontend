@@ -3,46 +3,67 @@ import { useEffect, useState } from "react";
 import { useHeader } from "@/utils/HeaderContext";
 import { addUser, getUsers } from "@/services/userService";
 
-//PLACEHOLDER ONLY
+// Interfaces
+interface BorrowTransaction {
+  transactionId: number;
+  borrowedDate: string;
+  returnedDate?: string;
+  materials: {
+    name: string;
+    quantity: number;
+  }[];
+  borrowerRemarks?: string;
+  labTechRemarks?: string;
+}
+
+interface Borrower {
+  name: string;
+  email: string;
+  transactions: BorrowTransaction[];
+}
+
 const Equipments = () => {
   const { setHeaderTitle } = useHeader();
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddingNew, setIsAddingNew] = useState(false);
-  const [borrowers, setBorrowers] = useState([
+  const [borrowers, setBorrowers] = useState<Borrower[]>([
     {
-      name: "Chraine Paul Tuazon",
-      email: "cstuazon3@up.edu.ph",
-      borrowHistory: [
+      name: "Ronan L. Alcordo",
+      email: "rlalcordo@up.edu.ph",
+      transactions: [
         {
-          material: "Beaker",
-          quantity: 1,
+          transactionId: 1,
           borrowedDate: "03/25/2025",
           returnedDate: "03/25/2025",
+          materials: [
+            { name: "BEAKER", quantity: 1 },
+            { name: "MICROSCOPE", quantity: 2 },
+            { name: "TEST TUBE", quantity: 4 },
+          ],
+          borrowerRemarks: "",
+          labTechRemarks: "",
         },
         {
-          material: "Microscope",
-          quantity: 2,
+          transactionId: 2,
           borrowedDate: "03/25/2025",
-          returnedDate: "03/25/2025",
-        },
-        {
-          material: "Test Tube",
-          quantity: 4,
-          borrowedDate: "03/25/2025",
-          returnedDate: "03/25/2025",
+          materials: [
+            { name: "BEAKER", quantity: 1 },
+            { name: "MICROSCOPE", quantity: 2 },
+          ],
         },
       ],
-      remarks: "",
     },
   ]);
+
   const [selectedBorrower, setSelectedBorrower] = useState<Borrower | null>(
     null
   );
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<BorrowTransaction | null>(null);
   const [newBorrower, setNewBorrower] = useState({
     name: "",
     email: "",
-    borrowHistory: [],
-    remarks: "",
+    transactions: [] as BorrowTransaction[],
   });
 
   useEffect(() => {
@@ -59,62 +80,51 @@ const Equipments = () => {
     b.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSubmit = async () => {
-    await addUser({
-      email: newBorrower.email,
-      name: newBorrower.name,
-      username: "user_" + newBorrower.name,
-    });
-    // fetchCartData();
-    // setRemarks("");
-    // setIsModalOpen(true); // show modal
-  };
-
-  interface BorrowHistoryItem {
-    material: string;
-    quantity: number;
-    borrowedDate: string;
-    returnedDate?: string;
-  }
-
-  interface Borrower {
-    name: string;
-    email: string;
-    borrowHistory: BorrowHistoryItem[];
-    remarks: string;
-  }
-
-  const getStatus = (user: Borrower): "RETURNED" | "PENDING" => {
-    return user.borrowHistory.every((item) => item.returnedDate)
+  const getOverallStatus = (user: Borrower): "RETURNED" | "PENDING" => {
+    return user.transactions.every((t) => t.returnedDate)
       ? "RETURNED"
       : "PENDING";
   };
 
   const handleAddBorrower = () => {
-    setBorrowers([...borrowers, newBorrower]);
-    setNewBorrower({ name: "", email: "", borrowHistory: [], remarks: "" });
+    setBorrowers([
+      ...borrowers,
+      {
+        ...newBorrower,
+        transactions: [],
+      },
+    ]);
+    setNewBorrower({ name: "", email: "", transactions: [] });
     setIsAddingNew(false);
   };
 
-  // Borrower detail view
-  if (selectedBorrower) {
-    const status = getStatus(selectedBorrower);
+  const statusColor = (returned: boolean) =>
+    returned ? "text-green-800 font-semibold" : "text-yellow-700 font-semibold";
+
+  // Detailed Transaction View
+  if (selectedTransaction && selectedBorrower) {
     return (
       <div className="p-6 text-white">
         <div className="bg-[#8C1931] rounded-lg p-6">
-          <h2 className="text-3xl font-bold flex items-center justify-between">
-            {selectedBorrower.name}
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-3xl font-bold text-white">
+                {selectedBorrower.name}
+              </h2>
+              <p className="text-md">{selectedBorrower.email}</p>
+            </div>
             <span
-              className={`ml-4 px-3 py-1 text-sm rounded ${
-                status === "RETURNED" ? "bg-green-700" : "bg-yellow-500"
+              className={`px-4 py-2 rounded font-bold ${
+                selectedTransaction.returnedDate
+                  ? "bg-green-700"
+                  : "bg-yellow-500"
               }`}
             >
-              {status}
+              {selectedTransaction.returnedDate ? "RETURNED" : "PENDING"}
             </span>
-          </h2>
-          <p className="text-md mb-4">{selectedBorrower.email}</p>
+          </div>
 
-          <table className="w-full mb-4 text-white">
+          <table className="w-full mb-6 text-white">
             <thead>
               <tr>
                 <th className="text-left">Material</th>
@@ -124,34 +134,90 @@ const Equipments = () => {
               </tr>
             </thead>
             <tbody>
-              {selectedBorrower.borrowHistory.map((item, index) => (
+              {selectedTransaction.materials.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.material}</td>
+                  <td className="py-2 cursor-pointer">{item.name}</td>
                   <td>{item.quantity} pcs</td>
-                  <td>{item.borrowedDate}</td>
-                  <td>{item.returnedDate || "—"}</td>
+                  <td>{selectedTransaction.borrowedDate}</td>
+                  <td>{selectedTransaction.returnedDate || "-"}</td>
                 </tr>
               ))}
             </tbody>
           </table>
 
-          <div className="mb-4">
-            <label className="block font-bold mb-2">REMARKS:</label>
-            <textarea
-              className="w-full h-28 p-2 text-white rounded border border-white"
-              value={selectedBorrower.remarks}
-              onChange={(e) =>
-                setSelectedBorrower({
-                  ...selectedBorrower,
-                  remarks: e.target.value,
-                })
-              }
-            />
+          <div className="flex gap-4 mb-4">
+            <div className="flex-1">
+              <h3 className="font-bold mb-2">BORROWER’S REMARKS:</h3>
+              <textarea
+                value={selectedTransaction.borrowerRemarks || ""}
+                readOnly
+                className="w-full h-28 p-2 rounded text-black bg-white"
+              />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold mb-2">LAB TECH’S REMARKS:</h3>
+              <textarea
+                value={selectedTransaction.labTechRemarks || ""}
+                onChange={(e) =>
+                  setSelectedTransaction({
+                    ...selectedTransaction,
+                    labTechRemarks: e.target.value,
+                  })
+                }
+                className="w-full h-28 p-2 rounded text-black bg-white"
+              />
+            </div>
           </div>
 
           <button
+            onClick={() => setSelectedTransaction(null)}
+            className="mt-2 text-white bg-[#8C1931] px-6 py-2 rounded shadow-md border border-white hover:bg-white hover:text-[#8C1931]"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Borrower Detail View
+  if (selectedBorrower) {
+    return (
+      <div className="p-6 text-white">
+        <div className="bg-[#8C1931] rounded-lg p-6">
+          <h2 className="text-3xl font-bold text-white">
+            {selectedBorrower.name}
+          </h2>
+          <p className="text-md mb-6">{selectedBorrower.email}</p>
+
+          <table className="w-full mb-4 text-white">
+            <thead>
+              <tr>
+                <th className="text-left">Transaction no.</th>
+                <th>Date Borrowed</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedBorrower.transactions.map((tx, index) => (
+                <tr
+                  key={index}
+                  className="cursor-pointer hover:bg-[#a63a4f]"
+                  onClick={() => setSelectedTransaction(tx)}
+                >
+                  <td className="py-2">#{tx.transactionId}</td>
+                  <td>{tx.borrowedDate}</td>
+                  <td className={statusColor(!!tx.returnedDate)}>
+                    {tx.returnedDate ? "Returned" : "Pending"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <button
             onClick={() => setSelectedBorrower(null)}
-            className="text-[#8C1931] bg-white px-6 py-2 rounded shadow-md"
+            className="mt-4 text-white bg-[#8C1931] px-6 py-2 rounded shadow-md border border-white hover:bg-white hover:text-[#8C1931]"
           >
             BACK
           </button>
@@ -160,7 +226,7 @@ const Equipments = () => {
     );
   }
 
-  // Main list view
+  // Masterlist View
   return (
     <div className="relative p-6 text-white">
       <div className="flex items-center mb-4">
@@ -173,9 +239,9 @@ const Equipments = () => {
         />
         <button
           onClick={() => setIsAddingNew(true)}
-          className="ml-2 bg-[#8C1931] px-4 py-2 rounded shadow-md"
+          className="ml-2 bg-[#8C1931] text-white px-4 py-2 rounded shadow-md"
         >
-          <span>+</span> ADD
+          + ADD
         </button>
       </div>
 
@@ -190,7 +256,7 @@ const Equipments = () => {
           </thead>
           <tbody>
             {filteredBorrowers.map((borrower, index) => {
-              const status = getStatus(borrower);
+              const status = getOverallStatus(borrower);
               return (
                 <tr
                   key={index}
@@ -215,7 +281,7 @@ const Equipments = () => {
         </table>
       </div>
 
-      {/* Modal */}
+      {/* Add Modal */}
       {isAddingNew && (
         <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
           <div className="text-[#8C1931] rounded-lg p-6 w-full max-w-md mx-auto bg-white">
