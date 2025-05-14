@@ -12,7 +12,12 @@ export const addtoCart = async (cartItemData: {
       body: JSON.stringify(cartItemData),
     });
 
-    if (!response.ok) throw new Error("Failed to add to cart");
+    if (!response.ok) {
+      const errorText = await response.text(); // read full response error body
+      console.error("Server responded with error:", response.status, errorText);
+      throw new Error("Failed to add to cart");
+    }
+
     return await response.json();
   } catch (error) {
     console.error("Error adding equipment:", error);

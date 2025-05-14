@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useHeader } from "@/utils/HeaderContext";
+import { addUser, getUsers } from "@/services/userService";
 
 //PLACEHOLDER ONLY
 const Equipments = () => {
@@ -12,28 +13,62 @@ const Equipments = () => {
       name: "Chraine Paul Tuazon",
       email: "cstuazon3@up.edu.ph",
       borrowHistory: [
-        { material: "Beaker", quantity: 1, borrowedDate: "03/25/2025", returnedDate: "03/25/2025" },
-        { material: "Microscope", quantity: 2, borrowedDate: "03/25/2025", returnedDate: "03/25/2025" },
-        { material: "Test Tube", quantity: 4, borrowedDate: "03/25/2025", returnedDate: "03/25/2025" }
+        {
+          material: "Beaker",
+          quantity: 1,
+          borrowedDate: "03/25/2025",
+          returnedDate: "03/25/2025",
+        },
+        {
+          material: "Microscope",
+          quantity: 2,
+          borrowedDate: "03/25/2025",
+          returnedDate: "03/25/2025",
+        },
+        {
+          material: "Test Tube",
+          quantity: 4,
+          borrowedDate: "03/25/2025",
+          returnedDate: "03/25/2025",
+        },
       ],
-      remarks: ""
-    }
+      remarks: "",
+    },
   ]);
-  const [selectedBorrower, setSelectedBorrower] = useState<Borrower | null>(null);
+  const [selectedBorrower, setSelectedBorrower] = useState<Borrower | null>(
+    null
+  );
   const [newBorrower, setNewBorrower] = useState({
     name: "",
     email: "",
     borrowHistory: [],
-    remarks: ""
+    remarks: "",
   });
 
   useEffect(() => {
+    getUsersData();
     setHeaderTitle("BORROWER'S MASTERLIST");
   }, []);
+
+  const getUsersData = async () => {
+    const response = await getUsers();
+    console.log(response);
+  };
 
   const filteredBorrowers = borrowers.filter((b) =>
     b.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleSubmit = async () => {
+    await addUser({
+      email: newBorrower.email,
+      name: newBorrower.name,
+      username: "user_" + newBorrower.name,
+    });
+    // fetchCartData();
+    // setRemarks("");
+    // setIsModalOpen(true); // show modal
+  };
 
   interface BorrowHistoryItem {
     material: string;
@@ -50,7 +85,9 @@ const Equipments = () => {
   }
 
   const getStatus = (user: Borrower): "RETURNED" | "PENDING" => {
-    return user.borrowHistory.every((item) => item.returnedDate) ? "RETURNED" : "PENDING";
+    return user.borrowHistory.every((item) => item.returnedDate)
+      ? "RETURNED"
+      : "PENDING";
   };
 
   const handleAddBorrower = () => {
@@ -67,9 +104,11 @@ const Equipments = () => {
         <div className="bg-[#8C1931] rounded-lg p-6">
           <h2 className="text-3xl font-bold flex items-center justify-between">
             {selectedBorrower.name}
-            <span className={`ml-4 px-3 py-1 text-sm rounded ${
-              status === "RETURNED" ? "bg-green-700" : "bg-yellow-500"
-            }`}>
+            <span
+              className={`ml-4 px-3 py-1 text-sm rounded ${
+                status === "RETURNED" ? "bg-green-700" : "bg-yellow-500"
+              }`}
+            >
               {status}
             </span>
           </h2>
@@ -102,7 +141,10 @@ const Equipments = () => {
               className="w-full h-28 p-2 text-white rounded border border-white"
               value={selectedBorrower.remarks}
               onChange={(e) =>
-                setSelectedBorrower({ ...selectedBorrower, remarks: e.target.value })
+                setSelectedBorrower({
+                  ...selectedBorrower,
+                  remarks: e.target.value,
+                })
               }
             />
           </div>
@@ -177,7 +219,9 @@ const Equipments = () => {
       {isAddingNew && (
         <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
           <div className="text-[#8C1931] rounded-lg p-6 w-full max-w-md mx-auto bg-white">
-            <h2 className="text-2xl font-bold mb-4 text-center">Add New Borrower</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center">
+              Add New Borrower
+            </h2>
 
             <div className="mb-4">
               <label className="block mb-1">Name:</label>
@@ -185,7 +229,9 @@ const Equipments = () => {
                 type="text"
                 className="w-full p-2 text-black rounded border border-[#8C1931]"
                 value={newBorrower.name}
-                onChange={(e) => setNewBorrower({ ...newBorrower, name: e.target.value })}
+                onChange={(e) =>
+                  setNewBorrower({ ...newBorrower, name: e.target.value })
+                }
               />
             </div>
 
@@ -195,7 +241,9 @@ const Equipments = () => {
                 type="email"
                 className="w-full p-2 text-black rounded border border-[#8C1931]"
                 value={newBorrower.email}
-                onChange={(e) => setNewBorrower({ ...newBorrower, email: e.target.value })}
+                onChange={(e) =>
+                  setNewBorrower({ ...newBorrower, email: e.target.value })
+                }
               />
             </div>
 
@@ -207,7 +255,10 @@ const Equipments = () => {
                 Cancel
               </button>
               <button
-                onClick={handleAddBorrower}
+                onClick={() => {
+                  handleAddBorrower();
+                  handleSubmit();
+                }}
                 className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700"
               >
                 Save
