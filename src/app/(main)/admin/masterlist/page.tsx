@@ -101,6 +101,9 @@ const Equipments = () => {
   const statusColor = (returned: boolean) =>
     returned ? "text-green-800 font-semibold" : "text-yellow-700 font-semibold";
 
+  const buttonBase = "px-6 py-2 rounded shadow-md font-bold transition-colors duration-300";
+  const buttonPrimary = `${buttonBase} bg-white text-[#8C1931] hover:bg-green-600 hover:text-white`;
+
   // Detailed Transaction View
   if (selectedTransaction && selectedBorrower) {
     return (
@@ -171,7 +174,7 @@ const Equipments = () => {
 
           <button
             onClick={() => setSelectedTransaction(null)}
-            className="mt-2 text-white bg-[#8C1931] px-6 py-2 rounded shadow-md border border-white hover:bg-white hover:text-[#8C1931]"
+            className="bg-white text-[#8C1931] px-6 py-2 rounded shadow-md font-bold hover:bg-green-600 hover:text-white transition-colors duration-300"
           >
             SAVE
           </button>
@@ -217,8 +220,8 @@ const Equipments = () => {
 
           <button
             onClick={() => setSelectedBorrower(null)}
-            className="mt-4 text-white bg-[#8C1931] px-6 py-2 rounded shadow-md border border-white hover:bg-white hover:text-[#8C1931]"
-          >
+            className="bg-white text-[#8C1931] px-6 py-2 rounded shadow-md font-bold hover:bg-green-600 hover:text-white transition-colors duration-300 mt-4"
+            >
             BACK
           </button>
         </div>
