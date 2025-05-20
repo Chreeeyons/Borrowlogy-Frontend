@@ -44,6 +44,17 @@ const MaterialContainer = ({ user_type }: { user_type: string }) => {
       )
     );
   }, [searchTerm, equipmentList]);
+  // TODO: Replace the following line with the actual cart retrieval logic (e.g., from context, props, or state)
+    const cart = [
+      { id: 1, name: "Item 1" },
+      { id: 2, name: "Item 2" },
+      { id: 3, name: "Item 3" },
+      { id: 1, name: "Item 4" },
+      { id: 2, name: "Item 5" },
+      { id: 3, name: "Item 6" }
+    ]; // Placeholder: replace with actual cart data source
+    const cartCount = cart.length;
+    console.log("Cart Count:", cartCount);
 
   return (
     <div className="p-1 w-full max-w-full">
