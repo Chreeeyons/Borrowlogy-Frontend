@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { LogOut } from 'lucide-react';
+import { LogOut, FlaskConical } from 'lucide-react';
 import { FiBox, FiShoppingCart, FiClock, FiLogOut, FiUsers, FiList } from "react-icons/fi";
 import { usePathname } from 'next/navigation';
 import { GiMicroscope } from "react-icons/gi";
@@ -69,6 +69,7 @@ const pathname = usePathname();
         <ul className="flex flex-col items-start space-y-6 text-left font-semibold text-[#FFFFFF] text-[14px] font-['Jost']">
           {[
             { href: "/equipment", icon: <GiMicroscope className="text-lg" />, label: "LAB MATERIALS" },
+            { href: "/chemicals", icon: <FlaskConical className="text-lg" />, label: "CHEMICALS" },
             { href: "/cart", icon: <FiShoppingCart className="text-lg" />, label: "CART" },
             { href: "/history", icon: <FiClock className="text-lg" />, label: "HISTORY LOG" },
           ].map((item) => (
@@ -122,6 +123,7 @@ const pathname = usePathname();
             { href: "/admin/requests", label: "REQUESTS", icon: <FiUsers className="text-lg" /> },
             { href: "/admin/masterlist", label: "MASTERLIST", icon: <FiList className="text-lg" /> },
             { href: "/admin/equipment", label: "LAB MATERIALS", icon: <GiMicroscope className="text-lg" /> },
+            { href: "/admin/chemicals", label: "CHEMICALS", icon: <FlaskConical className="text-lg" /> },
           ].map((item) => (
             <li key={item.href} className="w-full pb-2 mt-2 first:mt-6">
               <Link
