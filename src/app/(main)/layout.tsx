@@ -51,7 +51,7 @@ const Layout = ({ children }: LayoutProps) => {
           style={{
             borderRadius: "20px", 
             gridArea: "header",
-            height: "90px",
+            height: "80px",
             boxShadow: `
               inset 0px 4px 4px rgba(0, 0, 0, 0.25), 
               inset 0px 4px 4px rgba(0, 0, 0, 0.25)
@@ -63,21 +63,19 @@ const Layout = ({ children }: LayoutProps) => {
 
         {/* Main Content */}
         <main
-          className="p-6 m-3 bg-white rounded-lg shadow-3xl text-base leading-relaxed"
-          style={{
-            borderRadius: "20px",
-            gridArea: "main",
-            display: "flex",
-            flexDirection: "column",
-            height: "calc(100vh - 125px)",
-            maxHeight: "calc(100vh - 70px)",
-            overflowY: "auto",
-            margin: "0 1rem 1rem 1rem",
-            boxShadow: `
-              inset 0px 4px 5px rgba(0, 0, 0, 0.5), 
-              inset 4px 4px 4px rgba(0, 0, 0, 0.6)
-            `,
-          }}
+          className="p-6 m-2 bg-white rounded-lg shadow-3xl text-base leading-relaxed"
+        style={{
+          borderRadius: "20px",
+          gridArea: "main",
+          display: "flex",
+          flexDirection: "column",
+          height: "calc(100vh - 125px)",
+          maxHeight: "calc(100vh - 70px)",
+          overflowY: "auto",
+          margin: "0 1rem 0rem 1rem",
+          boxShadow: "0px 0px 20px rgba(0, 0, 0, 1)"
+
+        }}
         >
           {children}
         </main>

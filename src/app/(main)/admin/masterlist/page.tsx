@@ -68,7 +68,7 @@ const Equipments = () => {
 
   useEffect(() => {
     getUsersData();
-    setHeaderTitle("BORROWER'S MASTERLIST");
+    setHeaderTitle("Borrower's Masterlist");
   }, []);
 
   const getUsersData = async () => {
@@ -231,21 +231,59 @@ const Equipments = () => {
 
   // Masterlist View
   return (
-    <div className="relative p-6 text-white">
-      <div className="flex items-center mb-4">
-        <input
-          type="text"
-          placeholder="Search"
-          className="flex-grow p-2 rounded text-black border-2 border-gray-300"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+<div className="relative p-6 text-white">
+  <div className="flex items-center mb-4 w-full relative">
+    {/* Heroicons magnifying glass */}
+    <div className="absolute left-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-5 h-5 text-gray-500"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"
         />
-        <button
-          onClick={() => setIsAddingNew(true)}
-          className="ml-2 bg-[#8C1931] text-white px-4 py-2 rounded shadow-md"
-        >
-          + ADD
-        </button>
+      </svg>
+    </div>
+
+    <input
+      type="text"
+      placeholder="Search for borrowers..."
+      className="w-full pl-10 pr-3 py-2 rounded-[20px] bg-[#E3E1DD] outline-none text-black"
+      style={{
+        boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset',
+      }}
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+      <button
+        onClick={() => setIsAddingNew(true)}
+        className="flex items-center gap-2 ml-5 px-8 py-2 text-white rounded-[10px] font-bold transition duration-300 ease-in-out"
+        style={{
+          backgroundColor: '#8C1931',
+          boxShadow: 'inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)',
+          fontFamily: 'Jost, sans-serif',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.backgroundColor = '#7A1729';
+          e.currentTarget.style.boxShadow =
+            '0 0 12px 3px rgba(140, 25, 49, 0.75), inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
+          e.currentTarget.style.transform = 'scale(1.05)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.backgroundColor = '#8C1931';
+          e.currentTarget.style.boxShadow =
+            'inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
+      >
+        <span className="text-lg">+</span> Add
+      </button>
       </div>
 
       <div className="bg-[#EEE9E5] rounded-lg shadow-md text-[#8C1931] p-4">

@@ -7,7 +7,7 @@ const Equipments = () => {
   const { setHeaderTitle } = useHeader();
 
   useEffect(() => {
-    setHeaderTitle("CART");
+    setHeaderTitle("Cart");
   }, []);
 
   return null; // ✅ Ensures it doesn't break React rules

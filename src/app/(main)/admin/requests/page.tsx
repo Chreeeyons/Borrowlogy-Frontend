@@ -43,7 +43,7 @@ const Equipments = () => {
   ];
 
   useEffect(() => {
-    setHeaderTitle("BORROWER'S REQUESTS");
+    setHeaderTitle("Borrower's Requests");
   }, []);
 
   useEffect(() => {
@@ -157,24 +157,72 @@ const Equipments = () => {
     });
     handleGetAllHistory();
   };
-  return (
+    return (
     <div id="laboratory-materials" className="section">
       <div className="flex items-center space-x-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search Borrower..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="p-2 border rounded-md w-full max-w-2xl"
+        {/* Search Bar */}
+        <div className="relative w-full max-w-lg">
+          {/* Magnifying Glass Icon */}
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5 text-gray-500"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"
+              />
+            </svg>
+          </div>
+
+    {/* Seach Borrower text */}
+      <input
+        type="text"
+        placeholder="Search Borrower..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="pl-10 pr-3 py-2 rounded-[20px] bg-[#E3E1DD] outline-none text-black w-full"
+        style={{
+          width: "650px",   
+          boxShadow: 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
+        }}
         />
-        <select
-          className="p-2 border rounded-md ml-21"
-          value={sortOrder}
-          onChange={(e) => handleSortChange(e.target.value)}
-        >
-          <option value="asc">Sort by Date (Oldest to Newest)</option>
-          <option value="desc">Sort by Date (Newest to Oldest)</option>
-        </select>
+        </div>
+      <select
+        className="ml-35 px-6 py-2 text-black rounded-[10px] transition duration-300 ease-in-out cursor-pointer"
+      style={{
+        backgroundColor: '#E3E1DD',
+        boxShadow: `
+          inset 0px 3px 3px 0px rgba(0, 0, 0, 0.25), 
+        `,
+        fontFamily: 'Jost, sans-serif',
+        fontWeight: 'bold'
+      }}
+        value={sortOrder}
+        onChange={(e) => handleSortChange(e.target.value)}
+        onMouseEnter={e => {
+          e.currentTarget.style.backgroundColor = '#7A1729';
+          e.currentTarget.style.color = 'white'; 
+          e.currentTarget.style.boxShadow =
+            '0 0 12px 3px rgba(140, 25, 49, 0.75), inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
+          e.currentTarget.style.transform = 'scale(1.05)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.backgroundColor = '#E3E1DD';
+          e.currentTarget.style.color = 'black';
+          e.currentTarget.style.boxShadow =
+            'inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
+      >
+        <option value="asc">Sort by Date (Oldest to Newest)</option>
+        <option value="desc">Sort by Date (Newest to Oldest)</option>
+      </select>
       </div>
 
       <div className="space-y-4">
@@ -184,11 +232,11 @@ const Equipments = () => {
             <div
               key={index}
               style={{
-                backgroundColor: "#83191c",
+                backgroundColor: "#EEE9E5",
                 borderRadius: "17px",
-                boxShadow: "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset",
+                boxShadow: "4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset",
                 padding: "1rem",
-                color: "#FFF",
+                color: "#000000",
                 cursor: "pointer",
               }}
             >
@@ -203,9 +251,9 @@ const Equipments = () => {
                   <p className="text-sm font-normal tracking-wider mt-1">
                     {history.cart.user.email}
                   </p>
-                  <p className="text-xs font-light mt-1">
-                    Date: {new Date(history.borrow_date).toDateString()}
-                  </p>
+                <p className="text-xs font-bold mt-1">
+                  Date: {new Date(history.borrow_date).toLocaleString()}
+                </p>
                 </div>
                 <div className="ml-2">
                   {isExpanded ? (
@@ -240,7 +288,7 @@ const Equipments = () => {
                     />
                     <label
                       htmlFor={`check-all-${index}`}
-                      className="text-white tracking-wide ml-2"
+                      className="text-black font-bold tracking-wide ml-2"
                       onClick={(e) => e.stopPropagation()}
                     >
                       Select All Items
@@ -268,24 +316,36 @@ const Equipments = () => {
                           />
                           <label
                             htmlFor={`item-${index}-${itemIndex}`}
-                            className="text-white tracking-wide"
+                            className="text-black tracking-normal"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            {item.equipment.name.toUpperCase()}
+                            {item.equipment.name.toLowerCase()}
                           </label>
                         </div>
-                        <span className="w-20 text-white text-right">
+                        <span className="w-20 text-black font-bold text-right">
                           {item.quantity} pcs
                         </span>
                       </li>
                     ))}
                   </ul>
-                  <label className="font-normal block mt-4">
+                  <label className="font-bold block mt-4 text-black">
                     Remarks:
                     <textarea
                       value={history.remarks ?? "No remarks provided"}
-                      className="w-full border rounded p-2 mt-2 font-normal text-black bg-white"
                       readOnly
+                      style={{
+                        width: '100%',
+                        height: '100px',
+                        borderRadius: '12px',
+                        background: '#FFF',
+                        boxShadow: '3px 3px 2.886px 0px rgba(0, 0, 0, 0.25) inset',
+                        padding: '0.5rem',
+                        marginTop: '0.5rem',
+                        color: '#000',
+                        fontWeight: '400',
+                        fontFamily: 'inherit',
+                        resize: 'none',
+                      }}
                     />
                   </label>
                   <div className="flex justify-end mt-4">
@@ -299,13 +359,13 @@ const Equipments = () => {
                         )
                       }
                       style={{
-                        width: "138.509px",
+                        width: "130px",
                         height: "38.234px",
                         flexShrink: 0,
-                        borderRadius: "5.771px",
+                        borderRadius: "6px",
                         background: "#FFF",
-                        boxShadow: "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset",
-                        color: "#8C1931",
+                        boxShadow: "4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset",
+                        color: "#03aa6c",
                         textAlign: "center",
                         textShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
                         fontFamily: "Jost",
@@ -328,12 +388,12 @@ const Equipments = () => {
                           e.currentTarget as HTMLButtonElement
                         ).style.background = "#FFF";
                         (e.currentTarget as HTMLButtonElement).style.color =
-                          "#8C1931";
+                          "#03aa6c";
                         (e.currentTarget as HTMLButtonElement).style.boxShadow =
-                          "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset";
+                          "4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset";
                       }}
                     >
-                      CONFIRM
+                      Confirm
                     </button>
                   </div>
                 </>

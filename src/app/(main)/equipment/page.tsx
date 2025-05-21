@@ -9,7 +9,7 @@ const Equipments = () => {
   const { setHeaderTitle } = useHeader();
 
   useEffect(() => {
-    setHeaderTitle("LABORATORY MATERIALS");
+    setHeaderTitle("Laboratory Materials");
   }, []);
   return null;
 };

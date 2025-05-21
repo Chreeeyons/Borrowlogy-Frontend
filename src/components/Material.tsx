@@ -61,13 +61,7 @@ const Material = ({
       });
 
       setSuccessMessage("Successfully added to cart!");
-<<<<<<< HEAD
-
       setTimeout(() => setSuccessMessage(""), 3000); // Auto-hide
-
-=======
-      setTimeout(() => setSuccessMessage(""), 3000); // Auto-hide
->>>>>>> 4b07b6a ([fix][janna] allow deleting and typing new quantity in the input field)
       refreshEquipmentList();
     } catch (error) {
       console.error("Error adding equipment:", error);
@@ -111,12 +105,6 @@ const Material = ({
                 -
               </button>
               <input
-<<<<<<< HEAD
-                type="text"
-                value={quantity}
-                readOnly
-                className="w-12 h-9 text-center font-bold bg-gray-200 text-[#8C1931]"
-=======
                 type="number"
                 value={quantity !== null ? quantity : ""}
                 min={1}
@@ -139,7 +127,6 @@ const Material = ({
                 [&::-webkit-outer-spin-button]:appearance-none 
                 [&::-webkit-inner-spin-button]:appearance-none 
                 [-moz-appearance:textfield]"
->>>>>>> 4b07b6a ([fix][janna] allow deleting and typing new quantity in the input field)
               />
               <button
                 onClick={handleIncrease}

@@ -15,38 +15,44 @@ const History = () => {
   }, []);
 
   return (
-    <div id="history">
-      {/* Placeholder for multiple history entries */}
-      <div className="space-y-4">
-        {historyData.map((history: any, index: any) => (
-          <div
-            key={index}
-            style={{
-              backgroundColor: '#83191c',
-              borderRadius: '20px',
-              boxShadow: '6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset',
-              padding: '1rem',
-              color: '#FFF',
-            }}
-          >
-            <p className="text-4xl font-semibold tracking-normal">
-              Transaction #{history.id}
-            </p>
-            <p>Date: {new Date(history.borrow_date).toDateString()}</p>
+<div id="history">
+  <div className="space-y-4">
+    {historyData.map((history: any, index: any) => (
+      <div
+        key={index}
+        style={{
+          backgroundColor: '#EEE9E5',
+          borderRadius: '20px',
+          boxShadow: '4px 4px 5px 0px rgba(0, 0, 0, 0.5) inset',
+          padding: '1rem',
+          color: '#000000',
+        }}
+      >
+        <p className="text-4xl font-semibold tracking-normal">
+          Transaction #{history.id}
+        </p>
 
-            {/* Placeholder list of items */}
-            <ul className="mt-2 list-disc pl-5">
-              {history.cart.items.map((item: any, itemIndex: any) => (
-                <li className="py-2 flex items-center" key={itemIndex}>
-                  <span className="w-64 truncate">{item.equipment.name}</span>
-                  <span className="w-20 text-right">{item.quantity} pcs</span>
-                </li>
-              ))}
-            </ul>
+        <p className="text-base">
+          <span className="font-bold">Date:</span>{' '}
+          {new Date(history.borrow_date).toDateString()}{' '}
+          <span className="text-sm text-gray-600">
+            ({new Date(history.borrow_date).toLocaleTimeString()})
+          </span>
+        </p>
+
+        <ul className="mt-2 space-y-1 pl-6">
+          {history.cart.items.map((item: any, itemIndex: any) => (
+            <li className="flex items-center gap-2" key={itemIndex}>
+              <span className="w-2 h-2 rounded-full bg-[#5e0708] mt-[2px]"></span>
+              <span className="w-64 truncate font-semibold">{item.equipment.name}</span>
+              <span className="w-20 text-right">{item.quantity} pcs</span>
+            </li>
+          ))}
+        </ul>
 
             {/* Styled remarks */}
-            <label className="font-bold block mt-4 text-white">
-              REMARKS:
+            <label className="font-bold block mt-4 text-black">
+              Remarks:
               <textarea
                 value={
                   history.remarks ? history.remarks : 'No remarks provided'
@@ -55,7 +61,7 @@ const History = () => {
                 style={{
                   width: '100%',
                   height: '100px',
-                  borderRadius: '10px',
+                  borderRadius: '12px',
                   background: '#FFF',
                   boxShadow: '3px 3px 2.886px 0px rgba(0, 0, 0, 0.25) inset',
                   padding: '0.5rem',

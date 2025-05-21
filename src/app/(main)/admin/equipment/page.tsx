@@ -6,7 +6,7 @@ import {useHeader} from "@/utils/HeaderContext";
 const Equipments = () => {
   const { setHeaderTitle } = useHeader();
   useEffect(() => {
-    setHeaderTitle("LABORATORY MATERIALS");
+    setHeaderTitle("Laboratory Materials");
   }
   , []);
   return (

@@ -3,6 +3,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { LogOut } from 'lucide-react';
+import { FiBox, FiShoppingCart, FiClock, FiLogOut, FiUsers, FiList } from "react-icons/fi";
+import { usePathname } from 'next/navigation';
+import { GiMicroscope } from "react-icons/gi";
+
+
 
 interface MenuProps {
   userType: 'admin' | 'borrower';
@@ -14,6 +19,7 @@ export default function Menu({ userType, style }: MenuProps) {
   const goTo = (path: string) => {
     router.push(path);
   };
+const pathname = usePathname();
 
   const handleLogout = async () => {
     localStorage.clear();
@@ -33,122 +39,133 @@ export default function Menu({ userType, style }: MenuProps) {
     >
       {/* MENU Heading */}
       <div
-        className="w-64 bg-red-900 text-white p-4 mt-3 shadow-lg text-center flex items-center justify-center"
+        className="w-64 text-white p-4 mt-3 text-center flex items-center justify-center"
         style={{
-          height: "90px",
+          height: "80px",
           borderRadius: "20px",
-          boxShadow: `inset 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 4px 4px rgba(0, 0, 0, 0.25)`
+          backgroundColor: "transparent",
+          boxShadow: "inset 0 4px 8px rgba(0, 0, 0, 0.3)",
         }}
       >
-        <h1 className="text-5xl font-bold tracking-wider text-shadow">MENU</h1>
+        <img
+        src="/images/logo.png"
+          alt="App Logo"
+          style={{ height: "70px", maxWidth: "100%", objectFit: "contain" }}
+        />
       </div>
 
       {/* Menu Items */}
       <div
-        className="w-64 bg-red-900 text-white p-5 mb-3 h-[calc(100vh-7.5rem)] shadow-lg overflow-hidden flex flex-col justify-between"
+        className="w-64 text-white p-5 mb-3 h-[calc(100vh-7.5rem)] shadow-lg overflow-hidden flex flex-col justify-between"
         style={{
           marginTop: "1rem",
           borderRadius: "20px",
-          boxShadow: `inset 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 4px 4px rgba(0, 0, 0, 0.25)`
+          backgroundColor: "transparent",
+          boxShadow: "inset 0 4px 8px rgba(0, 0, 0, 0.3)",
         }}
       >
-        {/* Menu Links */}
-        {userType === "borrower" && (
-          <ul className="flex flex-col items-center space-y-6 text-center font-semibold text-[#FFFFFF] text-[14px] font-['Jost']">
-            <li className="w-full border-b border-[#82181a] pb-2 mt-6">
+      {/* Menu Links */}
+      {userType === "borrower" && (
+        <ul className="flex flex-col items-start space-y-6 text-left font-semibold text-[#FFFFFF] text-[14px] font-['Jost']">
+          {[
+            { href: "/equipment", icon: <GiMicroscope className="text-lg" />, label: "LAB MATERIALS" },
+            { href: "/cart", icon: <FiShoppingCart className="text-lg" />, label: "CART" },
+            { href: "/history", icon: <FiClock className="text-lg" />, label: "HISTORY LOG" },
+          ].map((item) => (
+            <li key={item.href} className="w-full  pb-2 mt-2 first:mt-2">
               <Link
-                href="/equipment"
-                className="block py-2 px-4 w-full hover:bg-[#5e0708] rounded-md transition-all duration-200"
+                href={item.href}
+                className={`flex items-center gap-3 py-2 px-4 w-full rounded-md transition-all duration-200 ${
+                  pathname === item.href ? "bg-[#5e0708]" : "hover:bg-[#5e0708]"
+                }`}
               >
-                LAB MATERIALS
+                {item.icon}
+                {item.label}
               </Link>
             </li>
-            <li className="w-full border-b border-[#82181a] pb-2">
-              <Link
-                href="/cart"
-                className="block py-2 px-4 w-full hover:bg-[#5e0708] rounded-md transition-all duration-200"
-              >
-                CART
-              </Link>
-            </li>
-            <li className="w-full border-b border-[#82181a] pb-2">
-              <Link
-                href="/history"
-                className="block py-2 px-4 w-full hover:bg-[#5e0708] rounded-md transition-all duration-200"
-              >
-                HISTORY LOG
-              </Link>
-            </li>
-            <li className="pt-4 mt-45 flex justify-center">
-              <div className="w-64"> {/* Adjust width here, e.g., w-64 (16rem) */}
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded font-bold text-white transition-all duration-300 transform hover:scale-105 hover:bg-red-700 hover:shadow-xl"
-                  style={{
-                    backgroundColor: "#5e0708",
-                    boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.4)",
-                    fontFamily: "Jost, sans-serif",
-                  }}
-                >
-                  <LogOut size={20} />
-                  LOG OUT
-                </button>
-              </div>
-            </li>
-          </ul>
-        )}
-
-      {/* Admin Menu Links */}
-      {userType === "admin" && (
-        <ul className="flex flex-col items-center space-y-6 text-center font-semibold text-[#FFFFFF] text-[14px] font-['Jost']">
-          <li className="w-full border-b border-[#82181a] pb-2 mt-6">
-            <Link
-              href="/admin/requests"
-              className="block py-2 px-4 w-full hover:bg-[#5e0708] rounded-md transition-all duration-200"
-            >
-              BORROWER'S REQUEST
-            </Link>
-          </li>
-          <li className="w-full border-b border-[#82181a] pb-2">
-            <Link
-              href="/admin/masterlist"
-              className="block py-2 px-4 w-full hover:bg-[#5e0708] rounded-md transition-all duration-200"
-            >
-              BORROWER'S MASTERLIST
-            </Link>
-          </li>
-          <li className="w-full border-b border-[#82181a] pb-2">
-            <Link
-              href="/admin/equipment"
-              className="block py-2 px-4 w-full hover:bg-[#5e0708] rounded-md transition-all duration-200"
-            >
-              LAB MATERIALS
-            </Link>
-          </li>
-          <li className="pt-4 mt-40 flex justify-center">
+          ))}
+          <li className="pt-4 mt-45 flex justify-center w-full">
             <div className="w-64">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded font-bold text-white transition-all duration-300 transform hover:scale-105 hover:bg-red-700 hover:shadow-xl"
-                style={{
-                  backgroundColor: "#5e0708",
-                  boxShadow:
-                    "0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.4)",
-                  fontFamily: "Jost, sans-serif",
-                }}
-              >
-                <LogOut size={20} />
-                LOG OUT
-              </button>
+      <button
+        onClick={handleLogout}
+        className="w-full flex items-center justify-start gap-3 py-2 px-4 rounded font-bold text-white transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+        style={{
+          borderRadius: "20px",
+          height: "45px",
+          backgroundColor: "#5e0708",
+          boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.4)",
+          fontFamily: "Jost, sans-serif",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = "#cc1f1f"; // brighter red
+          e.currentTarget.style.boxShadow = "0 4px 12px rgba(204, 31, 31, 0.6)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = "#5e0708";
+          e.currentTarget.style.boxShadow =
+            "0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.4)";
+        }}
+      >
+        <LogOut size={20} />
+        LOG OUT
+      </button>
             </div>
           </li>
         </ul>
       )}
-        {/* Logo at the Bottom */}
-        <div className="mt-auto mb-0 flex justify-center">
-          <img src="/images/logo.png" alt="Logo" className="w-24 h-auto" />
+
+      {/* Admin Menu Links */}
+
+      {userType === "admin" && (
+        <ul className="flex flex-col items-start space-y-6 text-left font-semibold text-[#FFFFFF] text-[14px] font-['Jost']">
+          {[
+            { href: "/admin/requests", label: "REQUESTS", icon: <FiUsers className="text-lg" /> },
+            { href: "/admin/masterlist", label: "MASTERLIST", icon: <FiList className="text-lg" /> },
+            { href: "/admin/equipment", label: "LAB MATERIALS", icon: <GiMicroscope className="text-lg" /> },
+          ].map((item) => (
+            <li key={item.href} className="w-full pb-2 mt-2 first:mt-6">
+              <Link
+                href={item.href}
+                className={`flex items-center gap-3 py-2 px-4 w-full rounded-md transition-all duration-200 ${
+                  pathname === item.href ? "bg-[#5e0708]" : "hover:bg-[#5e0708]"
+                }`}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            </li>
+          ))}
+
+    <li className="pt-4 mt-40 flex justify-center w-full">
+      <div className="w-64">
+    <button
+      onClick={handleLogout}
+      className="w-full flex items-center justify-start gap-3 py-2 px-4 rounded font-bold text-white transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+      style={{
+        borderRadius: "20px",
+        height: "45px",
+        backgroundColor: "#5e0708",
+        boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.4)",
+        fontFamily: "Jost, sans-serif",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = "#cc1f1f"; // brighter red
+        e.currentTarget.style.boxShadow = "0 4px 12px rgba(204, 31, 31, 0.6)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = "#5e0708";
+        e.currentTarget.style.boxShadow =
+          "0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.4)";
+      }}
+    >
+      <LogOut size={20} />
+      LOG OUT
+    </button>
+          </div>
+        </li>
+      </ul>
+    )}
+          </div>
         </div>
-      </div>
-    </div>
-  );
-}
+      );
+} 
