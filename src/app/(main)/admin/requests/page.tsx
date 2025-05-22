@@ -234,7 +234,7 @@ const Equipments = () => {
               style={{
                 backgroundColor: "#EEE9E5",
                 borderRadius: "17px",
-                boxShadow: "4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset",
+                boxShadow: "3px 3px 6px 0px rgba(0, 0, 0, 0.25) inset",
                 padding: "1rem",
                 color: "#000000",
                 cursor: "pointer",
@@ -251,9 +251,9 @@ const Equipments = () => {
                   <p className="text-sm font-normal tracking-wider mt-1">
                     {history.cart.user.email}
                   </p>
-                <p className="text-xs font-bold mt-1">
-                  Date: {new Date(history.borrow_date).toLocaleString()}
-                </p>
+<p className="text-1xl font-bold mt-1 text-gray-800">
+  Date: {new Date(history.borrow_date).toLocaleString()}
+</p>
                 </div>
                 <div className="ml-2">
                   {isExpanded ? (
@@ -393,7 +393,7 @@ const Equipments = () => {
                           "4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset";
                       }}
                     >
-                      Confirm
+                      CONFIRM
                     </button>
                   </div>
                 </>

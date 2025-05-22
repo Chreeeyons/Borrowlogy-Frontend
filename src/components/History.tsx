@@ -23,7 +23,7 @@ const History = () => {
         style={{
           backgroundColor: '#EEE9E5',
           borderRadius: '20px',
-          boxShadow: '4px 4px 5px 0px rgba(0, 0, 0, 0.5) inset',
+          boxShadow: '3px 3px 6px 0px rgba(0, 0, 0, 0.25) inset',
           padding: '1rem',
           color: '#000000',
         }}
