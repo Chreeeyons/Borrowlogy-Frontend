@@ -73,15 +73,17 @@ const pathname = usePathname();
             { href: "/history", icon: <FiClock className="text-lg" />, label: "HISTORY LOG" },
           ].map((item) => (
             <li key={item.href} className="w-full  pb-2 mt-2 first:mt-2">
-              <Link
-                href={item.href}
-                className={`flex items-center gap-3 py-2 px-4 w-full rounded-md transition-all duration-200 ${
-                  pathname === item.href ? "bg-[#5e0708]" : "hover:bg-[#5e0708]"
-                }`}
-              >
-                {item.icon}
-                {item.label}
-              </Link>
+          <Link
+            href={item.href}
+            className={`flex items-center gap-3 py-2 px-4 w-full transition-all duration-200 ease-in-out rounded-2xl
+              ${pathname === item.href 
+                ? "bg-[#04241b] shadow-[0_4px_20px_rgba(0,0,0,0.6)]" 
+                : "hover:bg-gradient-to-r hover:from-black hover:to-[#0b6b4d] hover:shadow-[0_4px_20px_rgba(0,0,0,0.6)]"}
+            `}
+          >
+            {item.icon}
+            {item.label}
+          </Link>
             </li>
           ))}
           <li className="pt-4 mt-35 flex justify-center w-full">
@@ -125,15 +127,17 @@ const pathname = usePathname();
             { href: "/admin/chemicals", label: "CHEMICALS", icon: <FlaskConical className="text-lg" /> },
           ].map((item) => (
             <li key={item.href} className="w-full pb-2 mt-2 first:mt-2">
-              <Link
-                href={item.href}
-                className={`flex items-center gap-3 py-2 px-4 w-full rounded-md transition-all duration-200 ${
-                  pathname === item.href ? "bg-[#5e0708]" : "hover:bg-[#5e0708]"
-                }`}
-              >
-                {item.icon}
-                {item.label}
-              </Link>
+            <Link
+              href={item.href}
+              className={`flex items-center gap-3 py-2 px-4 w-full rounded-2xl transition-all duration-200 ease-in-out
+                ${pathname === item.href
+                  ? "bg-[#04241b] shadow-[0_4px_20px_rgba(0,0,0,0.6)]"
+                  : "hover:bg-gradient-to-r hover:from-black hover:to-[#073a2a] hover:shadow-[0_4px_20px_rgba(0,0,0,0.6)]"}
+              `}
+            >
+              {item.icon}
+              {item.label}
+            </Link>
             </li>
           ))}
 
