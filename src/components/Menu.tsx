@@ -44,7 +44,6 @@ const pathname = usePathname();
           height: "80px",
           borderRadius: "20px",
           backgroundColor: "transparent",
-          boxShadow: "inset 0 4px 8px rgba(0, 0, 0, 0.3)",
         }}
       >
         <img
@@ -54,14 +53,14 @@ const pathname = usePathname();
         />
       </div>
 
-      {/* Menu Items */}
+      {/* Menu Items Container */}
       <div
         className="w-64 text-white p-5 mb-3 h-[calc(100vh-7.5rem)] shadow-lg overflow-hidden flex flex-col justify-between"
         style={{
           marginTop: "1rem",
           borderRadius: "20px",
           backgroundColor: "transparent",
-          boxShadow: "inset 0 4px 8px rgba(0, 0, 0, 0.3)",
+          boxShadow: "0 0 8px 7px rgba(0, 0, 0, 0.5)",
         }}
       >
       {/* Menu Links */}
@@ -85,7 +84,7 @@ const pathname = usePathname();
               </Link>
             </li>
           ))}
-          <li className="pt-4 mt-45 flex justify-center w-full">
+          <li className="pt-4 mt-35 flex justify-center w-full">
             <div className="w-64">
       <button
         onClick={handleLogout}
@@ -125,7 +124,7 @@ const pathname = usePathname();
             { href: "/admin/equipment", label: "LAB MATERIALS", icon: <GiMicroscope className="text-lg" /> },
             { href: "/admin/chemicals", label: "CHEMICALS", icon: <FlaskConical className="text-lg" /> },
           ].map((item) => (
-            <li key={item.href} className="w-full pb-2 mt-2 first:mt-6">
+            <li key={item.href} className="w-full pb-2 mt-2 first:mt-2">
               <Link
                 href={item.href}
                 className={`flex items-center gap-3 py-2 px-4 w-full rounded-md transition-all duration-200 ${
@@ -138,7 +137,7 @@ const pathname = usePathname();
             </li>
           ))}
 
-    <li className="pt-4 mt-40 flex justify-center w-full">
+    <li className="pt-4 mt-35 flex justify-center w-full">
       <div className="w-64">
     <button
       onClick={handleLogout}
