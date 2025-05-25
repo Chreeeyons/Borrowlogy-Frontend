@@ -52,7 +52,7 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
     }
   };
 
-  const [volume, setVolume] = useState<number>(0);
+  // const [volume, setVolume] = useState<number>(0);
 
   return (
     <div
@@ -72,6 +72,8 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
           placeholder="Chemical Name"
           value={form.chemical_name}
           onChange={(e) => setForm({ ...form, chemical_name: e.target.value })}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
+
         />
 
         <input
@@ -85,8 +87,10 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
         <input
           type="number"
           placeholder="Volume"
-          value={volume}
-          onChange={(e) => setVolume(parseFloat(e.target.value))}
+          value={form.volume}
+          onChange={(e) => setForm({ ...form, volume: e.target.value })}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
+
         />
 
         <select

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import EditChemicalModal from "./EditChemicalModal"; // rename modal component accordingly
+import EditChemicalModal from "./EditChemicalModal";
 import { addtoCart } from "@/services/cartService";
 
 interface ChemicalProps {
@@ -8,7 +8,7 @@ interface ChemicalProps {
     is_hazardous: boolean;
     brand_name: string;
     volume_unit: string;
-    volume: number; // <-- changed here
+    volume: number;
     id: number;
     chemical_name: string;
   };
@@ -37,17 +37,17 @@ const Chemical = ({
   };
 
   const handleSave = async () => {
-    if (quantity === null) return; // Prevent invalid submit
+    if (quantity === null) return;
 
     try {
-      const response = await addtoCart({
+      await addtoCart({
         user_id: 1,
         quantity: quantity,
         chemical_id: chemical.id,
       } as any);
 
       setSuccessMessage("Successfully added to cart!");
-      setTimeout(() => setSuccessMessage(""), 3000); // Auto-hide
+      setTimeout(() => setSuccessMessage(""), 3000);
       refreshChemicalList();
     } catch (error) {
       console.error("Error adding chemical:", error);
@@ -131,27 +131,61 @@ const Chemical = ({
             </div>
           )}
 
-          {/* ... rest unchanged */}
+          {user_type === "admin" && (
+            <button
+              onClick={() => setIsModalOpen(true)}
+              style={{
+                width: "120px",
+                height: "38.234px",
+                flexShrink: 0,
+                borderRadius: "5.771px",
+                background: "#FFF",
+                boxShadow: "4px 4px 8px 2px rgba(0, 0, 0, 0.3)",
+                color: "#000000",
+                textAlign: "center",
+                textShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
+                fontFamily: "Jost",
+                fontSize: "16px",
+                fontWeight: 700,
+                lineHeight: "normal",
+                fontStyle: "bold",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#03aa6c";
+                e.currentTarget.style.color = "#FFF";
+                e.currentTarget.style.boxShadow =
+                  "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#FFF";
+                e.currentTarget.style.color = "#000000";
+                e.currentTarget.style.boxShadow =
+                  "4px 4px 8px 2px rgba(0, 0, 0, 0.3)";
+              }}
+            >
+              EDIT
+            </button>
+          )}
+
+          {user_type !== "admin" && chemical.volume > 0 && (
+            <button
+              onClick={handleSave}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+            >
+              Add to Cart
+            </button>
+          )}
         </div>
       </div>
 
       {/* Edit Modal */}
       {isModalOpen && (
         <EditChemicalModal
-          chemical={{
-            id: chemical.id,
-            chemical_name: chemical.chemical_name,
-            volume: chemical.volume,
-            volume_unit: chemical.volume_unit,
-            brand_name: chemical.brand_name,
-            is_hazardous: chemical.is_hazardous,
-          }}
+          chemical={chemical}
           onClose={() => setIsModalOpen(false)}
-          onRefresh={refreshChemicalList}
-          onSave={function (): void {
+          onRefresh={refreshChemicalList} onSave={function (): void {
             throw new Error("Function not implemented.");
-          }}
-        />
+          } }        />
       )}
 
       {successMessage && (
@@ -162,4 +196,5 @@ const Chemical = ({
     </div>
   );
 };
+
 export default Chemical;

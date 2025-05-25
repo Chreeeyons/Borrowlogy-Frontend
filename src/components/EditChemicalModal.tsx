@@ -22,6 +22,7 @@ const EditChemicalModal = ({
   chemical,
   onClose,
   onSave,
+  onRefresh,
 }: EditChemicalModalProps) => {
   const [formData, setFormData] = useState({
     chemical_name: chemical.chemical_name,
@@ -39,10 +40,7 @@ const EditChemicalModal = ({
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    const target = e.target as
-      | HTMLInputElement
-      | HTMLSelectElement
-      | HTMLTextAreaElement;
+    const target = e.target;
     const { name, value, type } = target;
     const checked = type === "checkbox" && (target as HTMLInputElement).checked;
 
@@ -67,9 +65,7 @@ const EditChemicalModal = ({
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to update chemical");
-      }
+      if (!response.ok) throw new Error("Failed to update chemical");
 
       onSave();
       onClose();
@@ -80,9 +76,35 @@ const EditChemicalModal = ({
     }
   };
 
+  const handleDelete = async () => {
+    const confirmDelete = confirm("Are you sure you want to delete this chemical?");
+    if (!confirmDelete) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/chemicals/${chemical.id}/`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to delete chemical");
+
+      onRefresh();
+      onClose();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur bg-opacity-50 z-50"
       onClick={onClose}
     >
       <div
@@ -179,22 +201,33 @@ const EditChemicalModal = ({
             <div className="text-red-600 font-semibold">Error: {error}</div>
           )}
 
-          <div className="flex justify-end gap-3 mt-4">
+          <div className="flex justify-between items-center mt-4">
             <button
               type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              onClick={handleDelete}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
               disabled={loading}
             >
-              Cancel
+              {loading ? "Deleting..." : "Delete"}
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              disabled={loading}
-            >
-              {loading ? "Saving..." : "Save"}
-            </button>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                disabled={loading}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-[#8C1931] text-white rounded hover:bg-green-700"
+                disabled={loading}
+              >
+                {loading ? "Saving..." : "Save"}
+              </button>
+            </div>
           </div>
         </form>
       </div>
