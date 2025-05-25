@@ -18,7 +18,10 @@ export const getEquipment = async () => {
  * Add new equipment.
  * @param {object} equipmentData - { name: string, quantity: number }
  */
-export const addEquipment = async (equipmentData: { name: string; quantity: number }) => {
+export const addEquipment = async (equipmentData: {
+  name: string;
+  quantity: number;
+}) => {
   try {
     const response = await fetch(`${BASE_URL}/add_equipment/`, {
       method: "POST",
@@ -34,12 +37,15 @@ export const addEquipment = async (equipmentData: { name: string; quantity: numb
   }
 };
 
-
 /**
  * Edit existing equipment.
  * @param {object} equipmentData - { pk: number, name?: string, quantity?: number }
  */
-export const editEquipment = async (equipmentData: { pk: number; name?: string; quantity?: number }) => {
+export const editEquipment = async (equipmentData: {
+  pk: number;
+  name?: string;
+  quantity?: number;
+}) => {
   try {
     const response = await fetch(`${BASE_URL}/edit_equipment/`, {
       method: "PUT",

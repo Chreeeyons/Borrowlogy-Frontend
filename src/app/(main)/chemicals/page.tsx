@@ -1,9 +1,8 @@
 "use client";
-import Materials from "@/components/MaterialContainer";
+import Chemicals from "@/components/ChemicalContainer";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useHeader } from "@/utils/HeaderContext";
-
 
 const Equipments = () => {
   const { setHeaderTitle } = useHeader();
@@ -18,7 +17,7 @@ const Home = () => {
   return (
     <div id="chemicals" className="section">
       <Equipments /> {}
-      <Materials user_type="borrower" />
+      <Chemicals user_type="borrower" />
       {/* <Link href="/cart" className="hover:underline text-center block mt-4">
         Cart
       </Link> */}
