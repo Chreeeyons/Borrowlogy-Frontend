@@ -73,12 +73,48 @@ const Equipments = () => {
 
   const getUsersData = async () => {
     const response = await getUsers();
-    console.log(response);
+    if (response && response.custom_users) {
+      setBorrowers(response.custom_users);
+    }
   };
 
   const filteredBorrowers = borrowers.filter((b) =>
     b.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleSubmit = async () => {
+    function isValidUPEMail(email: string) {
+      // Basic format check: some characters + @up.edu.ph
+      const regex = /^[a-zA-Z0-9._%+-]+@up\.edu\.ph$/;
+      return regex.test(email);
+    }
+    if (!isValidUPEMail(newBorrower.email)) {
+      alert("Please enter a valid UP email address.");
+      return;
+    } else if (!newBorrower.name.trim()) {
+      alert("Please fill all of the fields.");
+      return;
+    } else {
+      await addUser({
+        email: newBorrower.email,
+        name: newBorrower.name,
+        username: "user_" + newBorrower.name,
+      })
+        .then((response) => {
+          if (response) {
+            alert("User added successfully!");
+          }
+        })
+        .catch((error) => {
+          console.error("Error adding user:", error);
+          alert("Failed to add user.");
+        });
+    }
+
+    // fetchCartData();
+    // setRemarks("");
+    // setIsModalOpen(true); // show modal
+  };
 
   const getOverallStatus = (user: Borrower): "RETURNED" | "PENDING" => {
     return user.transactions.every((t) => t.returnedDate)
@@ -112,23 +148,20 @@ const Equipments = () => {
         <div className="bg-[#EEE9E5] rounded-[20px] p-6 shadow-[inset_3px_3px_6px_0px_rgba(0,0,0,0.25)]">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2
-                className="text-4xl font-bold text-black"
-                style={{ textShadow: "2px 2px 6px rgba(0, 0, 0, 0.4)" }}
-              >
+              <h2 className="text-4xl font-bold text-black" style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.4)' }}>
                 {selectedBorrower.name}
               </h2>
               <p className="text-md">{selectedBorrower.email}</p>
             </div>
-            <span
-              className={`px-4 py-1.5 rounded-full font-semibold text-white shadow-md tracking-wide uppercase text-sm transition-all duration-200 ${
-                selectedTransaction.returnedDate
-                  ? "bg-green-700 hover:bg-green-800"
-                  : "bg-yellow-500 hover:bg-yellow-600"
-              }`}
-            >
-              {selectedTransaction.returnedDate ? "RETURNED" : "PENDING"}
-            </span>
+          <span
+            className={`px-4 py-1.5 rounded-full font-semibold text-white shadow-md tracking-wide uppercase text-sm transition-all duration-200 ${
+              selectedTransaction.returnedDate
+                ? "bg-green-700 hover:bg-green-800"
+                : "bg-yellow-500 hover:bg-yellow-600"
+            }`}
+                    >
+            {selectedTransaction.returnedDate ? "RETURNED" : "PENDING"}
+          </span>
           </div>
 
           <table className="w-full mb-6 text-black table-auto">
@@ -156,53 +189,53 @@ const Equipments = () => {
             </tbody>
           </table>
 
-          <div className="flex gap-4 mb-4">
-            <div className="flex-1">
-              <h3 className="font-bold mb-2">BORROWER’S REMARKS:</h3>
-              <textarea
-                value={selectedTransaction.borrowerRemarks || ""}
-                readOnly
-                style={{
-                  borderRadius: "12px",
-                  background: "#FFF",
-                  boxShadow: "3px 3px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
-                  padding: "0.5rem",
-                  marginTop: "0.5rem",
-                  color: "#000",
-                  fontWeight: 400,
-                  fontFamily: "inherit",
-                  resize: "none",
-                  width: "100%",
-                  height: "7rem",
-                }}
-              />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-bold mb-2">LAB TECH’S REMARKS:</h3>
-              <textarea
-                value={selectedTransaction.labTechRemarks || ""}
-                onChange={(e) =>
-                  setSelectedTransaction({
-                    ...selectedTransaction,
-                    labTechRemarks: e.target.value,
-                  })
-                }
-                style={{
-                  borderRadius: "12px",
-                  background: "#FFF",
-                  boxShadow: "3px 3px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
-                  padding: "0.5rem",
-                  marginTop: "0.5rem",
-                  color: "#000",
-                  fontWeight: 400,
-                  fontFamily: "inherit",
-                  resize: "none",
-                  width: "100%",
-                  height: "7rem",
-                }}
-              />
-            </div>
+        <div className="flex gap-4 mb-4">
+          <div className="flex-1">
+            <h3 className="font-bold mb-2">BORROWER’S REMARKS:</h3>
+            <textarea
+              value={selectedTransaction.borrowerRemarks || ""}
+              readOnly
+              style={{
+                borderRadius: "12px",
+                background: "#FFF",
+                boxShadow: "3px 3px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
+                padding: "0.5rem",
+                marginTop: "0.5rem",
+                color: "#000",
+                fontWeight: 400,
+                fontFamily: "inherit",
+                resize: "none",
+                width: "100%",
+                height: "7rem",
+              }}
+            />
           </div>
+          <div className="flex-1">
+            <h3 className="font-bold mb-2">LAB TECH’S REMARKS:</h3>
+            <textarea
+              value={selectedTransaction.labTechRemarks || ""}
+              onChange={(e) =>
+                setSelectedTransaction({
+                  ...selectedTransaction,
+                  labTechRemarks: e.target.value,
+                })
+              }
+              style={{
+                borderRadius: "12px",
+                background: "#FFF",
+                boxShadow: "3px 3px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
+                padding: "0.5rem",
+                marginTop: "0.5rem",
+                color: "#000",
+                fontWeight: 400,
+                fontFamily: "inherit",
+                resize: "none",
+                width: "100%",
+                height: "7rem",
+              }}
+            />
+          </div>
+        </div>
           <button
             onClick={() => setSelectedTransaction(null)}
             style={{
@@ -224,14 +257,12 @@ const Equipments = () => {
             onMouseEnter={(e) => {
               e.currentTarget.style.background = "#03aa6c";
               e.currentTarget.style.color = "#FFF";
-              e.currentTarget.style.boxShadow =
-                "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
+              e.currentTarget.style.boxShadow = "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = "#FFF";
               e.currentTarget.style.color = "#03aa6c";
-              e.currentTarget.style.boxShadow =
-                "4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset";
+              e.currentTarget.style.boxShadow = "4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset";
             }}
           >
             SAVE
@@ -242,92 +273,71 @@ const Equipments = () => {
   }
 
   // Borrower Detail View
-  if (selectedBorrower) {
-    return (
-      <div className="p-6 text-black">
-        <div className="bg-[#EEE9E5] rounded-[20px] p-6 shadow-[inset_3px_3px_6px_0px_rgba(0,0,0,0.25)]">
-          <h2
-            className="text-4xl font-bold text-black"
-            style={{ textShadow: "2px 2px 6px rgba(0, 0, 0, 0.4)" }}
-          >
-            {selectedBorrower.name}
-          </h2>
-          <p className="text-md mb-6 text-black">{selectedBorrower.email}</p>
+if (selectedBorrower) {
+  return (
+    <div className="p-6 text-black">
+      <div className="bg-[#EEE9E5] rounded-[20px] p-6 shadow-[inset_3px_3px_6px_0px_rgba(0,0,0,0.25)]">
+      <h2 className="text-4xl font-bold text-black" style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.4)' }}>
+        {selectedBorrower.name}
+      </h2>
+        <p className="text-md mb-6 text-black">{selectedBorrower.email}</p>
 
-          <table className="w-full mb-4 text-black table-auto">
-            <thead>
-              <tr className="text-center">
-                <th className="px-1 py-2 text-xl">Transaction No.</th>{" "}
-                {/* Increased font size */}
-                <th className="px-1 py-2 text-xl">Date Borrowed</th>{" "}
-                {/* Increased font size */}
-                <th className="px-1 py-2 text-xl">Status</th>{" "}
-                {/* Increased font size */}
-              </tr>
-            </thead>
-            <tbody>
-              {selectedBorrower.transactions.map((tx, index) => (
-                <tr
-                  key={index}
-                  className="cursor-pointer hover:bg-[#6B8E23] hover:shadow-lg hover:border-[#6B8E23] transition-all duration-300 ease-in-out hover:text-white"
-                  onClick={() => setSelectedTransaction(tx)}
-                >
-                  <td className="px-4 py-2 text-center">{tx.transactionId}</td>{" "}
-                  {/* Centered text */}
-                  <td className="px-4 py-2 text-center">
-                    {tx.borrowedDate}
-                  </td>{" "}
-                  {/* Centered text */}
-                  <td
-                    className={`px-4 py-2 text-center ${statusColor(
-                      !!tx.returnedDate
-                    )}`}
-                    style={{
-                      textShadow: "1px 1px 5px rgba(255, 255, 255, 0.7)",
-                    }}
-                  >
-                    {" "}
-                    {/* Centered text with brighter drop shadow */}
-                    {tx.returnedDate ? "RETURNED" : "PENDING"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <button
-            onClick={() => setSelectedBorrower(null)}
-            style={{
-              width: "130px",
-              height: "38.234px",
-              flexShrink: 0,
-              borderRadius: "6px",
-              background: "rgb(255, 255, 255)",
-              boxShadow: "rgba(0, 0, 0, 0.25) 4px 4px 4px 0px inset",
-              color: "rgb(3, 170, 108)",
-              textAlign: "center",
-              textShadow: "rgba(0, 0, 0, 0.25) 0px 2px 4px",
-              fontFamily: "Jost",
-              fontSize: "16px",
-              fontWeight: 700,
-              lineHeight: "normal",
-              cursor: "pointer",
-            }}
-            className="font-bold transition-all duration-300 mt-4"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#03aa6c";
-              e.currentTarget.style.color = "#FFF";
-              e.currentTarget.style.boxShadow =
-                "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#FFF";
-              e.currentTarget.style.color = "#03aa6c";
-              e.currentTarget.style.boxShadow =
-                "4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset";
-            }}
-          >
-            BACK
-          </button>
+      <table className="w-full mb-4 text-black table-auto">
+        <thead>
+          <tr className="text-center">
+            <th className="px-1 py-2 text-xl">Transaction No.</th> {/* Increased font size */}
+            <th className="px-1 py-2 text-xl">Date Borrowed</th> {/* Increased font size */}
+            <th className="px-1 py-2 text-xl">Status</th> {/* Increased font size */}
+          </tr>
+        </thead>
+        <tbody>
+          {selectedBorrower.transactions.map((tx, index) => (
+            <tr
+              key={index}
+              className="cursor-pointer hover:bg-[#6B8E23] hover:shadow-lg hover:border-[#6B8E23] transition-all duration-300 ease-in-out hover:text-white"
+              onClick={() => setSelectedTransaction(tx)}
+            >
+      <td className="px-4 py-2 text-center">{tx.transactionId}</td> {/* Centered text */}
+      <td className="px-4 py-2 text-center">{tx.borrowedDate}</td> {/* Centered text */}
+      <td className={`px-4 py-2 text-center ${statusColor(!!tx.returnedDate)}`} style={{ textShadow: '1px 1px 5px rgba(255, 255, 255, 0.7)' }}> {/* Centered text with brighter drop shadow */}
+        {tx.returnedDate ? "RETURNED" : "PENDING"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+        <button
+          onClick={() => setSelectedBorrower(null)}
+          style={{
+            width: '130px',
+            height: '38.234px',
+            flexShrink: 0,
+            borderRadius: '6px',
+            background: 'rgb(255, 255, 255)',
+            boxShadow: 'rgba(0, 0, 0, 0.25) 4px 4px 4px 0px inset',
+            color: 'rgb(3, 170, 108)',
+            textAlign: 'center',
+            textShadow: 'rgba(0, 0, 0, 0.25) 0px 2px 4px',
+            fontFamily: 'Jost',
+            fontSize: '16px',
+            fontWeight: 700,
+            lineHeight: 'normal',
+            cursor: 'pointer',
+          }}
+          className="font-bold transition-all duration-300 mt-4"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "#03aa6c";
+            e.currentTarget.style.color = "#FFF";
+            e.currentTarget.style.boxShadow = "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "#FFF";
+            e.currentTarget.style.color = "#03aa6c";
+            e.currentTarget.style.boxShadow = "4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset";
+          }}
+        >
+          BACK
+        </button>
         </div>
       </div>
     );
@@ -389,8 +399,8 @@ const Equipments = () => {
           <span className="text-lg">+</span> Add
         </button>
       </div>
-      <div className="bg-[#EEE9E5] rounded-[20px] shadow-[inset_3px_3px_6px_0px_rgba(0,0,0,0.25)] p-4 text-[#000000] font-jost">
-        <table className="w-full text-center table-auto">
+        <div className="bg-[#EEE9E5] rounded-[20px] shadow-[inset_3px_3px_6px_0px_rgba(0,0,0,0.25)] p-4 text-[#000000] font-jost">
+          <table className="w-full text-center table-auto">
           <thead>
             <tr
               className="text-black text-3xl font-bold"
@@ -405,20 +415,18 @@ const Equipments = () => {
             {filteredBorrowers.map((borrower, index) => {
               const status = getOverallStatus(borrower);
               return (
-                <tr
-                  key={index}
-                  className="hover:bg-[#E3E1DD] hover:shadow-md hover:scale-[1.01] transition-all duration-200 ease-in-out cursor-pointer rounded-full"
-                  onClick={() => setSelectedBorrower(borrower)}
-                >
+              <tr
+                key={index}
+                className="hover:bg-[#E3E1DD] hover:shadow-md hover:scale-[1.01] transition-all duration-200 ease-in-out cursor-pointer rounded-full"
+                onClick={() => setSelectedBorrower(borrower)}
+              >
                   <td className="px-4 py-2">{borrower.name}</td>
                   <td className="px-4 py-2">{borrower.email}</td>
                   <td className="px-4 py-2 flex items-center justify-center gap-1">
-                    <span
-                      className={`px-4 py-1.5 inline-block rounded-full text-white text-sm font-semibold shadow-md transition-all duration-200 ${
-                        status === "RETURNED"
-                          ? "bg-green-700 hover:bg-green-800"
-                          : "bg-yellow-500 hover:bg-yellow-600"
-                      }`}
+                <span
+                  className={`px-4 py-1.5 inline-block rounded-full text-white text-sm font-semibold shadow-md transition-all duration-200 ${
+                    status === "RETURNED" ? "bg-green-700 hover:bg-green-800" : "bg-yellow-500 hover:bg-yellow-600"
+                  }`}
                     >
                       {status}
                     </span>

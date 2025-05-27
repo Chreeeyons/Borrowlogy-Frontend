@@ -1,11 +1,5 @@
-"use client";
+'use client';
 
-<<<<<<< HEAD
-import Image from "next/image";
-import Link from "next/link";
-import "./globals.css";
-=======
->>>>>>> c69e2df (New Landing Page)
 import { signIn } from "next-auth/react";
 import './globals.css'; // still needed for Tailwind resets and fonts
 

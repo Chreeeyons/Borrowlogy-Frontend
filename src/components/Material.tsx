@@ -70,38 +70,47 @@ const Material = ({
 
   return (
     <div>
-      <div
-        className="p-4 mb-2 bg-[#83191c] shadow-md flex justify-between items-center rounded-lg"
-        style={{
-          borderRadius: "12px",
-          boxShadow:
-            "inset 0px 2px 4px rgba(0, 0, 0, 0.7), inset 0px 2px 6px rgba(0, 0, 0, 0.2)",
-        }}
-      >
-        <div>
-          <h2 className="text-white text-3xl font-semibold mb-2 tracking-normal">
-            {material.name}
-          </h2>
-          <p className="text-sm font-normal flex items-center gap-2">
-            <span
-              className={
-                material.quantity > 0 ? "text-green-500" : "text-red-500"
-              }
-            >
-              {material.quantity > 0 ? "Available" : "Out of Stock"}
-            </span>
-            <span className="text-white">| Quantity: {material.quantity}</span>
-          </p>
-        </div>
+<div
+  className="p-4 mb-2 bg-[#EEE9E5] shadow-md flex justify-between items-center rounded-lg"
+  style={{
+    borderRadius: "12px",
+    boxShadow: `3px 3px 6px 0px rgba(0, 0, 0, 0.25) inset`
+  }}
+>
+<div>
+  <h2 className="text-black text-4xl font-semibold mb-0 tracking-normal">
+    {material.name}
+  </h2>
+  <p className="text-sm font-normal flex items-center gap-2">
+    <span
+      className={
+        material.quantity > 0
+          ? "text-black-500 font-bold text-lg"
+          : "text-red-500 font-bold text-lg"
+      }
+    >
+      {material.quantity > 0 ? "Available" : "Out of Stock"}
+    </span>
+    <span className="text-black flex items-center gap-1">
+      |
+      <span className="font-bold text-lg">Quantity:</span> {material.quantity}
+    </span>
+  </p>
+</div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-5">
-          {user_type !== "admin" && material.quantity > 0 && (
-            <div className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white">
-              <button
-                onClick={handleDecrease}
-                className="px-3 py-2 text-[#8C1931] hover:bg-gray-300"
-              >
+{/* Action Buttons */}
+<div className="flex items-center gap-5">
+  {user_type !== "admin" && material.quantity > 0 && (
+    <div
+      className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white"
+      style={{
+        boxShadow: '0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25) inset'
+      }}
+    >
+      <button
+        onClick={handleDecrease}
+        className="px-3 py-2 text-[#000000] hover:bg-gray-300"
+      >
                 -
               </button>
               <input
@@ -123,14 +132,15 @@ const Material = ({
                     }
                   }
                 }}
-                className="w-16 h-9 text-center bg-gray-200 text-[#8C1931] outline-none 
+                className="w-16 h-9 text-center bg-white-200 text-[#000000] outline-none font-bold
                 [&::-webkit-outer-spin-button]:appearance-none 
                 [&::-webkit-inner-spin-button]:appearance-none 
                 [-moz-appearance:textfield]"
+                
               />
               <button
                 onClick={handleIncrease}
-                className="px-3 py-2 text-[#8C1931] hover:bg-gray-300"
+                className="px-3 py-2 text-[#000000] hover:bg-gray-300"
               >
                 +
               </button>
@@ -138,69 +148,91 @@ const Material = ({
           )}
 
           {user_type === "admin" ? (
+        <button
+          onClick={() => setIsModalOpen(true)}
+          style={{
+            width: "120px",
+            height: "38.234px",
+            flexShrink: 0,
+            borderRadius: "5.771px",
+            background: "#FFF",
+            boxShadow: "4px 4px 8px 2px rgba(0, 0, 0, 0.3)",
+            color: "#000000",
+            textAlign: "center",
+            textShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
+            fontFamily: "Jost",
+            fontSize: "16px",
+            fontWeight: 700,
+            lineHeight: 'normal',
+            fontStyle: "bold",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#03aa6c";
+            (e.currentTarget as HTMLButtonElement).style.color = "#FFF";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#FFF";
+            (e.currentTarget as HTMLButtonElement).style.color = "#000000";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "4px 4px 8px 2px rgba(0, 0, 0, 0.3)";
+          }}
+        >
+          EDIT
+        </button>
+
+          ) : material.quantity > 0 ? (
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleSave}
               style={{
-                width: "138.509px",
-                height: "38.234px",
+                width: '120px',
+                height: '38.234px',
                 flexShrink: 0,
-                borderRadius: "5.771px",
-                background: "#FFF",
-                boxShadow: "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset",
-                color: "#8C1931",
-                textAlign: "center",
-                textShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-                fontFamily: "Jost",
-                fontSize: "16px",
+                borderRadius: '5.771px',
+                background: '#FFF',
+                boxShadow: "4px 4px 8px 2px rgba(0, 0, 0, 0.3)",
+                color: '#000000',
+                textAlign: 'center',
+                textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                fontFamily: 'Jost, sans-serif',
+                fontSize: '21.139px',
+                fontStyle: 'normal',
                 fontWeight: 700,
-                lineHeight: "normal",
-                fontStyle: "bold",
+                lineHeight: 'normal',
               }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "#03aa6c";
-                (e.currentTarget as HTMLButtonElement).style.color = "#FFF";
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#03aa6c';
+                (e.currentTarget as HTMLButtonElement).style.color = '#FFF';
                 (e.currentTarget as HTMLButtonElement).style.boxShadow =
-                  "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
+                  '6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset';
               }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "#FFF";
-                (e.currentTarget as HTMLButtonElement).style.color = "#8C1931";
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#FFF';
+                (e.currentTarget as HTMLButtonElement).style.color = '#000000';
                 (e.currentTarget as HTMLButtonElement).style.boxShadow =
-                  "6px 6px 4px 0px rgba(0, 0, 0, 0.25) inset";
+                  "4px 4px 8px 2px rgba(0, 0, 0, 0.3)";
               }}
             >
-              EDIT
+              ADD
             </button>
-          ) : material.quantity > 0 ? (
-            <div className="flex flex-col items-start">
-              <button
-                className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700"
-                onClick={handleSave}
-              >
-                Add to Cart
-              </button>
-            </div>
           ) : (
             <button
               disabled
               style={{
-                width: "138.509px",
-                height: "38.234px",
+                width: '120px',
+                height: '38.234px',
                 flexShrink: 0,
-                borderRadius: "5.771px",
-                background: "#B0B0B0",
-                boxShadow: "inset 0px 2.886px 2.886px rgba(0, 0, 0, 0.25)",
-                color: "#FFFFFF",
-                textAlign: "center",
-                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                fontFamily: "Jost, sans-serif",
-                fontSize: "21.139px",
-                fontStyle: "normal",
+                borderRadius: '5.771px',
+                background: '#B0B0B0',
+                boxShadow: "4px 4px 8px 2px rgba(0, 0, 0, 0.3)",
+                color: '#FFFFFF',
+                textAlign: 'center',
+                textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                fontFamily: 'Jost, sans-serif',
+                fontSize: '21.139px',
+                fontStyle: 'normal',
                 fontWeight: 700,
-                lineHeight: "normal",
-                cursor: "not-allowed",
+                lineHeight: 'normal',
+                cursor: 'not-allowed',
                 opacity: 0.8,
               }}
             >
