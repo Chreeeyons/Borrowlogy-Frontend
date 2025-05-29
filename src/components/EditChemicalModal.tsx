@@ -3,8 +3,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 interface Chemical {
   id: number;
   chemical_name: string;
-  volume: number;
-  volume_unit: string;
+  mass: number;          // changed from volume
   brand_name: string;
   is_hazardous: boolean;
   expiration_date?: string;
@@ -26,8 +25,7 @@ const EditChemicalModal = ({
 }: EditChemicalModalProps) => {
   const [formData, setFormData] = useState({
     chemical_name: chemical.chemical_name,
-    volume: chemical.volume,
-    volume_unit: chemical.volume_unit,
+    mass: chemical.mass,           // updated here
     brand_name: chemical.brand_name,
     is_hazardous: chemical.is_hazardous,
     expiration_date: chemical.expiration_date || "",
@@ -111,7 +109,7 @@ const EditChemicalModal = ({
         className="bg-white rounded-lg p-6 w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-2xl font-semibold mb-4">Edit Chemical</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-center">Edit Chemical</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block font-medium">Chemical Name</label>
@@ -126,26 +124,14 @@ const EditChemicalModal = ({
           </div>
 
           <div>
-            <label className="block font-medium">Volume</label>
+            <label className="block font-medium">Mass</label>
             <input
               type="number"
-              name="volume"
-              value={formData.volume}
+              name="mass"
+              value={formData.mass}
               onChange={handleChange}
               min={0}
               step="any"
-              className="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block font-medium">Volume Unit</label>
-            <input
-              type="text"
-              name="volume_unit"
-              value={formData.volume_unit}
-              onChange={handleChange}
               className="w-full border rounded px-3 py-2"
               required
             />

@@ -10,8 +10,7 @@ import { getChemicals } from "@/services/chemicalService";
 interface ChemicalItem {
   id: number;
   chemical_name: string;
-  volume: number;
-  volume_unit: string;
+  mass: number;        // changed from volume
   brand_name: string;
   is_hazardous: boolean;
   expiration_date?: string;
@@ -22,9 +21,7 @@ const ChemicalContainer = ({ user_type }: { user_type: string }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [chemicalList, setChemicalList] = useState<ChemicalItem[]>([]);
-  const [filteredChemicals, setFilteredChemicals] = useState<ChemicalItem[]>(
-    []
-  );
+  const [filteredChemicals, setFilteredChemicals] = useState<ChemicalItem[]>([]);
 
   // Fetch chemicals from API
   const fetchChemicals = async () => {

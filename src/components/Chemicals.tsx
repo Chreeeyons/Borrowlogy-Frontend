@@ -7,8 +7,7 @@ interface ChemicalProps {
   chemical: {
     is_hazardous: boolean;
     brand_name: string;
-    volume_unit: string;
-    volume: number;
+    mass: number;        // changed from volume
     id: number;
     chemical_name: string;
   };
@@ -25,7 +24,7 @@ const Chemical = ({
   const [successMessage, setSuccessMessage] = useState("");
 
   const handleIncrease = () => {
-    if (quantity !== null && quantity < chemical.volume) {
+    if (quantity !== null && quantity < chemical.mass) {  // updated here
       setQuantity((prev) => (prev !== null ? prev + 1 : 1));
     }
   };
@@ -70,23 +69,23 @@ const Chemical = ({
           <p className="text-sm font-normal flex items-center gap-2">
             <span
               className={
-                chemical.volume > 0
+                chemical.mass > 0  // updated here
                   ? "text-black-500 font-bold text-lg"
                   : "text-red-500 font-bold text-lg"
               }
             >
-              {chemical.volume > 0 ? "Available" : "Out of Stock"}
+              {chemical.mass > 0 ? "Available" : "Out of Stock"} {/* updated here */}
             </span>
             <span className="text-black flex items-center gap-1">
-              |<span className="font-bold text-lg">Volume:</span>{" "}
-              {chemical.volume} {chemical.volume_unit}
+              |<span className="font-bold text-lg">Mass:</span>{" "} {/* updated label */}
+              {chemical.mass} g {/* updated here */}
             </span>
           </p>
         </div>
 
         {/* Action Buttons */}
         <div className="flex items-center gap-5">
-          {user_type !== "admin" && chemical.volume > 0 && (
+          {user_type !== "admin" && chemical.mass > 0 && (  // updated here
             <div
               className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white"
               style={{
@@ -103,7 +102,7 @@ const Chemical = ({
                 type="number"
                 value={quantity !== null ? quantity : ""}
                 min={1}
-                max={chemical.volume}
+                max={chemical.mass}  // updated here
                 onChange={(e) => {
                   const val = e.target.value;
                   if (val === "") {
@@ -112,7 +111,7 @@ const Chemical = ({
                     const parsedVal = parseInt(val);
                     if (!isNaN(parsedVal)) {
                       setQuantity(
-                        Math.max(1, Math.min(parsedVal, chemical.volume))
+                        Math.max(1, Math.min(parsedVal, chemical.mass))  // updated here
                       );
                     }
                   }
@@ -167,7 +166,7 @@ const Chemical = ({
             </button>
           )}
 
-          {user_type !== "admin" && chemical.volume > 0 && (
+          {user_type !== "admin" && chemical.mass > 0 && (  // updated here
             <button
               onClick={handleSave}
               className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
@@ -183,9 +182,9 @@ const Chemical = ({
         <EditChemicalModal
           chemical={chemical}
           onClose={() => setIsModalOpen(false)}
-          onRefresh={refreshChemicalList} onSave={function (): void {
-            throw new Error("Function not implemented.");
-          } }        />
+          onRefresh={refreshChemicalList} 
+          onSave={() => {}}
+        />
       )}
 
       {successMessage && (
