@@ -258,7 +258,7 @@ const Material = ({
           <div className="bg-white/70 px-6 py-4 rounded-lg shadow-lg text-center backdrop-blur-sm">
             <div className="flex flex-col items-center justify-center">
               <span className="text-3xl text-green-700 mb-2">✓</span>
-              <p className="text-lg font-semibold text-[#04543C]">
+              <p className="text-lg font-semibold text-black">
                 {successMessage}
               </p>
             </div>
