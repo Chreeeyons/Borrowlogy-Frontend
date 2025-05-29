@@ -214,11 +214,19 @@ const Chemical = ({
         />
       )}
 
-      {successMessage && (
-        <div className="mt-2 text-green-600 font-semibold">
-          {successMessage}
-        </div>
-      )}
+      {/* Success Message */}
+        {successMessage && (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+            <div className="bg-white/70 px-6 py-4 rounded-lg shadow-lg text-center backdrop-blur-sm">
+              <div className="flex flex-col items-center justify-center">
+                <span className="text-3xl text-green-700 mb-2">✓</span>
+                <p className="text-lg font-semibold text-black">
+                  {successMessage}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
 };
