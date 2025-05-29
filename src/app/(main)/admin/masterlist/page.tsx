@@ -82,39 +82,43 @@ const Equipments = () => {
     b.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSubmit = async () => {
-    function isValidUPEMail(email: string) {
-      // Basic format check: some characters + @up.edu.ph
-      const regex = /^[a-zA-Z0-9._%+-]+@up\.edu\.ph$/;
-      return regex.test(email);
-    }
-    if (!isValidUPEMail(newBorrower.email)) {
-      alert("Please enter a valid UP email address.");
-      return;
-    } else if (!newBorrower.name.trim()) {
-      alert("Please fill all of the fields.");
-      return;
-    } else {
-      await addUser({
-        email: newBorrower.email,
-        name: newBorrower.name,
-        username: "user_" + newBorrower.name,
-      })
-        .then((response) => {
-          if (response) {
-            alert("User added successfully!");
-          }
-        })
-        .catch((error) => {
-          console.error("Error adding user:", error);
-          alert("Failed to add user.");
-        });
-    }
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-    // fetchCartData();
-    // setRemarks("");
-    // setIsModalOpen(true); // show modal
-  };
+  const handleSubmit = async () => {
+  function isValidUPEMail(email: string) {
+    const regex = /^[a-zA-Z0-9._%+-]+@up\.edu\.ph$/;
+    return regex.test(email);
+  }
+  
+  if (!isValidUPEMail(newBorrower.email)) {
+    setErrorMessage("Please enter a valid UP email address.");
+    setTimeout(() => setErrorMessage(""), 3000);
+    return;
+  } else if (!newBorrower.name.trim()) {
+    setErrorMessage("Please fill all of the fields.");
+    setTimeout(() => setErrorMessage(""), 3000);
+    return;
+  } else {
+    await addUser({
+      email: newBorrower.email,
+      name: newBorrower.name,
+      username: "user_" + newBorrower.name,
+    })
+      .then((response) => {
+        if (response) {
+          setSuccessMessage("User added successfully!");
+          handleAddBorrower();
+          setTimeout(() => setSuccessMessage(""), 3000);
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding user:", error);
+        setErrorMessage("Failed to add user.");
+        setTimeout(() => setErrorMessage(""), 3000);
+      });
+  }
+};
 
   const getOverallStatus = (user: Borrower): "RETURNED" | "PENDING" => {
     return user.transactions.every((t) => t.returnedDate)
@@ -437,6 +441,33 @@ if (selectedBorrower) {
             })}
           </tbody>
         </table>
+        {/* Success Message */}
+        {successMessage && (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+            <div className="bg-white/70 px-6 py-4 rounded-lg shadow-lg text-center backdrop-blur-sm">
+              <div className="flex flex-col items-center justify-center">
+                <span className="text-3xl text-green-700 mb-2">✓</span>
+                <p className="text-lg font-semibold text-black">
+                  {successMessage}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+            <div className="bg-white/70 px-6 py-4 rounded-lg shadow-lg text-center backdrop-blur-sm">
+              <div className="flex flex-col items-center justify-center">
+                <span className="text-3xl text-red-700 mb-2">✗</span>
+                <p className="text-lg font-semibold text-black">
+                  {errorMessage}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Add Modal */}
