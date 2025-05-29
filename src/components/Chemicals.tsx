@@ -169,9 +169,36 @@ const Chemical = ({
           {user_type !== "admin" && chemical.mass > 0 && (  // updated here
             <button
               onClick={handleSave}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+              style={{
+                width: '120px',
+                height: '38.234px',
+                flexShrink: 0,
+                borderRadius: '5.771px',
+                background: '#FFF',
+                boxShadow: "4px 4px 8px 2px rgba(0, 0, 0, 0.3)",
+                color: '#000000',
+                textAlign: 'center',
+                textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                fontFamily: 'Jost, sans-serif',
+                fontSize: '21.139px',
+                fontStyle: 'normal',
+                fontWeight: 700,
+                lineHeight: 'normal',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#03aa6c';
+                (e.currentTarget as HTMLButtonElement).style.color = '#FFF';
+                (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                  '6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#FFF';
+                (e.currentTarget as HTMLButtonElement).style.color = '#000000';
+                (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                  "4px 4px 8px 2px rgba(0, 0, 0, 0.3)";
+              }}
             >
-              Add to Cart
+              ADD
             </button>
           )}
         </div>
