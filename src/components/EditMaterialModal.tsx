@@ -9,7 +9,7 @@ interface Material {
 interface EditMaterialModalProps {
   material: Material;
   onClose: () => void;
-  onSave: () => void; // Simplified, we only need to trigger refresh
+  onSave: () => void;
   onDelete: () => void;
 }
 
@@ -42,10 +42,25 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [form]);
 
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    
+    // Allow empty input (will be treated as 0)
+    if (value === "") {
+      setForm({ ...form, quantity: 0 });
+      return;
+    }
+    
+    // Only allow numbers
+    if (/^\d+$/.test(value)) {
+      setForm({ ...form, quantity: parseInt(value, 10) });
+    }
+  };
+
   const handleSave = async () => {
     setLoading(true);
     if (await handleEdit(material.id, { name: form.name, quantity: form.quantity })) {
-      onSave(); // Refresh list
+      onSave();
       onClose();
     }
     setLoading(false);
@@ -65,11 +80,13 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose
         />
 
         <input
-          type="number"
+          type="text" // Changed from number to text
           className="w-full mt-4 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
-          value={form.quantity}
-          onChange={(e) => setForm({ ...form, quantity: Number(e.target.value) })}
+          value={form.quantity === 0 ? "" : form.quantity.toString()} // Show empty string for 0
+          onChange={handleQuantityChange}
           disabled={loading}
+          inputMode="numeric" // Show numeric keyboard on mobile
+          pattern="[0-9]*" // Pattern for numeric input
         />
 
         <div className="flex justify-between mt-6">
