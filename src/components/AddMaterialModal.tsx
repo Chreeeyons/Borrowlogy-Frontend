@@ -15,15 +15,15 @@ const AddMaterialModal: React.FC<AddMaterialModalProps> = ({
   const [form, setForm] = useState({ name: "", quantity: "" });
   const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "Enter") handleSave();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line
-  }, [form]);
+  // useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent) => {
+  //     if (e.key === "Escape") onClose();
+  //     if (e.key === "Enter") handleSave();
+  //   };
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   return () => window.removeEventListener("keydown", handleKeyDown);
+  //   // eslint-disable-next-line
+  // }, [form]);
 
   const handleSave = async () => {
     setErrorMessage(""); // Clear previous errors
