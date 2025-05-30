@@ -51,8 +51,12 @@ const Equipments = () => {
     }
   };
 
-  const filteredBorrowers = borrowers.filter((b) =>
-    b.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredBorrowers = borrowers.filter((b) => {
+    if(b.name)
+    return b.name.toLowerCase().includes(searchQuery ? searchQuery.toLowerCase():"")
+    else
+    return false
+    }
   );
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -270,11 +274,11 @@ const Equipments = () => {
           <table className="w-full mb-4 text-black table-auto">
             <thead>
               <tr className="text-center">
-                <th className="px-1 py-2 text-xl">Transaction No.</th>{" "}
+                <th className="px-1 py-2 text-xl">Transaction No.</th>{""}
                 {/* Increased font size */}
-                <th className="px-1 py-2 text-xl">Date Borrowed</th>{" "}
+                <th className="px-1 py-2 text-xl">Date Borrowed</th>{""}
                 {/* Increased font size */}
-                <th className="px-1 py-2 text-xl">Status</th>{" "}
+                <th className="px-1 py-2 text-xl">Status</th>{""}
                 {/* Increased font size */}
               </tr>
             </thead>
@@ -528,3 +532,7 @@ const Equipments = () => {
 };
 
 export default Equipments;
+function toLowerCase(): string {
+  throw new Error("Function not implemented.");
+}
+
