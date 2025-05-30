@@ -42,6 +42,24 @@ const handleEditChemical = async (id: number, updatedData: Partial<Chemical>) =>
   }
 };
 
+const handleDeleteChemical = async () => {
+  try {
+    const response = await fetch(`http://localhost:8000/api/chemicals/delete_chemical}/`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) throw new Error("Failed to delete chemical.");
+
+    // Optional: refresh list
+    // refreshChemicalList();
+
+    // Close the modal
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error("Error deleting chemical:", error);
+  }
+};
+
 const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose, onSave, onDelete }) => {
   const [form, setForm] = useState<Chemical>(chemical);
   const [loading, setLoading] = useState(false);
@@ -162,3 +180,7 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
 };
 
 export default EditChemicalModal;
+function setIsModalOpen(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+

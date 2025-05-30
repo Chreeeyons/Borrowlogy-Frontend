@@ -53,6 +53,32 @@ const Chemical = ({
     }
   };
 
+
+  const handleDeleteChemical = async () => { 
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/chemicals/delete_chemical/",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ pk: chemical.id }), // include chemical ID in the request body
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete chemical");
+      }
+
+      refreshChemicalList(); // Refresh the list after deletion
+    } catch (error) {
+      console.error("Error deleting chemical:", error);
+      alert("An error occurred while deleting the chemical.");
+    }
+  };
+
+
   return (
     <div>
       <div
@@ -213,11 +239,11 @@ const Chemical = ({
         <EditChemicalModal
           chemical={chemical}
           onClose={() => setIsModalOpen(false)}
-          // onRefresh={refreshChemicalList} 
-          onSave={() => { } } onDelete={function (): void {
-            throw new Error("Function not implemented.");
-          } }        />
+          onSave={() => {}}
+          onDelete={handleDeleteChemical}
+        />
       )}
+
 
       {/* Success Message */}
         {successMessage && (
