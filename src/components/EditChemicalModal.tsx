@@ -42,27 +42,10 @@ const handleEditChemical = async (id: number, updatedData: Partial<Chemical>) =>
   }
 };
 
-const handleDeleteChemical = async () => {
-  try {
-    const response = await fetch(`http://localhost:8000/api/chemicals/delete_chemical}/`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) throw new Error("Failed to delete chemical.");
-
-    // Optional: refresh list
-    // refreshChemicalList();
-
-    // Close the modal
-    setIsModalOpen(false);
-  } catch (error) {
-    console.error("Error deleting chemical:", error);
-  }
-};
-
 const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose, onSave, onDelete }) => {
   const [form, setForm] = useState<Chemical>(chemical);
   const [loading, setLoading] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -93,94 +76,136 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
     setLoading(false);
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteConfirmation(false);
+    onDelete();
+    onClose();
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50" onClick={onClose}>
-      <div className="relative bg-white p-8 rounded-lg shadow-lg w-[450px]" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-4">Edit Chemical</h2>
+    <>
+      <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50" onClick={onClose}>
+        <div className="relative bg-white p-8 rounded-lg shadow-lg w-[450px]" onClick={(e) => e.stopPropagation()}>
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-4">Edit Chemical</h2>
 
-        <input
-          type="text"
-          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
-          placeholder="Chemical Name"
-          value={form.chemical_name}
-          onChange={(e) => setForm({ ...form, chemical_name: e.target.value })}
-          disabled={loading}
-        />
+          <input
+            type="text"
+            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            placeholder="Chemical Name"
+            value={form.chemical_name}
+            onChange={(e) => setForm({ ...form, chemical_name: e.target.value })}
+            disabled={loading}
+          />
 
-        <input
-          type="text"
-          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
-          placeholder="Brand Name"
-          value={form.brand_name}
-          onChange={(e) => setForm({ ...form, brand_name: e.target.value })}
-          disabled={loading}
-        />
+          <input
+            type="text"
+            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            placeholder="Brand Name"
+            value={form.brand_name}
+            onChange={(e) => setForm({ ...form, brand_name: e.target.value })}
+            disabled={loading}
+          />
 
-        <input
-          type="text"
-          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
-          placeholder="Mass (g/ml)"
-          value={form.mass === 0 ? "" : form.mass.toString()}
-          onChange={handleMassChange}
-          disabled={loading}
-          inputMode="decimal"
-        />
+          <input
+            type="text"
+            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            placeholder="Mass (g/ml)"
+            value={form.mass === 0 ? "" : form.mass.toString()}
+            onChange={handleMassChange}
+            disabled={loading}
+            inputMode="decimal"
+          />
 
-        <select
-          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
-          value={form.hazard_type || ""}
-          onChange={(e) => setForm({ ...form, hazard_type: e.target.value })}
-          disabled={loading}
-        >
-          <option value="">Select Hazard Type</option>
-          {hazardTypeOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+          <select
+            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            value={form.hazard_type || ""}
+            onChange={(e) => setForm({ ...form, hazard_type: e.target.value })}
+            disabled={loading}
+          >
+            <option value="">Select Hazard Type</option>
+            {hazardTypeOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
 
-        <input
-          type="date"
-          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
-          value={form.expiration_date || ""}
-          onChange={(e) => setForm({ ...form, expiration_date: e.target.value })}
-          disabled={loading}
-        />
+          <input
+            type="date"
+            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            value={form.expiration_date || ""}
+            onChange={(e) => setForm({ ...form, expiration_date: e.target.value })}
+            disabled={loading}
+          />
 
-        <input
-          type="text"
-          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
-          placeholder="Location"
-          value={form.location || ""}
-          onChange={(e) => setForm({ ...form, location: e.target.value })}
-          disabled={loading}
-        />
+          <input
+            type="text"
+            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            placeholder="Location"
+            value={form.location || ""}
+            onChange={(e) => setForm({ ...form, location: e.target.value })}
+            disabled={loading}
+          />
 
-        <div className="flex justify-between mt-6">
-          <button onClick={onDelete} className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
-            Delete
-          </button>
-          <div className="flex gap-3">
-            <button onClick={onClose} className="px-5 py-2 bg-gray-300 rounded-lg hover:bg-gray-400" disabled={loading}>
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              className="px-5 py-2 bg-[#8C1931] text-white rounded-lg hover:bg-[#6f1427]"
+          <div className="flex justify-between mt-6">
+            <button 
+              onClick={handleDeleteClick} 
+              className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save"}
+              Delete
             </button>
+            <div className="flex gap-3">
+              <button onClick={onClose} className="px-5 py-2 bg-gray-300 rounded-lg hover:bg-gray-400" disabled={loading}>
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-5 py-2 bg-[#8C1931] text-white rounded-lg hover:bg-[#6f1427]"
+                disabled={loading}
+              >
+                {loading ? "Saving..." : "Save"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur bg-opacity-50 z-50">
+          <div
+            className="bg-white rounded-lg p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-2xl font-semibold mb-4 text-center">Confirm Deletion</h2>
+            <p className="text-center mb-6">Are you sure you want to delete this chemical?</p>
+            
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => setShowDeleteConfirmation(false)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                disabled={loading}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                disabled={loading}
+              >
+                {loading ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
 export default EditChemicalModal;
-function setIsModalOpen(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
-
