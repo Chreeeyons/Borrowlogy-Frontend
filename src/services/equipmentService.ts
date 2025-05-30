@@ -29,11 +29,20 @@ export const addEquipment = async (equipmentData: {
       body: JSON.stringify(equipmentData),
     });
 
-    if (!response.ok) throw new Error("Failed to add equipment");
-    return await response.json();
+    // Try to parse the response body even on error
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      // Log the backend error for debugging
+      console.error("Backend error:", data);
+      // Return the error to the UI
+      return { error: data?.error || "Failed to add equipment" };
+    }
+
+    return data;
   } catch (error) {
     console.error("Error adding equipment:", error);
-    return null;
+    return { error: "Network or server error" };
   }
 };
 
