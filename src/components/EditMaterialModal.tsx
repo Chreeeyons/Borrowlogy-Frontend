@@ -32,6 +32,7 @@ const handleEdit = async (id: number, updatedData: Partial<Material>) => {
 const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose, onSave, onDelete }) => {
   const [form, setForm] = useState<Material>(material);
   const [loading, setLoading] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -45,13 +46,11 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     
-    // Allow empty input (will be treated as 0)
     if (value === "") {
       setForm({ ...form, quantity: 0 });
       return;
     }
     
-    // Only allow numbers
     if (/^\d+$/.test(value)) {
       setForm({ ...form, quantity: parseInt(value, 10) });
     }
@@ -80,17 +79,20 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose
         />
 
         <input
-          type="text" // Changed from number to text
+          type="text"
           className="w-full mt-4 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
-          value={form.quantity === 0 ? "" : form.quantity.toString()} // Show empty string for 0
+          value={form.quantity === 0 ? "" : form.quantity.toString()}
           onChange={handleQuantityChange}
           disabled={loading}
-          inputMode="numeric" // Show numeric keyboard on mobile
-          pattern="[0-9]*" // Pattern for numeric input
+          inputMode="numeric"
+          pattern="[0-9]*"
         />
 
         <div className="flex justify-between mt-6">
-          <button onClick={onDelete} className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
+          <button 
+            onClick={() => setShowDeleteConfirmation(true)} 
+            className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+          >
             Delete
           </button>
           <div className="flex gap-3">
@@ -102,6 +104,34 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({ material, onClose
             </button>
           </div>
         </div>
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirmation && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50" onClick={() => setShowDeleteConfirmation(false)}>
+            <div className="relative bg-white p-8 rounded-lg shadow-lg w-[420px]" onClick={(e) => e.stopPropagation()}>
+              <h2 className="text-2xl font-bold text-center text-gray-900 mb-4">Confirm Deletion</h2>
+              <p className="text-center mb-6">Are you sure you want to delete this material?</p>
+              
+              <div className="flex justify-center gap-4">
+                <button 
+                  onClick={() => setShowDeleteConfirmation(false)} 
+                  className="px-5 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={() => {
+                    onDelete();
+                    setShowDeleteConfirmation(false);
+                  }}
+                  className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
