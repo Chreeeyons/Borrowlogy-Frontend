@@ -239,7 +239,10 @@ const Chemical = ({
         <EditChemicalModal
           chemical={chemical}
           onClose={() => setIsModalOpen(false)}
-          onSave={() => {}}
+          onSave={(updatedChemical) => {
+            refreshChemicalList(); // Refresh the list to get the updated data
+            setIsModalOpen(false);
+          }}
           onDelete={handleDeleteChemical}
         />
       )}

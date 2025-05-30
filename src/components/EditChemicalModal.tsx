@@ -22,7 +22,7 @@ interface Chemical {
 interface EditChemicalModalProps {
   chemical: Chemical;
   onClose: () => void;
-  onSave: () => void;
+  onSave: (updatedChemical: Chemical) => void;  // Changed to accept the updated chemical
   onDelete: () => void;
 }
 
@@ -69,8 +69,9 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
 
   const handleSave = async () => {
     setLoading(true);
-    if (await handleEditChemical(chemical.id, form)) {
-      onSave();
+    const updatedChemical = await handleEditChemical(chemical.id, form);
+    if (updatedChemical) {
+      onSave({ ...form, id: chemical.id });  // Pass the updated chemical data back
       onClose();
     }
     setLoading(false);
