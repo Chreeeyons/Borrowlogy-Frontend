@@ -34,6 +34,7 @@ const EditChemicalModal = ({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -75,8 +76,7 @@ const EditChemicalModal = ({
   };
 
   const handleDelete = async () => {
-    const confirmDelete = confirm("Are you sure you want to delete this chemical?");
-    if (!confirmDelete) return;
+    setShowDeleteConfirmation(false);
 
     setLoading(true);
     setError(null);
@@ -190,7 +190,7 @@ const EditChemicalModal = ({
           <div className="flex justify-between items-center mt-4">
             <button
               type="button"
-              onClick={handleDelete}
+              onClick={() => setShowDeleteConfirmation(true)}
               className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
               disabled={loading}
             >
@@ -216,6 +216,36 @@ const EditChemicalModal = ({
             </div>
           </div>
         </form>
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirmation && (
+          <div
+            className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur bg-opacity-50 z-50"
+            onClick={() => setShowDeleteConfirmation(false)}
+          >
+            <div
+              className="bg-white rounded-lg p-6 w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-2xl font-semibold mb-4 text-center">Confirm Deletion</h2>
+              <p className="text-center mb-6">Are you sure you want to delete this chemical?</p>
+              
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => setShowDeleteConfirmation(false)}
+                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
