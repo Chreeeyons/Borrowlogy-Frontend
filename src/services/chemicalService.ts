@@ -1,8 +1,12 @@
 const BASE_URL = "http://127.0.0.1:8000/api/chemicals";
 
-export const getChemicals = async () => {
+export const getChemicals = async (hazardType?: string) => {
   try {
-    const response = await fetch(`${BASE_URL}/get_chemicals/`);
+    const url = hazardType
+      ? `${BASE_URL}/get_chemicals/?hazard_type=${encodeURIComponent(hazardType)}`
+      : `${BASE_URL}/get_chemicals/`;
+
+    const response = await fetch(url);
     if (!response.ok) throw new Error("Failed to fetch chemicals");
     return await response.json();
   } catch (error) {
@@ -13,10 +17,9 @@ export const getChemicals = async () => {
 
 export const addChemical = async (chemicalData: {
   chemical_name: string;
-  volume: number;
-  volume_unit: string;
+  mass: number;
+  hazard_type: string;
   brand_name?: string;
-  is_hazardous: boolean;
   expiration_date?: string;
   location?: string;
 }) => {
@@ -41,7 +44,7 @@ export const editChemical = async (chemicalData: {
 }) => {
   try {
     const response = await fetch(`${BASE_URL}/edit_chemical/`, {
-      method: "PUT",
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(chemicalData),
     });

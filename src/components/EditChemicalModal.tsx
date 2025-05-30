@@ -1,11 +1,20 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect } from "react";
+
+const hazardTypeOptions = [
+  { value: "No GHS", label: "No GHS" },
+  { value: "Flammable", label: "Flammable" },
+  { value: "Harmful", label: "Harmful" },
+  { value: "Health Hazard", label: "Health Hazard" },
+  { value: "Acute Toxicity", label: "Acute Toxicity" },
+  { value: "Environmental Hazard", label: "Environmental Hazard" },
+];
 
 interface Chemical {
   id: number;
   chemical_name: string;
-  mass: number;          // changed from volume
+  mass: number;
   brand_name: string;
-  is_hazardous: boolean;
+  hazard_type?: string;
   expiration_date?: string;
   location?: string;
 }
@@ -14,208 +23,139 @@ interface EditChemicalModalProps {
   chemical: Chemical;
   onClose: () => void;
   onSave: () => void;
-  onRefresh: () => void;
+  onDelete: () => void;
 }
 
-const EditChemicalModal = ({
-  chemical,
-  onClose,
-  onSave,
-  onRefresh,
-}: EditChemicalModalProps) => {
-  const [formData, setFormData] = useState({
-    chemical_name: chemical.chemical_name,
-    mass: chemical.mass,           // updated here
-    brand_name: chemical.brand_name,
-    is_hazardous: chemical.is_hazardous,
-    expiration_date: chemical.expiration_date || "",
-    location: chemical.location || "",
-  });
+const handleEditChemical = async (id: number, updatedData: Partial<Chemical>) => {
+  try {
+    const response = await fetch("http://localhost:8000/api/chemicals/edit_chemical/", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pk: id, ...updatedData }),
+    });
 
+    if (!response.ok) throw new Error("Failed to update chemical.");
+    return response.json();
+  } catch (error) {
+    console.error("Error updating chemical:", error);
+    return null;
+  }
+};
+
+const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose, onSave, onDelete }) => {
+  const [form, setForm] = useState<Chemical>(chemical);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target;
-    const { name, value, type } = target;
-    const checked = type === "checkbox" && (target as HTMLInputElement).checked;
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+      if (event.key === "Enter") handleSave();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [form]);
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  const handleMassChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === "") {
+      setForm({ ...form, mass: 0 });
+      return;
+    }
+    if (/^\d+(\.\d{0,2})?$/.test(value)) {
+      setForm({ ...form, mass: parseFloat(value) });
+    }
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSave = async () => {
     setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `http://localhost:8000/api/chemicals/${chemical.id}/`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to update chemical");
-
+    if (await handleEditChemical(chemical.id, form)) {
       onSave();
       onClose();
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setLoading(false);
     }
-  };
-
-  const handleDelete = async () => {
-    const confirmDelete = confirm("Are you sure you want to delete this chemical?");
-    if (!confirmDelete) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `http://localhost:8000/api/chemicals/${chemical.id}/`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to delete chemical");
-
-      onRefresh();
-      onClose();
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur bg-opacity-50 z-50"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-lg p-6 w-full max-w-md"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className="text-2xl font-semibold mb-4 text-center">Edit Chemical</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block font-medium">Chemical Name</label>
-            <input
-              type="text"
-              name="chemical_name"
-              value={formData.chemical_name}
-              onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50" onClick={onClose}>
+      <div className="relative bg-white p-8 rounded-lg shadow-lg w-[450px]" onClick={(e) => e.stopPropagation()}>
+        <h2 className="text-2xl font-bold text-center text-gray-900 mb-4">Edit Chemical</h2>
 
-          <div>
-            <label className="block font-medium">Mass</label>
-            <input
-              type="number"
-              name="mass"
-              value={formData.mass}
-              onChange={handleChange}
-              min={0}
-              step="any"
-              className="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
+        <input
+          type="text"
+          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+          placeholder="Chemical Name"
+          value={form.chemical_name}
+          onChange={(e) => setForm({ ...form, chemical_name: e.target.value })}
+          disabled={loading}
+        />
 
-          <div>
-            <label className="block font-medium">Brand Name</label>
-            <input
-              type="text"
-              name="brand_name"
-              value={formData.brand_name}
-              onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
-            />
-          </div>
+        <input
+          type="text"
+          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+          placeholder="Brand Name"
+          value={form.brand_name}
+          onChange={(e) => setForm({ ...form, brand_name: e.target.value })}
+          disabled={loading}
+        />
 
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="is_hazardous"
-              checked={formData.is_hazardous}
-              onChange={handleChange}
-              id="hazardous-checkbox"
-            />
-            <label htmlFor="hazardous-checkbox" className="font-medium">
-              Hazardous
-            </label>
-          </div>
+        <input
+          type="text"
+          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+          placeholder="Mass (g/ml)"
+          value={form.mass === 0 ? "" : form.mass.toString()}
+          onChange={handleMassChange}
+          disabled={loading}
+          inputMode="decimal"
+        />
 
-          <div>
-            <label className="block font-medium">Expiration Date</label>
-            <input
-              type="date"
-              name="expiration_date"
-              value={formData.expiration_date}
-              onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
-            />
-          </div>
+        <select
+          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+          value={form.hazard_type || ""}
+          onChange={(e) => setForm({ ...form, hazard_type: e.target.value })}
+          disabled={loading}
+        >
+          <option value="">Select Hazard Type</option>
+          {hazardTypeOptions.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
 
-          <div>
-            <label className="block font-medium">Location</label>
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
-            />
-          </div>
+        <input
+          type="date"
+          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+          value={form.expiration_date || ""}
+          onChange={(e) => setForm({ ...form, expiration_date: e.target.value })}
+          disabled={loading}
+        />
 
-          {error && (
-            <div className="text-red-600 font-semibold">Error: {error}</div>
-          )}
+        <input
+          type="text"
+          className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+          placeholder="Location"
+          value={form.location || ""}
+          onChange={(e) => setForm({ ...form, location: e.target.value })}
+          disabled={loading}
+        />
 
-          <div className="flex justify-between items-center mt-4">
+        <div className="flex justify-between mt-6">
+          <button onClick={onDelete} className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
+            Delete
+          </button>
+          <div className="flex gap-3">
+            <button onClick={onClose} className="px-5 py-2 bg-gray-300 rounded-lg hover:bg-gray-400" disabled={loading}>
+              Cancel
+            </button>
             <button
-              type="button"
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              onClick={handleSave}
+              className="px-5 py-2 bg-[#8C1931] text-white rounded-lg hover:bg-[#6f1427]"
               disabled={loading}
             >
-              {loading ? "Deleting..." : "Delete"}
+              {loading ? "Saving..." : "Save"}
             </button>
-
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                disabled={loading}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-[#8C1931] text-white rounded hover:bg-green-700"
-                disabled={loading}
-              >
-                {loading ? "Saving..." : "Save"}
-              </button>
-            </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

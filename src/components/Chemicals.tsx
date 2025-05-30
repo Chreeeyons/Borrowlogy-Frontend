@@ -5,7 +5,7 @@ import { addtoCart } from "@/services/cartService";
 interface ChemicalProps {
   user_type: string;
   chemical: {
-    is_hazardous: boolean;
+    hazard_type?: string;
     brand_name: string;
     mass: number;        // changed from volume
     id: number;
@@ -79,6 +79,10 @@ const Chemical = ({
             <span className="text-black flex items-center gap-1">
               |<span className="font-bold text-lg">Mass:</span>{" "} {/* updated label */}
               {chemical.mass} g {/* updated here */}
+            </span>
+            <span className="text-black flex items-center gap-1">
+              |<span className="font-bold text-lg">Hazard Type:</span>{" "} {/* updated label */}
+              {chemical.hazard_type} {/* updated here */}
             </span>
           </p>
         </div>
@@ -209,9 +213,10 @@ const Chemical = ({
         <EditChemicalModal
           chemical={chemical}
           onClose={() => setIsModalOpen(false)}
-          onRefresh={refreshChemicalList} 
-          onSave={() => {}}
-        />
+          // onRefresh={refreshChemicalList} 
+          onSave={() => { } } onDelete={function (): void {
+            throw new Error("Function not implemented.");
+          } }        />
       )}
 
       {/* Success Message */}
