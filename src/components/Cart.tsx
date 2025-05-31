@@ -2,19 +2,21 @@ import { clearCart, getCart, removeCartItems } from "@/services/cartService";
 import { addHistory } from "@/services/historyService";
 import { updateCartItemQuantity } from "@/services/cartService";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<any>({ items: [] });
   const [remarks, setRemarks] = useState<string>("");
+  const { data: session, status } = useSession();
   const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>(
     {}
   );
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  console.log("Session:", session);
   const fetchCartData = async () => {
     try {
-      const data = await getCart(1); // Assuming user_id is 1 for demo purposes
+      const data = await getCart(parseInt(session?.user?.id ?? "")); // Assuming user_id is 1 for demo purposes
       const itemsWithQuantity =
         data?.items?.map((item: any) => ({
           ...item,
@@ -38,8 +40,9 @@ const Cart = () => {
   };
 
   useEffect(() => {
+    if (!session?.user?.id) return; // Ensure user ID is available
     fetchCartData();
-  }, []);
+  }, [session?.user?.id]); // Refetch when user ID changes
 
   const handleCheckboxChange = (index: number) => {
     const updated = {
@@ -67,7 +70,7 @@ const Cart = () => {
 
   const handleSubmit = async () => {
     await addHistory({
-      user_id: 1,
+      user_id: parseInt(session?.user?.id ?? ""),
       cart_id: cartItems?.cart_id,
       borrower_date: new Date(),
       remarks: remarks ?? "",

@@ -6,7 +6,7 @@ export const addtoCart = async (cartItemData: {
   quantity: number;
 }) => {
   try {
-    const response = await fetch(`${BASE_URL}/add_item/`, {
+    const response = await fetch(`${BASE_URL}/cart/add_item/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cartItemData),
@@ -85,7 +85,7 @@ export const removeCartItems = async ({
   equipment_ids: number[];
 }) => {
   try {
-    const response = await fetch(`${BASE_URL}/remove_items/`, {
+    const response = await fetch(`${BASE_URL}/cart/remove_items/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cart_id, equipment_ids }),
@@ -108,12 +108,16 @@ export const updateCartItemQuantity = async ({
   equipment_id: number;
   quantity: number;
 }) => {
+  console.log(cart_id, equipment_id, quantity);
   try {
     const response = await fetch(`${BASE_URL}/cart/update_item_quantity/`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // or add your auth header instead
-      body: JSON.stringify({ cart_id, equipment_id, quantity }),
+      body: JSON.stringify({
+        cart_id: cart_id,
+        equipment_id: equipment_id,
+        quantity: quantity,
+      }),
     });
 
     if (!response.ok) {
