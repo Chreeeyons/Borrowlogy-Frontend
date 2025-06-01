@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000/cart/cart";
+const BASE_URL = "http://127.0.0.1:8000/cart";
 
 export const addtoCart = async (cartItemData: {
   user_id: number;
@@ -6,7 +6,7 @@ export const addtoCart = async (cartItemData: {
   quantity: number;
 }) => {
   try {
-    const response = await fetch(`${BASE_URL}/add_item/`, {
+    const response = await fetch(`${BASE_URL}/cart/add_item/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cartItemData),
@@ -27,7 +27,7 @@ export const addtoCart = async (cartItemData: {
 
 export const getCart = async (user_id: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/get_cart/`, {
+    const response = await fetch(`${BASE_URL}/cart/get_cart/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id }),
@@ -42,10 +42,10 @@ export const getCart = async (user_id: number) => {
 
 export const clearCart = async (cart_id: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/clear_cart/`, {
-      method: "POST",
+    const response = await fetch(`${BASE_URL}/update-item-quantity/`, {
+      method: "PATCH", // Use PATCH here
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cart_id: cart_id }),
+      body: JSON.stringify({ cart_id }),
     }); // Assuming user_id is 1 for demo purposes
     if (!response.ok) throw new Error("Failed to fetch equipment");
     return await response.json();
@@ -85,7 +85,7 @@ export const removeCartItems = async ({
   equipment_ids: number[];
 }) => {
   try {
-    const response = await fetch(`${BASE_URL}/remove_items/`, {
+    const response = await fetch(`${BASE_URL}/cart/remove_items/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cart_id, equipment_ids }),
@@ -95,6 +95,40 @@ export const removeCartItems = async ({
     return await response.json();
   } catch (error) {
     console.error("Error removing items:", error);
+    return null;
+  }
+};
+
+export const updateCartItemQuantity = async ({
+  cart_id,
+  equipment_id,
+  quantity,
+}: {
+  cart_id: number;
+  equipment_id: number;
+  quantity: number;
+}) => {
+  console.log(cart_id, equipment_id, quantity);
+  try {
+    const response = await fetch(`${BASE_URL}/cart/update_item_quantity/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        cart_id: cart_id,
+        equipment_id: equipment_id,
+        quantity: quantity,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Server responded with error:", response.status, errorText);
+      throw new Error("Failed to update cart item quantity");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating cart item quantity:", error);
     return null;
   }
 };

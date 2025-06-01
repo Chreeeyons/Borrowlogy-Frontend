@@ -1,16 +1,26 @@
-'use client';
+"use client";
 
-import { signIn } from "next-auth/react";
-import './globals.css'; // still needed for Tailwind resets and fonts
+import { signIn, signOut, useSession } from "next-auth/react";
+import "./globals.css"; // still needed for Tailwind resets and fonts
+import { useEffect } from "react";
 
 export default function LandingPage() {
+  const { data: session, status } = useSession();
+
   const handleLogin = async () => {
     try {
-      await signIn("google", { callbackUrl: "/equipment" });
+      await signIn("google", { callbackUrl: "/" });
     } catch (error) {
       console.error("Error during sign-in:", error);
     }
   };
+
+  useEffect(() => {
+    console.log("Session data:", session);
+    if (session?.user?.id) {
+      window.location.href = "/equipment"; // Redirect to main page if user is logged in
+    }
+  }, [session?.user]);
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden bg-black text-white font-sans">

@@ -2,6 +2,7 @@
 
 import { addEquipment } from "@/services/equipmentService";
 import { useState, useEffect } from "react";
+import Papa from "papaparse"; // <-- Add this import
 
 interface AddMaterialModalProps {
   onClose: () => void;
@@ -50,6 +51,36 @@ const AddMaterialModal: React.FC<AddMaterialModalProps> = ({
     }
   };
 
+  // CSV import handler
+  const handleCSVImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results) => {
+        // results.data is an array of objects
+        for (const row of results.data as {
+          name: string;
+          quantity: string;
+        }[]) {
+          if (row.name && row.quantity && !isNaN(Number(row.quantity))) {
+            await addEquipment({
+              name: row.name,
+              quantity: Number(row.quantity),
+            });
+          }
+        }
+        onSave(); // Refresh the list after import
+        onClose();
+      },
+      error: (err) => {
+        setErrorMessage("Failed to parse CSV: " + err.message);
+      },
+    });
+  };
+
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
@@ -78,6 +109,24 @@ const AddMaterialModal: React.FC<AddMaterialModalProps> = ({
           onChange={(e) => setForm({ ...form, quantity: e.target.value })}
           className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
         />
+
+        {/* CSV Import Button */}
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Or Import CSV:</label>
+          <label
+            htmlFor="csv-upload"
+            className="inline-block px-5 py-2 bg-[#04543C] text-white rounded-lg cursor-pointer hover:bg-green-700"
+          >
+            Import CSV
+          </label>
+          <input
+            id="csv-upload"
+            type="file"
+            accept=".csv"
+            onChange={handleCSVImport}
+            className="hidden"
+          />
+        </div>
 
         {errorMessage && (
           <div className="text-red-600 mb-2 text-center">{errorMessage}</div>

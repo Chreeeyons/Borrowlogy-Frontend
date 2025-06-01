@@ -1,6 +1,8 @@
 // app/layout.tsx
 import "./globals.css";
 import { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
+import AuthProvider from "./NextAuthProvider";
 
 export const metadata: Metadata = {
   title: "Homepage | Borrowlogy",
@@ -16,12 +18,16 @@ const kumbhSans = Kumbh_Sans({
 
 export default function RootLayout({
   children,
+  Session,
 }: {
   children: React.ReactNode;
+  Session: any;
 }) {
   return (
     <html lang="en" className={kumbhSans.variable}>
-      <body suppressHydrationWarning={true}>{children}</body>
+      <body suppressHydrationWarning={true}>
+        <AuthProvider session={Session}>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
