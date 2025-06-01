@@ -5,7 +5,7 @@ import { addtoCart } from "@/services/cartService";
 interface ChemicalProps {
   user_type: string;
   chemical: {
-    is_hazardous: boolean;
+    hazard_type?: string;
     brand_name: string;
     mass: number;        // changed from volume
     id: number;
@@ -53,6 +53,32 @@ const Chemical = ({
     }
   };
 
+
+  const handleDeleteChemical = async () => { 
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/chemicals/delete_chemical/",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ pk: chemical.id }), // include chemical ID in the request body
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete chemical");
+      }
+
+      refreshChemicalList(); // Refresh the list after deletion
+    } catch (error) {
+      console.error("Error deleting chemical:", error);
+      alert("An error occurred while deleting the chemical.");
+    }
+  };
+
+
   return (
     <div>
       <div
@@ -79,6 +105,10 @@ const Chemical = ({
             <span className="text-black flex items-center gap-1">
               |<span className="font-bold text-lg">Mass:</span>{" "} {/* updated label */}
               {chemical.mass} g {/* updated here */}
+            </span>
+            <span className="text-black flex items-center gap-1">
+              |<span className="font-bold text-lg">Hazard Type:</span>{" "} {/* updated label */}
+              {chemical.hazard_type} {/* updated here */}
             </span>
           </p>
         </div>
@@ -209,10 +239,14 @@ const Chemical = ({
         <EditChemicalModal
           chemical={chemical}
           onClose={() => setIsModalOpen(false)}
-          onRefresh={refreshChemicalList} 
-          onSave={() => {}}
+          onSave={(updatedChemical) => {
+            refreshChemicalList(); // Refresh the list to get the updated data
+            setIsModalOpen(false);
+          }}
+          onDelete={handleDeleteChemical}
         />
       )}
+
 
       {/* Success Message */}
         {successMessage && (

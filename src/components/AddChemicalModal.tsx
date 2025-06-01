@@ -5,8 +5,18 @@ import { useState, useEffect } from "react";
 
 interface AddChemicalModalProps {
   onClose: () => void;
-  onSave: () => void; // Simplified to just trigger refresh
+  onSave: () => void;
 }
+
+// Match these options to your Django HAZARD_TYPE_CHOICES exactly
+const hazardTypeOptions = [
+  { value: "No GHS", label: "No GHS" },
+  { value: "Flammable", label: "Flammable" },
+  { value: "Harmful", label: "Harmful" },
+  { value: "Health Hazard", label: "Health Hazard" },
+  { value: "Acute Toxicity", label: "Acute Toxicity" },
+  { value: "Environmental Hazard", label: "Environmental Hazard" },
+];
 
 const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
   onClose,
@@ -14,10 +24,9 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
 }) => {
   const [form, setForm] = useState({
     chemical_name: "",
-    volume: "",
-    volume_unit: "mL", // or default to something
+    mass: "",
     brand_name: "",
-    is_hazardous: false,
+    hazard_type: "No GHS",
   });
 
   useEffect(() => {
@@ -30,18 +39,17 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
   }, [form]);
 
   const handleSave = async () => {
-    if (form.chemical_name.trim() && !isNaN(Number(form.volume))) {
+    if (form.chemical_name.trim() && !isNaN(Number(form.mass))) {
       try {
         const response = await addChemical({
           chemical_name: form.chemical_name,
-          volume: Number(form.volume),
-          volume_unit: form.volume_unit,
+          mass: Number(form.mass),
           brand_name: form.brand_name,
-          is_hazardous: form.is_hazardous,
+          hazard_type: form.hazard_type,
         });
 
         if (response?.chemical) {
-          onSave(); // Refresh the list
+          onSave();
           onClose();
         } else {
           console.error("Unexpected API response:", response);
@@ -51,8 +59,6 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
       }
     }
   };
-
-  // const [volume, setVolume] = useState<number>(0);
 
   return (
     <div
@@ -73,7 +79,6 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
           value={form.chemical_name}
           onChange={(e) => setForm({ ...form, chemical_name: e.target.value })}
           className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
-
         />
 
         <input
@@ -86,33 +91,24 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
 
         <input
           type="number"
-          placeholder="Volume"
-          value={form.volume}
-          onChange={(e) => setForm({ ...form, volume: e.target.value })}
+          placeholder="Mass (g)"
+          value={form.mass}
+          onChange={(e) => setForm({ ...form, mass: e.target.value })}
           className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
-
         />
 
+        <label className="block mb-2 font-semibold">Hazard Type</label>
         <select
-          value={form.volume_unit}
-          onChange={(e) => setForm({ ...form, volume_unit: e.target.value })}
+          value={form.hazard_type}
+          onChange={(e) => setForm({ ...form, hazard_type: e.target.value })}
           className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
         >
-          <option value="mL">mL</option>
-          <option value="L">L</option>
+          {hazardTypeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </select>
-
-        <div className="flex items-center mb-4">
-          <input
-            type="checkbox"
-            checked={form.is_hazardous}
-            onChange={(e) =>
-              setForm({ ...form, is_hazardous: e.target.checked })
-            }
-            className="mr-2"
-          />
-          <label>Is Hazardous?</label>
-        </div>
 
         <div className="flex justify-end gap-3 mt-6">
           <button
