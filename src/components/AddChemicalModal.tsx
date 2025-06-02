@@ -2,6 +2,7 @@
 
 import { addChemical } from "@/services/chemicalService";
 import { useState, useEffect } from "react";
+import Papa from "papaparse";
 
 interface AddChemicalModalProps {
   onClose: () => void;
@@ -62,6 +63,44 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
         console.error("Error adding chemical:", error);
       }
     }
+  };
+
+  const handleCSVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results) => {
+        const data = results.data as any[];
+
+        const validEntries = data.filter(
+          (row) =>
+            row.chemical_name &&
+            !isNaN(Number(row.mass)) &&
+            hazardTypeOptions.some((opt) => opt.value === row.hazard_type)
+        );
+
+        for (const entry of validEntries) {
+          try {
+            await addChemical({
+              chemical_name: entry.chemical_name,
+              mass: Number(entry.mass),
+              brand_name: entry.brand_name || "",
+              hazard_type: entry.hazard_type || "No GHS",
+              expiration_date: entry.expiration_date || "",
+              location: entry.location || "",
+            });
+          } catch (err) {
+            console.error(`Error adding ${entry.chemical_name}:`, err);
+          }
+        }
+
+        onSave();
+        onClose();
+      },
+    });
   };
 
   return (
@@ -131,20 +170,37 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
         />
 
 
-        <div className="flex justify-end gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="px-5 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            className="px-5 py-2 bg-[#04543C] text-white rounded-lg hover:bg-green-700"
-          >
-            Save
-          </button>
-        </div>
+        <div className="flex justify-between items-center gap-2">
+          <div>
+            <label
+              htmlFor="csv-upload"
+              className="inline-block px-4 py-2 bg-[#04543C] text-white rounded-lg cursor-pointer hover:bg-green-700"
+            >
+              Import CSV
+            </label>
+            <input
+              id="csv-upload"
+              type="file"
+              accept=".csv"
+              onChange={handleCSVUpload}
+              className="hidden"
+            />
+          </div>  
+          <div className="flex gap-2">
+            <button
+              onClick={onClose}
+              className="px-5 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-5 py-2 bg-[#04543C] text-white rounded-lg hover:bg-green-700"
+            >
+              Save
+            </button>
+          </div>
+        </div>  
       </div>
     </div>
   );

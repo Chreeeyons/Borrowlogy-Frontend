@@ -88,77 +88,64 @@ const Chemical = ({
   return (
     <div>
       <div
-        className="p-4 mb-2 bg-[#EEE9E5] shadow-md flex justify-between items-center rounded-lg"
+        className="p-4 mb-2 bg-[#EEE9E5] shadow-md rounded-lg flex flex-col md:flex-row md:justify-between md:items-center gap-4"
         style={{
           borderRadius: "12px",
           boxShadow: `3px 3px 6px 0px rgba(0, 0, 0, 0.25) inset`,
         }}
       >
-        <div>
-          <h2 className="text-black text-4xl font-semibold mb-0 tracking-normal">
+        {/* LEFT: Chemical Info */}
+        <div className="flex flex-col gap-1">
+          <h2 className="text-black text-2xl md:text-4xl font-semibold mb-0 tracking-normal">
             {chemical.chemical_name}
           </h2>
-          <p className="text-sm font-normal flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 text-sm">
             <span
               className={
-                chemical.mass > 0 // updated here
-                  ? "text-black-500 font-bold text-lg"
-                  : "text-red-500 font-bold text-lg"
+                chemical.mass > 0
+                  ? "text-black-500 font-bold text-base"
+                  : "text-red-500 font-bold text-base"
               }
             >
-              {chemical.mass > 0 ? "Available" : "Out of Stock"}{" "}
-              {/* updated here */}
+              {chemical.mass > 0 ? "Available" : "Out of Stock"}
             </span>
             <span className="text-black flex items-center gap-1">
-              |<span className="font-bold text-lg">Mass:</span>{" "}
-              {/* updated label */}
-              {chemical.mass} g {/* updated here */}
+              | <span className="font-bold text-base">Mass:</span> {chemical.mass} g
             </span>
             <span className="text-black flex items-center gap-1">
-<<<<<<< HEAD
-              |<span className="font-bold text-lg">Hazard Type:</span>{" "}
-              {/* updated label */}
-=======
-              |<span className="font-bold text-lg">Brand:</span>{" "} {/* updated label */}
-              {chemical.brand_name} {/* updated here */}
+              | <span className="font-bold text-base">Brand:</span> {chemical.brand_name}
             </span>
             <span className="text-black flex items-center gap-1">
-              |<span className="font-bold text-lg">Hazard Type:</span>{" "} {/* updated label */}
->>>>>>> 2c3896c95d4c47a2d241f3d5cc3a4c4c878e4409
-              {chemical.hazard_type} {/* updated here */}
+              | <span className="font-bold text-base">Hazard Type:</span> {chemical.hazard_type}
+
             </span>
-            
 
             {user_type === "admin" && (
               <>
                 <span className="text-black flex items-center gap-1">
-                  |<span className="font-bold text-lg">Expiry:</span>
-                  {chemical.expiration_date}
+                  | <span className="font-bold text-base">Expiry:</span> {chemical.expiration_date}
                 </span>
                 <span className="text-black flex items-center gap-1">
-                  |<span className="font-bold text-lg">Location:</span>
-                  {chemical.location}
+                  | <span className="font-bold text-base">Location:</span> {chemical.location}
                 </span>
               </>
             )}
-          </p>
+          </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-5">
-          {user_type !== "admin" &&
-            chemical.mass > 0 && ( // updated here
-              <div
-                className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white"
-                style={{
-                  boxShadow:
-                    "0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
-                }}
+        <div className="flex flex-wrap sm:flex-nowrap justify-end items-center gap-3 sm:gap-5">
+          {user_type !== "admin" && chemical.mass > 0 && (  // updated here
+            <div
+              className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white"
+              style={{
+                boxShadow: "0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
+              }}
+            >
+              <button
+                onClick={handleDecrease}
+                className="px-3 py-2 text-[#000000] hover:bg-gray-300"
               >
-                <button
-                  onClick={handleDecrease}
-                  className="px-3 py-2 text-[#000000] hover:bg-gray-300"
-                >
                   -
                 </button>
                 <input
