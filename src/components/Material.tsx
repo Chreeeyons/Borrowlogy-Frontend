@@ -54,7 +54,6 @@ const Material = ({
 
   const handleSave = async () => {
     if (quantity === null) return; // Prevent invalid submit
-
     try {
       const response = await addtoCart({
         user_id: session?.user?.id ? Number(session.user.id) : 1, // Use session user ID or default to 1
