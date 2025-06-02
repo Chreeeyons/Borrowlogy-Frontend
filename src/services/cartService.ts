@@ -42,7 +42,7 @@ export const getCart = async (user_id: number) => {
 
 export const clearCart = async (cart_id: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/update-item-quantity/`, {
+    const response = await fetch(`${BASE_URL}/cart/update-item-quantity/`, {
       method: "PATCH", // Use PATCH here
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cart_id }),
@@ -63,7 +63,7 @@ export const approveCart = async ({
   historyId: any;
 }) => {
   try {
-    const response = await fetch(`${BASE_URL}/approve_cart/`, {
+    const response = await fetch(`${BASE_URL}/cart/approve_cart/`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cart_items: cartItems, history_id: historyId }),
