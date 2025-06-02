@@ -86,7 +86,7 @@ const pathname = usePathname();
           </Link>
             </li>
           ))}
-          <li className="pt-4 mt-35 flex justify-center w-full">
+          <li className="pt-4 mt-25 flex justify-center w-full">
             <div className="w-64">
       <button
         onClick={handleLogout}
@@ -141,7 +141,7 @@ const pathname = usePathname();
             </li>
           ))}
 
-    <li className="pt-4 mt-35 flex justify-center w-full">
+    <li className="pt-4 mt-25 flex justify-center w-full">
       <div className="w-64">
     <button
       onClick={handleLogout}

@@ -49,7 +49,7 @@ const handler = NextAuth({
             const userData = await res.json();
             if (typeof userData.user_type === "string") {
               token.user_type = userData.user_type;
-              token.name = "Chraine"; // Convert null to undefined
+              token.name = userData.name; // Convert null to undefined
               token.id = userData.id; // Ensure ID is set from user data
               token.email = userData.email ?? undefined; // Convert null to undefined
               token.account = account; // Store account information

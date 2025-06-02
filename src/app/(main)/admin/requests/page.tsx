@@ -188,13 +188,13 @@ const Equipments = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
         className="pl-10 pr-3 py-2 rounded-[20px] bg-[#E3E1DD] outline-none text-black w-full"
         style={{
-          width: "650px",   
+          width: "550px",   
           boxShadow: 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
         }}
         />
         </div>
       <select
-        className="ml-35 px-6 py-2 text-black rounded-[10px] transition duration-300 ease-in-out cursor-pointer"
+        className="ml-17 px-6 py-2 text-black rounded-[10px] transition duration-300 ease-in-out cursor-pointer"
       style={{
         backgroundColor: '#E3E1DD',
         boxShadow: `

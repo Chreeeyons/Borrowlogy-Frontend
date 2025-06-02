@@ -12,7 +12,6 @@ const AuthProvider = ({ children, session }: Props) => {
   return (
     <SessionProvider session={session}>
       {" "}
-      // session passed
       {children}
     </SessionProvider>
   );
