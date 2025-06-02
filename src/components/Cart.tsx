@@ -153,7 +153,7 @@ const Cart = () => {
 
       {/* Select All */}
       {cartItems.items.length > 0 && (
-        <div className="pl-20 mt-4">
+        <div className="pl-4 sm:pl-20 mt-4">
           <label className="flex items-center space-x-2 font-bold">
             <input
               type="checkbox"
@@ -165,19 +165,29 @@ const Cart = () => {
         </div>
       )}
 
+
       {/* Items in cart */}
-      <ul className="mt-2 ml-12 list-disc pl-20">
+      <ul className="mt-2 ml-4 sm:ml-12 list-disc pl-5 sm:pl-20">
         {cartItems?.items?.map((item: any, index: number) => (
-          <li key={index} className="py-2 flex items-center">
-            <input
-              type="checkbox"
-              className="mr-3"
-              checked={checkedItems[index] || false}
-              onChange={() => handleCheckboxChange(index)}
-            />
-            <span className="w-64 truncate">{item.equipment_name}</span>
+          <li
+            key={index}
+            className="py-2 flex flex-col sm:flex-row sm:items-center"
+          >
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                className="mr-3"
+                checked={checkedItems[index] || false}
+                onChange={() => handleCheckboxChange(index)}
+              />
+              {/* Responsive text container: max width and truncate */}
+              <span className="max-w-[16rem] sm:max-w-[16rem] truncate">
+                {item.equipment_name}
+              </span>
+            </div>
+
             {/* Quantity Selector */}
-            <div className="ml-4 flex items-center bg-white rounded-lg overflow-hidden h-9">
+            <div className="mt-2 sm:mt-0 sm:ml-4 flex items-center bg-white rounded-lg overflow-hidden h-9 self-start">
               <button
                 onClick={() => handleDecrease(index)}
                 className="w-9 h-full text-[#000000] hover:bg-gray-200 flex items-center justify-center"
@@ -211,6 +221,7 @@ const Cart = () => {
           </li>
         ))}
       </ul>
+
 
       {/* Remarks input */}
       <label className="font-bold block mt-4 text-black">

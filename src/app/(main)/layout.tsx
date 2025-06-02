@@ -64,16 +64,13 @@ const Layout = ({ children }: LayoutProps) => {
 
           {/* Main Content */}
           <main
-            className="p-6 m-2 bg-white rounded-lg shadow-3xl text-base leading-relaxed"
+            className="p-4 md:p-6 mx-2 md:mx-4 bg-white rounded-[20px] shadow-3xl text-base leading-relaxed overflow-y-auto"
             style={{
-              borderRadius: "20px",
               gridArea: "main",
               display: "flex",
               flexDirection: "column",
-              height: "calc(100vh - 125px)",
-              maxHeight: "calc(100vh - 70px)",
-              overflowY: "auto",
-              margin: "0 1rem 0rem 1rem",
+              height: "calc(100vh - 10rem)", // Adjust to leave room for bottom nav
+              paddingBottom: "5rem", // Ensures scroll content doesn't get hidden
               boxShadow: "0px 0px 20px rgba(0, 0, 0, 1)",
             }}
           >

@@ -92,32 +92,32 @@ return (
       </div>
 
         {user_type === "borrower" && (
-    <Link href="/cart">
-      <button
-        className="flex items-center gap-2 ml-5 px-8 py-2 text-white rounded-[10px] font-bold transition duration-300 ease-in-out"
-        style={{
-          backgroundColor: '#8C1931',
-          boxShadow: 'inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)',
-          fontFamily: 'Jost, sans-serif',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.backgroundColor = '#7A1729';
-          e.currentTarget.style.boxShadow =
-            '0 0 12px 3px rgba(140, 25, 49, 0.75), inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
-          e.currentTarget.style.transform = 'scale(1.05)';
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.backgroundColor = '#8C1931';
-          e.currentTarget.style.boxShadow = 'inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
-          e.currentTarget.style.transform = 'scale(1)';
-        }}
-      >
-        <ShoppingCart size={20} />
-        Cart
-      </button>
-    </Link>
+        <Link href="/cart">
+          <button
+            className="hidden md:flex items-center gap-2 ml-5 px-8 py-2 text-white rounded-[10px] font-bold transition duration-300 ease-in-out"
+            style={{
+              backgroundColor: '#8C1931',
+              boxShadow: 'inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)',
+              fontFamily: 'Jost, sans-serif',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.backgroundColor = '#7A1729';
+              e.currentTarget.style.boxShadow =
+                '0 0 12px 3px rgba(140, 25, 49, 0.75), inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
+              e.currentTarget.style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.backgroundColor = '#8C1931';
+              e.currentTarget.style.boxShadow = 'inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            <ShoppingCart size={20} />
+            Cart
+          </button>
+        </Link>
+      )}
 
-        )}
       {user_type === "admin" && (
         <button
           className="flex items-center gap-2 ml-5 px-8 py-2 text-white rounded-[10px] font-bold transition duration-300 ease-in-out"
