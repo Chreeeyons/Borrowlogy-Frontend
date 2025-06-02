@@ -45,7 +45,7 @@ export const getCart = async (user_id: any) => {
 
 export const clearCart = async (cart_id: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/update-item-quantity/`, {
+    const response = await fetch(`${BASE_URL}/cart/update-item-quantity/`, {
       method: "PATCH", // Use PATCH here
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cart_id }),

@@ -10,6 +10,8 @@ interface ChemicalProps {
     brand_name: string;
     mass: number; // changed from volume
     id: number;
+    expiration_date?: string;
+    location?: string;
     chemical_name: string;
   };
   refreshChemicalList: () => void;
@@ -113,10 +115,32 @@ const Chemical = ({
               {chemical.mass} g {/* updated here */}
             </span>
             <span className="text-black flex items-center gap-1">
+<<<<<<< HEAD
               |<span className="font-bold text-lg">Hazard Type:</span>{" "}
               {/* updated label */}
+=======
+              |<span className="font-bold text-lg">Brand:</span>{" "} {/* updated label */}
+              {chemical.brand_name} {/* updated here */}
+            </span>
+            <span className="text-black flex items-center gap-1">
+              |<span className="font-bold text-lg">Hazard Type:</span>{" "} {/* updated label */}
+>>>>>>> 2c3896c95d4c47a2d241f3d5cc3a4c4c878e4409
               {chemical.hazard_type} {/* updated here */}
             </span>
+            
+
+            {user_type === "admin" && (
+              <>
+                <span className="text-black flex items-center gap-1">
+                  |<span className="font-bold text-lg">Expiry:</span>
+                  {chemical.expiration_date}
+                </span>
+                <span className="text-black flex items-center gap-1">
+                  |<span className="font-bold text-lg">Location:</span>
+                  {chemical.location}
+                </span>
+              </>
+            )}
           </p>
         </div>
 
