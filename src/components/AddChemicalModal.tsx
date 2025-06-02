@@ -27,6 +27,8 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
     mass: "",
     brand_name: "",
     hazard_type: "No GHS",
+    expiration_date: "",
+    location: "",
   });
 
   useEffect(() => {
@@ -46,6 +48,8 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
           mass: Number(form.mass),
           brand_name: form.brand_name,
           hazard_type: form.hazard_type,
+          expiration_date: form.expiration_date,
+          location: form.location,
         });
 
         if (response?.chemical) {
@@ -109,6 +113,23 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
             </option>
           ))}
         </select>
+
+        <input
+          type="date"
+          placeholder="Expiration Date"
+          value={form.expiration_date}
+          onChange={(e) => setForm({ ...form, expiration_date: e.target.value })}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
+        />
+
+        <input
+          type="text"
+          placeholder="Location"
+          value={form.location}
+          onChange={(e) => setForm({ ...form, location: e.target.value })}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
+        />
+
 
         <div className="flex justify-end gap-3 mt-6">
           <button
