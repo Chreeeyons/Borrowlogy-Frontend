@@ -4,6 +4,9 @@ export const addtoCart = async (cartItemData: {
   user_id: number;
   equipment_id: number;
   quantity: number;
+  // brand_name?: string;
+  // chemical_name: string;
+  // mass?: number; // Optional for chemicals
 }) => {
   try {
     const response = await fetch(`${BASE_URL}/cart/add_item/`, {
@@ -25,7 +28,7 @@ export const addtoCart = async (cartItemData: {
   }
 };
 
-export const getCart = async (user_id: number) => {
+export const getCart = async (user_id: any) => {
   try {
     const response = await fetch(`${BASE_URL}/cart/get_cart/`, {
       method: "POST",
