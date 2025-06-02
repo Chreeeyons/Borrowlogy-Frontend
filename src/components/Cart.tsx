@@ -16,7 +16,7 @@ const Cart = () => {
   console.log("Session:", session);
   const fetchCartData = async () => {
     try {
-      const data = await getCart(parseInt(session?.user?.id ?? "")); // Assuming user_id is 1 for demo purposes
+      const data = await getCart(session?.user?.id); // Assuming user_id is 1 for demo purposes
       const itemsWithQuantity =
         data?.items?.map((item: any) => ({
           ...item,
@@ -70,7 +70,7 @@ const Cart = () => {
 
   const handleSubmit = async () => {
     await addHistory({
-      user_id: parseInt(session?.user?.id ?? ""),
+      user_id: session?.user?.id,
       cart_id: cartItems?.cart_id,
       borrower_date: new Date(),
       remarks: remarks ?? "",
