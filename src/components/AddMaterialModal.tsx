@@ -148,6 +148,7 @@ const AddMaterialModal: React.FC<AddMaterialModalProps> = ({
           className="hidden"
         />
       </div>
+
         {errorMessage && (
           <div className="text-red-600 mb-2 text-center">{errorMessage}</div>
         )}
@@ -182,8 +183,9 @@ const AddMaterialModal: React.FC<AddMaterialModalProps> = ({
         Save
       </button>
     </div>
+
       </div>
-    </div>
+    </div>  
   );
 };
 

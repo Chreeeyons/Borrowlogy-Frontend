@@ -9,12 +9,8 @@ type Props = {
 };
 
 const AuthProvider = ({ children, session }: Props) => {
-  return (
-    <SessionProvider session={session}>
-      {" "}
-      {children}
-    </SessionProvider>
-  );
+
+  return <SessionProvider session={session}> {children}</SessionProvider>;
 };
 
 export default AuthProvider;

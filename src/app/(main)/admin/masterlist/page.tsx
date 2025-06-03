@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useHeader } from "@/utils/HeaderContext";
 import { addUser, getUsers } from "@/services/userService";
+import Papa from "papaparse"; // For CSV parsing
 
 
 // Interfaces
@@ -158,6 +159,49 @@ const Equipments = () => {
    return ""; // No color for users with no status
  };
 
+ const handleCSVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: async function (results: Papa.ParseResult<any>) {
+      const parsedData = results.data as { name: string; email: string }[];
+
+      const validUsers = parsedData.filter(user =>
+        /^[a-zA-Z0-9._%+-]+@up\.edu\.ph$/.test(user.email) &&
+        user.name.trim() !== ""
+      );
+
+      for (const user of validUsers) {
+        try {
+          const response = await addUser({
+            name: user.name,
+            email: user.email,
+            username: `user_${user.name}`,
+          });
+
+          if (response) {
+            setBorrowers(prev => [
+              ...prev,
+              {
+                name: user.name,
+                email: user.email,
+                transactions: [],
+              },
+            ]);
+          }
+        } catch (error) {
+          console.error(`Error adding ${user.email}:`, error);
+        }
+      }
+
+      // ✅ Close the modal after CSV is processed
+      setIsAddingNew(false);
+    },
+  });
+};
 
 
 

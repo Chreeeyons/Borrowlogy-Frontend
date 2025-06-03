@@ -1,20 +1,8 @@
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import type { JWT } from "next-auth/jwt"; // Import JWT type
+import type { NextAuthOptions } from "next-auth";
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      account?: any; // Store account information
-      name?: string | null; // Ensure name can be null
-      email?: string | null;
-      user_type?: string; // Ensure user_type is included
-    } & DefaultSession["user"];
-  }
-}
-
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -30,65 +18,59 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }) {
-      if (profile) {
-        token.id = profile.sub as string;
-        token.email = profile.email ?? undefined;
 
+    async jwt({ token, account }) {
+      if (account?.access_token) {
         try {
-          // Fetch user type from Django backend
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/user/by_email/`,
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/user/login/`,
             {
               method: "POST",
+              credentials: "include",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email: token.email }),
+              body: JSON.stringify({
+                access_token: account.access_token,
+              }),
             }
           );
-          if (res.ok) {
-            const userData = await res.json();
-            if (typeof userData.user_type === "string") {
-              token.user_type = userData.user_type;
-              token.name = userData.name; // Convert null to undefined
-              token.id = userData.id; // Ensure ID is set from user data
-              token.email = userData.email ?? undefined; // Convert null to undefined
-              token.account = account; // Store account information
-            } else {
-              throw new Error("User type missing");
-            }
-          } else {
-            token = {};
-            throw new Error("User not found in database");
-          }
-        } catch (error) {
-          console.error("Error fetching user type:", error);
-          // Optionally, set a flag or property on the token to indicate error
-          token.user_type = undefined;
+          const data = (await response.json()) as {
+            message: string;
+            user_type: string;
+            user_id: number;
+          };
+
+          // Attach user_type to the token
+          token.user_type = data.user_type;
+          token.user_id = data.user_id;
+        } catch (err) {
+          console.error("Backend login failed:", err);
         }
       }
-      return {
-        ...token,
-        email: token.email ?? undefined,
-      };
+      return token;
     },
+
     async session({ session, token }) {
-      if (token && token.id) {
-        session.user = {
-          id: token.id as string,
-          account: token.account ?? undefined, // Store account information
-          name: token.name ?? undefined, // Ensure name can be null
-          email: token.email ?? undefined, // Convert null to undefined
-          user_type:
-            typeof token.user_type === "string" ? token.user_type : undefined, // Ensure type safety
-        };
+      if (
+        session.user &&
+        typeof token.user_type === "string" &&
+        typeof token.user_id === "number"
+      ) {
+        session.user.user_type = token.user_type;
+        session.user.id = token.user_id;
       }
       return session;
     },
   },
-  pages: {
-    signIn: "/login",
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 24, // 24 hours
   },
-  debug: true, // Enable debug mode for troubleshooting
-});
+  pages: {
+    signIn: "/login", // Optional: custom login page
+  },
+  debug: true,
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

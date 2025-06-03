@@ -2,7 +2,7 @@
 
 import { addChemical } from "@/services/chemicalService";
 import { useState, useEffect } from "react";
-import { ChangeEvent } from "react";
+import Papa from "papaparse";
 
 interface AddChemicalModalProps {
   onClose: () => void;
@@ -28,6 +28,8 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
     mass: "",
     brand_name: "",
     hazard_type: "No GHS",
+    expiration_date: "",
+    location: "",
   });
 
   useEffect(() => {
@@ -47,6 +49,8 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
           mass: Number(form.mass),
           brand_name: form.brand_name,
           hazard_type: form.hazard_type,
+          expiration_date: form.expiration_date,
+          location: form.location,
         });
 
         if (response?.chemical) {
@@ -61,58 +65,43 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
     }
   };
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  async function handleCSVImport(event: ChangeEvent<HTMLInputElement>): Promise<void> {
-    setErrorMessage(null);
+  const handleCSVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) {
-      setErrorMessage("No file selected.");
-      return;
-    }
+    if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const text = e.target?.result as string;
-      try {
-        // Simple CSV parsing (assumes header: chemical_name,mass,brand_name,hazard_type)
-        const lines = text.trim().split("\n");
-        const [header, ...rows] = lines;
-        const columns = header.split(",").map((col) => col.trim());
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results) => {
+        const data = results.data as any[];
 
-        for (const row of rows) {
-          const values = row.split(",").map((v) => v.trim());
-          if (values.length !== columns.length) continue;
-          const chemical: Record<string, string> = {};
-          columns.forEach((col, idx) => {
-            chemical[col] = values[idx];
-          });
+        const validEntries = data.filter(
+          (row) =>
+            row.chemical_name &&
+            !isNaN(Number(row.mass)) &&
+            hazardTypeOptions.some((opt) => opt.value === row.hazard_type)
+        );
 
-          // Validate required fields
-          if (!chemical.chemical_name || isNaN(Number(chemical.mass))) {
-            setErrorMessage("Invalid data in CSV.");
-            continue;
+        for (const entry of validEntries) {
+          try {
+            await addChemical({
+              chemical_name: entry.chemical_name,
+              mass: Number(entry.mass),
+              brand_name: entry.brand_name || "",
+              hazard_type: entry.hazard_type || "No GHS",
+              expiration_date: entry.expiration_date || "",
+              location: entry.location || "",
+            });
+          } catch (err) {
+            console.error(`Error adding ${entry.chemical_name}:`, err);
           }
-
-          await addChemical({
-            chemical_name: chemical.chemical_name,
-            mass: Number(chemical.mass),
-            brand_name: chemical.brand_name || "",
-            hazard_type: chemical.hazard_type || "No GHS",
-          });
         }
+
         onSave();
         onClose();
-      } catch (err) {
-        setErrorMessage("Failed to import CSV.");
-        console.error(err);
-      }
-    };
-    reader.onerror = () => {
-      setErrorMessage("Error reading file.");
-    };
-    reader.readAsText(file);
-  }
+      },
+    });
+  };
 
   return (
       <div

@@ -13,10 +13,12 @@ const Cart = () => {
   );
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
   console.log("Session:", session);
   const fetchCartData = async () => {
     try {
-      const data = await getCart(parseInt(session?.user?.id ?? "")); // Assuming user_id is 1 for demo purposes
+      const data = await getCart(session?.user?.id); // Assuming user_id is 1 for demo purposes
+      console.log("Fetched Cart Data:", data);
       const itemsWithQuantity =
         data?.items?.map((item: any) => ({
           ...item,
@@ -70,7 +72,7 @@ const Cart = () => {
 
   const handleSubmit = async () => {
     await addHistory({
-      user_id: parseInt(session?.user?.id ?? ""),
+      user_id: session?.user?.id,
       cart_id: cartItems?.cart_id,
       borrower_date: new Date(),
       remarks: remarks ?? "",
@@ -93,7 +95,8 @@ const Cart = () => {
       .filter((id: number | null) => id !== null);
 
     if (itemsToRemove.length === 0) {
-      alert("Please select items to remove.");
+      setShowWarning(true);
+      setTimeout(() => setShowWarning(false), 3000);
       return;
     }
 
@@ -153,7 +156,7 @@ const Cart = () => {
 
       {/* Select All */}
       {cartItems.items.length > 0 && (
-        <div className="pl-20 mt-4">
+        <div className="pl-4 sm:pl-20 mt-4">
           <label className="flex items-center space-x-2 font-bold">
             <input
               type="checkbox"
@@ -165,19 +168,29 @@ const Cart = () => {
         </div>
       )}
 
+
       {/* Items in cart */}
-      <ul className="mt-2 ml-12 list-disc pl-20">
+      <ul className="mt-2 ml-4 sm:ml-12 list-disc pl-5 sm:pl-20">
         {cartItems?.items?.map((item: any, index: number) => (
-          <li key={index} className="py-2 flex items-center">
-            <input
-              type="checkbox"
-              className="mr-3"
-              checked={checkedItems[index] || false}
-              onChange={() => handleCheckboxChange(index)}
-            />
-            <span className="w-64 truncate">{item.equipment_name}</span>
+          <li
+            key={index}
+            className="py-2 flex flex-col sm:flex-row sm:items-center"
+          >
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                className="mr-3"
+                checked={checkedItems[index] || false}
+                onChange={() => handleCheckboxChange(index)}
+              />
+              {/* Responsive text container: max width and truncate */}
+              <span className="max-w-[16rem] sm:max-w-[16rem] truncate">
+                {item.equipment_name}
+              </span>
+            </div>
+
             {/* Quantity Selector */}
-            <div className="ml-4 flex items-center bg-white rounded-lg overflow-hidden h-9">
+            <div className="mt-2 sm:mt-0 sm:ml-4 flex items-center bg-white rounded-lg overflow-hidden h-9 self-start">
               <button
                 onClick={() => handleDecrease(index)}
                 className="w-9 h-full text-[#000000] hover:bg-gray-200 flex items-center justify-center"
@@ -211,6 +224,7 @@ const Cart = () => {
           </li>
         ))}
       </ul>
+
 
       {/* Remarks input */}
       <label className="font-bold block mt-4 text-black">
@@ -318,6 +332,18 @@ const Cart = () => {
           </div>
         </div>
       )}
+      {showWarning && (
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+        <div className="bg-white/70 px-6 py-4 rounded-lg shadow-lg text-center backdrop-blur-sm">
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-3xl text-yellow-600 mb-2">!</span>
+            <p className="text-lg font-semibold text-black">
+              Please select items to remove
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
     </div>
   );
 };

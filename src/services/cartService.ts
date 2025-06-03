@@ -2,7 +2,8 @@ const BASE_URL = "http://127.0.0.1:8000/cart";
 
 export const addtoCart = async (cartItemData: {
   user_id: number;
-  equipment_id: number;
+  equipment_id?: number;
+  chemical_id?: number;
   quantity: number;
 }) => {
   try {
@@ -25,7 +26,7 @@ export const addtoCart = async (cartItemData: {
   }
 };
 
-export const getCart = async (user_id: number) => {
+export const getCart = async (user_id: any) => {
   try {
     const response = await fetch(`${BASE_URL}/cart/get_cart/`, {
       method: "POST",
