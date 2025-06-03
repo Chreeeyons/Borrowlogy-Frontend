@@ -18,6 +18,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+
     async jwt({ token, account }) {
       if (account?.access_token) {
         try {
@@ -32,7 +33,6 @@ export const authOptions: NextAuthOptions = {
               }),
             }
           );
-
           const data = (await response.json()) as {
             message: string;
             user_type: string;
