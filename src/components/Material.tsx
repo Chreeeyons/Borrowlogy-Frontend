@@ -60,7 +60,6 @@ const Material = ({
         user_id: session?.user?.id ? Number(session.user.id) : 1, // Use session user ID or default to 1
         quantity: quantity,
         equipment_id: material.id,
-        // chemical_name: material.name,
       });
 
       setSuccessMessage("Successfully added to cart!");

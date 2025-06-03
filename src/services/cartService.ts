@@ -2,11 +2,9 @@ const BASE_URL = "http://127.0.0.1:8000/cart";
 
 export const addtoCart = async (cartItemData: {
   user_id: number;
-  equipment_id: number;
+  equipment_id?: number;
+  chemical_id?: number;
   quantity: number;
-  // brand_name?: string;
-  // chemical_name: string;
-  // mass?: number; // Optional for chemicals
 }) => {
   try {
     const response = await fetch(`${BASE_URL}/cart/add_item/`, {

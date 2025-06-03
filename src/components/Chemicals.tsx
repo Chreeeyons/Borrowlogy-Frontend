@@ -44,14 +44,11 @@ const Chemical = ({
     if (quantity === null) return;
 
     try {
-      await addtoCart({
-        user_id: session?.user?.id ? Number(session.user.id) : 1,
+      const response = await addtoCart({
+        user_id: session?.user?.id ? Number(session.user.id) : 1, // Use session user ID or default to 1
+        quantity: quantity,
         chemical_id: chemical.id,
-        chemical_name: "" + chemical.chemical_name + '"', // updated here
-        mass: chemical.mass, // updated here
-        hazard_type: chemical.hazard_type,
-        brand_name: chemical.brand_name,
-      } as any);
+      });
 
       setSuccessMessage("Successfully added to cart!");
       setTimeout(() => setSuccessMessage(""), 3000);
@@ -110,23 +107,27 @@ const Chemical = ({
               {chemical.mass > 0 ? "Available" : "Out of Stock"}
             </span>
             <span className="text-black flex items-center gap-1">
-              | <span className="font-bold text-base">Mass:</span> {chemical.mass} g
+              | <span className="font-bold text-base">Mass:</span>{" "}
+              {chemical.mass} g
             </span>
             <span className="text-black flex items-center gap-1">
-              | <span className="font-bold text-base">Brand:</span> {chemical.brand_name}
+              | <span className="font-bold text-base">Brand:</span>{" "}
+              {chemical.brand_name}
             </span>
             <span className="text-black flex items-center gap-1">
-              | <span className="font-bold text-base">Hazard Type:</span> {chemical.hazard_type}
-
+              | <span className="font-bold text-base">Hazard Type:</span>{" "}
+              {chemical.hazard_type}
             </span>
 
             {user_type === "admin" && (
               <>
                 <span className="text-black flex items-center gap-1">
-                  | <span className="font-bold text-base">Expiry:</span> {chemical.expiration_date}
+                  | <span className="font-bold text-base">Expiry:</span>{" "}
+                  {chemical.expiration_date}
                 </span>
                 <span className="text-black flex items-center gap-1">
-                  | <span className="font-bold text-base">Location:</span> {chemical.location}
+                  | <span className="font-bold text-base">Location:</span>{" "}
+                  {chemical.location}
                 </span>
               </>
             )}
@@ -135,17 +136,19 @@ const Chemical = ({
 
         {/* Action Buttons */}
         <div className="flex flex-wrap sm:flex-nowrap justify-end items-center gap-3 sm:gap-5">
-          {user_type !== "admin" && chemical.mass > 0 && (  // updated here
-            <div
-              className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white"
-              style={{
-                boxShadow: "0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
-              }}
-            >
-              <button
-                onClick={handleDecrease}
-                className="px-3 py-2 text-[#000000] hover:bg-gray-300"
+          {user_type !== "admin" &&
+            chemical.mass > 0 && ( // updated here
+              <div
+                className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white"
+                style={{
+                  boxShadow:
+                    "0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
+                }}
               >
+                <button
+                  onClick={handleDecrease}
+                  className="px-3 py-2 text-[#000000] hover:bg-gray-300"
+                >
                   -
                 </button>
                 <input

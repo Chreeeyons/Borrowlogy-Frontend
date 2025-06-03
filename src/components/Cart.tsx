@@ -17,6 +17,7 @@ const Cart = () => {
   const fetchCartData = async () => {
     try {
       const data = await getCart(session?.user?.id); // Assuming user_id is 1 for demo purposes
+      console.log("Fetched Cart Data:", data);
       const itemsWithQuantity =
         data?.items?.map((item: any) => ({
           ...item,

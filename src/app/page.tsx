@@ -17,10 +17,10 @@ export default function LandingPage() {
 
   useEffect(() => {
     console.log("Session data2:", session);
+    // Redirect to main page if user is logged in
     if (session?.user?.user_type) {
       if (session.user.user_type === "borrower")
         window.location.href = "/equipment";
-      // Redirect to main page if user is logged in
       else if (session.user.user_type === "lab_technician")
         window.location.href = "/admin/requests"; // Redirect to lab technician page if user is logged in
     }

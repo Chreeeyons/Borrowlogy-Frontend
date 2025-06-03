@@ -9,7 +9,7 @@ const History = () => {
 
   const handleGetAllHistoryBorrower = async () => {
     const data = await viewAllHistoryBorrower(
-      parseInt(session?.user?.id ?? "")
+      session?.user?.id ?? 1 // Use session user ID or default to 1
     ); // Placeholder for user_id
     setHistoryData(data);
   };
@@ -50,7 +50,9 @@ const History = () => {
                 <li className="flex items-center gap-2" key={itemIndex}>
                   <span className="w-2 h-2 rounded-full bg-[#5e0708] mt-[2px]"></span>
                   <span className="w-64 truncate font-semibold">
-                    {item.equipment.name}
+                    {item.equipment
+                      ? item.equipment.name
+                      : item.chemicals.chemical_name}
                   </span>
                   <span className="w-20 text-right">{item.quantity} pcs</span>
                 </li>
