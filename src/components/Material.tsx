@@ -72,35 +72,36 @@ const Material = ({
   return (
     <div>
       <div
-        className="p-4 mb-2 bg-[#EEE9E5] shadow-md flex justify-between items-center rounded-lg"
+        className="p-4 mb-2 bg-[#EEE9E5] shadow-md flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0 rounded-lg"
         style={{
           borderRadius: "12px",
           boxShadow: `3px 3px 6px 0px rgba(0, 0, 0, 0.25) inset`,
         }}
       >
-        <div>
-          <h2 className="text-black text-4xl font-semibold mb-0 tracking-normal">
+        {/* Left Section */}
+        <div className="flex-1">
+          <h2 className="text-black text-2xl sm:text-3xl md:text-4xl font-semibold mb-0 tracking-normal">
             {material.name}
           </h2>
-          <p className="text-sm font-normal flex items-center gap-2">
+          <p className="text-sm font-normal flex flex-wrap items-center gap-2 mt-1">
             <span
               className={
                 material.quantity > 0
-                  ? "text-black-500 font-bold text-lg"
-                  : "text-red-500 font-bold text-lg"
+                  ? "text-black-500 font-bold text-base sm:text-lg"
+                  : "text-red-500 font-bold text-base sm:text-lg"
               }
             >
               {material.quantity > 0 ? "Available" : "Out of Stock"}
             </span>
             <span className="text-black flex items-center gap-1">
-              |<span className="font-bold text-lg">Quantity:</span>{" "}
+              |<span className="font-bold text-base sm:text-lg">Quantity:</span>{" "}
               {material.quantity}
             </span>
           </p>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-5">
+        {/* Right Section: Buttons */}
+        <div className="flex flex-wrap sm:flex-nowrap justify-end items-center gap-3 sm:gap-5">
           {user_type !== "admin" && material.quantity > 0 && (
             <div
               className="flex items-center bg-gray-200 rounded-lg overflow-hidden text-white"
@@ -121,7 +122,6 @@ const Material = ({
                 max={material.quantity}
                 onChange={(e) => {
                   const val = e.target.value;
-
                   if (val === "") {
                     setQuantity(null);
                   } else {
@@ -133,7 +133,7 @@ const Material = ({
                     }
                   }
                 }}
-                className="w-16 h-9 text-center bg-white-200 text-[#000000] outline-none font-bold
+                className="w-14 h-9 text-center bg-white-200 text-[#000000] outline-none font-bold
                 [&::-webkit-outer-spin-button]:appearance-none 
                 [&::-webkit-inner-spin-button]:appearance-none 
                 [-moz-appearance:textfield]"
@@ -147,37 +147,20 @@ const Material = ({
             </div>
           )}
 
+          {/* Buttons for admin / user */}
           {user_type === "admin" ? (
             <button
               onClick={() => setIsModalOpen(true)}
+              className="w-[100px] sm:w-[120px] h-[38px] rounded-md bg-white text-black font-bold shadow-md hover:bg-[#03aa6c] hover:text-white transition duration-200"
               style={{
-                width: "120px",
-                height: "38.234px",
-                flexShrink: 0,
-                borderRadius: "5.771px",
-                background: "#FFF",
                 boxShadow: "4px 4px 8px 2px rgba(0, 0, 0, 0.3)",
-                color: "#000000",
-                textAlign: "center",
-                textShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-                fontFamily: "Jost",
-                fontSize: "16px",
-                fontWeight: 700,
-                lineHeight: "normal",
-                fontStyle: "bold",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "#03aa6c";
-                (e.currentTarget as HTMLButtonElement).style.color = "#FFF";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                e.currentTarget.style.boxShadow =
                   "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "#FFF";
-                (e.currentTarget as HTMLButtonElement).style.color = "#000000";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                e.currentTarget.style.boxShadow =
                   "4px 4px 8px 2px rgba(0, 0, 0, 0.3)";
               }}
             >
@@ -186,34 +169,16 @@ const Material = ({
           ) : material.quantity > 0 ? (
             <button
               onClick={handleSave}
+              className="w-[100px] sm:w-[120px] h-[38px] rounded-md bg-white text-black font-bold text-lg shadow-md hover:bg-[#03aa6c] hover:text-white transition duration-200"
               style={{
-                width: "120px",
-                height: "38.234px",
-                flexShrink: 0,
-                borderRadius: "5.771px",
-                background: "#FFF",
                 boxShadow: "4px 4px 8px 2px rgba(0, 0, 0, 0.3)",
-                color: "#000000",
-                textAlign: "center",
-                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                fontFamily: "Jost, sans-serif",
-                fontSize: "21.139px",
-                fontStyle: "normal",
-                fontWeight: 700,
-                lineHeight: "normal",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "#03aa6c";
-                (e.currentTarget as HTMLButtonElement).style.color = "#FFF";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                e.currentTarget.style.boxShadow =
                   "6px 6px 8px 0px rgba(0, 0, 0, 0.4) inset";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "#FFF";
-                (e.currentTarget as HTMLButtonElement).style.color = "#000000";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                e.currentTarget.style.boxShadow =
                   "4px 4px 8px 2px rgba(0, 0, 0, 0.3)";
               }}
             >
@@ -222,23 +187,9 @@ const Material = ({
           ) : (
             <button
               disabled
+              className="w-[100px] sm:w-[120px] h-[38px] rounded-md bg-gray-400 text-white font-bold text-lg shadow-md cursor-not-allowed opacity-80"
               style={{
-                width: "120px",
-                height: "38.234px",
-                flexShrink: 0,
-                borderRadius: "5.771px",
-                background: "#B0B0B0",
                 boxShadow: "4px 4px 8px 2px rgba(0, 0, 0, 0.3)",
-                color: "#FFFFFF",
-                textAlign: "center",
-                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                fontFamily: "Jost, sans-serif",
-                fontSize: "21.139px",
-                fontStyle: "normal",
-                fontWeight: 700,
-                lineHeight: "normal",
-                cursor: "not-allowed",
-                opacity: 0.8,
               }}
             >
               ADD
@@ -246,6 +197,7 @@ const Material = ({
           )}
         </div>
       </div>
+
 
       {/* Edit Modal */}
       {isModalOpen && (

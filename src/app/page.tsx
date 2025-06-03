@@ -9,16 +9,20 @@ export default function LandingPage() {
 
   const handleLogin = async () => {
     try {
-      await signIn("google", { callbackUrl: "/" });
+      const res = await signIn("google", { callbackUrl: "/" });
     } catch (error) {
       console.error("Error during sign-in:", error);
     }
   };
 
   useEffect(() => {
-    console.log("Session data:", session);
-    if (session?.user?.id) {
-      window.location.href = "/equipment"; // Redirect to main page if user is logged in
+    console.log("Session data2:", session);
+    // Redirect to main page if user is logged in
+    if (session?.user?.user_type) {
+      if (session.user.user_type === "borrower")
+        window.location.href = "/equipment";
+      else if (session.user.user_type === "lab_technician")
+        window.location.href = "/admin/requests"; // Redirect to lab technician page if user is logged in
     }
   }, [session?.user]);
 

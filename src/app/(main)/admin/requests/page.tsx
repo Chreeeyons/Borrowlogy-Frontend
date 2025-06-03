@@ -19,7 +19,7 @@ const Equipments = () => {
   const [showModal, setShowModal] = useState(false);
   const [activeBorrower, setActiveBorrower] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<
-    { equipment: any; quantity: number }[]
+    { equipment?: any; quantity: number; chemicals?: any }[]
   >([]);
   const [activeRequestIndex, setActiveRequestIndex] = useState<number | null>(
     null
@@ -157,7 +157,7 @@ const Equipments = () => {
     });
     handleGetAllHistory();
   };
-    return (
+  return (
     <div id="laboratory-materials" className="section">
       <div className="flex items-center space-x-4 mb-4">
         {/* Search Bar */}
@@ -180,49 +180,49 @@ const Equipments = () => {
             </svg>
           </div>
 
-    {/* Seach Borrower text */}
-      <input
-        type="text"
-        placeholder="Search Borrower..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="pl-10 pr-3 py-2 rounded-[20px] bg-[#E3E1DD] outline-none text-black w-full"
-        style={{
-          width: "650px",   
-          boxShadow: 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
-        }}
-        />
+          {/* Seach Borrower text */}
+          <input
+            type="text"
+            placeholder="Search Borrower..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 pr-3 py-2 rounded-[20px] bg-[#E3E1DD] outline-none text-black w-full"
+            style={{
+              width: "650px",
+              boxShadow: "inset 0px 4px 4px rgba(0, 0, 0, 0.25)",
+            }}
+          />
         </div>
-      <select
-        className="ml-35 px-6 py-2 text-black rounded-[10px] transition duration-300 ease-in-out cursor-pointer"
-      style={{
-        backgroundColor: '#E3E1DD',
-        boxShadow: `
+        <select
+          className="ml-35 px-6 py-2 text-black rounded-[10px] transition duration-300 ease-in-out cursor-pointer"
+          style={{
+            backgroundColor: "#E3E1DD",
+            boxShadow: `
           inset 0px 3px 3px 0px rgba(0, 0, 0, 0.25), 
         `,
-        fontFamily: 'Jost, sans-serif',
-        fontWeight: 'bold'
-      }}
-        value={sortOrder}
-        onChange={(e) => handleSortChange(e.target.value)}
-        onMouseEnter={e => {
-          e.currentTarget.style.backgroundColor = '#7A1729';
-          e.currentTarget.style.color = 'white'; 
-          e.currentTarget.style.boxShadow =
-            '0 0 12px 3px rgba(140, 25, 49, 0.75), inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
-          e.currentTarget.style.transform = 'scale(1.05)';
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.backgroundColor = '#E3E1DD';
-          e.currentTarget.style.color = 'black';
-          e.currentTarget.style.boxShadow =
-            'inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)';
-          e.currentTarget.style.transform = 'scale(1)';
-        }}
-      >
-        <option value="asc">Sort by Date (Oldest to Newest)</option>
-        <option value="desc">Sort by Date (Newest to Oldest)</option>
-      </select>
+            fontFamily: "Jost, sans-serif",
+            fontWeight: "bold",
+          }}
+          value={sortOrder}
+          onChange={(e) => handleSortChange(e.target.value)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#7A1729";
+            e.currentTarget.style.color = "white";
+            e.currentTarget.style.boxShadow =
+              "0 0 12px 3px rgba(140, 25, 49, 0.75), inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)";
+            e.currentTarget.style.transform = "scale(1.05)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#E3E1DD";
+            e.currentTarget.style.color = "black";
+            e.currentTarget.style.boxShadow =
+              "inset 0px 2.886px 2.886px 0px rgba(0, 0, 0, 0.25)";
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        >
+          <option value="asc">Sort by Date (Oldest to Newest)</option>
+          <option value="desc">Sort by Date (Newest to Oldest)</option>
+        </select>
       </div>
 
       <div className="space-y-4">
@@ -251,9 +251,9 @@ const Equipments = () => {
                   <p className="text-sm font-normal tracking-wider mt-1">
                     {history.cart.user.email}
                   </p>
-<p className="text-1xl font-bold mt-1 text-gray-800">
-  Date: {new Date(history.borrow_date).toLocaleString()}
-</p>
+                  <p className="text-1xl font-bold mt-1 text-gray-800">
+                    Date: {new Date(history.borrow_date).toLocaleString()}
+                  </p>
                 </div>
                 <div className="ml-2">
                   {isExpanded ? (
@@ -319,7 +319,9 @@ const Equipments = () => {
                             className="text-black tracking-normal"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            {item.equipment.name.toLowerCase()}
+                            {item.equipment
+                              ? item.equipment.name.toLowerCase()
+                              : item.chemicals?.chemical_name.toLowerCase()}
                           </label>
                         </div>
                         <span className="w-20 text-black font-bold text-right">
@@ -334,17 +336,18 @@ const Equipments = () => {
                       value={history.remarks ?? "No remarks provided"}
                       readOnly
                       style={{
-                        width: '100%',
-                        height: '100px',
-                        borderRadius: '12px',
-                        background: '#FFF',
-                        boxShadow: '3px 3px 2.886px 0px rgba(0, 0, 0, 0.25) inset',
-                        padding: '0.5rem',
-                        marginTop: '0.5rem',
-                        color: '#000',
-                        fontWeight: '400',
-                        fontFamily: 'inherit',
-                        resize: 'none',
+                        width: "100%",
+                        height: "100px",
+                        borderRadius: "12px",
+                        background: "#FFF",
+                        boxShadow:
+                          "3px 3px 2.886px 0px rgba(0, 0, 0, 0.25) inset",
+                        padding: "0.5rem",
+                        marginTop: "0.5rem",
+                        color: "#000",
+                        fontWeight: "400",
+                        fontFamily: "inherit",
+                        resize: "none",
                       }}
                     />
                   </label>
@@ -420,7 +423,10 @@ const Equipments = () => {
                 <ul className="list-disc pl-5 mb-4">
                   {selectedItems.map((item, i) => (
                     <li key={i}>
-                      {item.equipment.name} - {item.quantity} pcs
+                      {item.equipment
+                        ? item.equipment.name
+                        : item.chemicals.chemical_name}{" "}
+                      - {item.quantity} pcs
                     </li>
                   ))}
                 </ul>

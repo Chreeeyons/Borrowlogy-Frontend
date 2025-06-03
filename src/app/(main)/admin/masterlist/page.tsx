@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useHeader } from "@/utils/HeaderContext";
 import { addUser, getUsers } from "@/services/userService";
+import Papa from "papaparse"; // For CSV parsing
 
 
 // Interfaces
@@ -137,6 +138,49 @@ const Equipments = () => {
    return ""; // No color for users with no status
  };
 
+ const handleCSVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: async function (results: Papa.ParseResult<any>) {
+      const parsedData = results.data as { name: string; email: string }[];
+
+      const validUsers = parsedData.filter(user =>
+        /^[a-zA-Z0-9._%+-]+@up\.edu\.ph$/.test(user.email) &&
+        user.name.trim() !== ""
+      );
+
+      for (const user of validUsers) {
+        try {
+          const response = await addUser({
+            name: user.name,
+            email: user.email,
+            username: `user_${user.name}`,
+          });
+
+          if (response) {
+            setBorrowers(prev => [
+              ...prev,
+              {
+                name: user.name,
+                email: user.email,
+                transactions: [],
+              },
+            ]);
+          }
+        } catch (error) {
+          console.error(`Error adding ${user.email}:`, error);
+        }
+      }
+
+      // ✅ Close the modal after CSV is processed
+      setIsAddingNew(false);
+    },
+  });
+};
 
 
 
@@ -515,7 +559,7 @@ const Equipments = () => {
      {/* Add Modal */}
      {isAddingNew && (
        <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
-         <div className="text-[#8C1931] rounded-lg p-6 w-full max-w-md mx-auto bg-white">
+         <div className="text-black rounded-lg p-6 w-full max-w-md mx-auto bg-white">
            <h2 className="text-2xl font-bold mb-4 text-center">
              Add New Borrower
            </h2>
@@ -546,23 +590,40 @@ const Equipments = () => {
              />
            </div>
 
-
-           <div className="flex justify-end gap-2">
-             <button
-               onClick={() => setIsAddingNew(false)}
-               className="bg-gray-500 text-white px-4 py-2 rounded"
-             >
-               Cancel
-             </button>
-             <button
-               onClick={() => {
-                 handleAddBorrower();
-                 handleSubmit();
-               }}
-               className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700"
-             >
-               Save
-             </button>
+           <div className="flex justify-between items-center gap-2">
+            {/* CSV Import Button */}
+            <div>
+              <label
+                htmlFor="csv-upload"
+                className="inline-block px-4 py-2 bg-[#04543C] text-white rounded-lg cursor-pointer hover:bg-green-700"
+              >
+                Import CSV
+              </label>
+              <input
+                id="csv-upload"
+                type="file"
+                accept=".csv"
+                onChange={handleCSVUpload}
+                className="hidden"
+              />
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setIsAddingNew(false)}
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  handleAddBorrower();
+                  handleSubmit();
+                }}
+                className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700"
+              >
+                Save
+              </button>
+            </div>
            </div>
          </div>
        </div>

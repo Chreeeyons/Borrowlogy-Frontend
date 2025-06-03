@@ -2,7 +2,8 @@ const BASE_URL = "http://127.0.0.1:8000/cart";
 
 export const addtoCart = async (cartItemData: {
   user_id: number;
-  equipment_id: number;
+  equipment_id?: number;
+  chemical_id?: number;
   quantity: number;
 }) => {
   try {
@@ -25,7 +26,7 @@ export const addtoCart = async (cartItemData: {
   }
 };
 
-export const getCart = async (user_id: number) => {
+export const getCart = async (user_id: any) => {
   try {
     const response = await fetch(`${BASE_URL}/cart/get_cart/`, {
       method: "POST",
@@ -42,7 +43,7 @@ export const getCart = async (user_id: number) => {
 
 export const clearCart = async (cart_id: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/update-item-quantity/`, {
+    const response = await fetch(`${BASE_URL}/cart/update-item-quantity/`, {
       method: "PATCH", // Use PATCH here
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cart_id }),
@@ -63,7 +64,7 @@ export const approveCart = async ({
   historyId: any;
 }) => {
   try {
-    const response = await fetch(`${BASE_URL}/approve_cart/`, {
+    const response = await fetch(`${BASE_URL}/cart/approve_cart/`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cart_items: cartItems, history_id: historyId }),

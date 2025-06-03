@@ -1,7 +1,7 @@
 const BASE_URL = "http://127.0.0.1:8000/history/history";
 
 export const addHistory = async (historydata: {
-  user_id: number;
+  user_id: any;
   cart_id: number;
   borrower_date: Date;
   remarks: string;
