@@ -18,15 +18,13 @@ const kumbhSans = Kumbh_Sans({
 
 export default function RootLayout({
   children,
-  Session,
 }: {
   children: React.ReactNode;
-  Session: any;
 }) {
   return (
     <html lang="en" className={kumbhSans.variable}>
       <body suppressHydrationWarning={true}>
-        <AuthProvider session={Session}>{children}</AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
