@@ -32,6 +32,27 @@ const Equipments = () => {
  const [isAddingNew, setIsAddingNew] = useState(false);
  const [borrowers, setBorrowers] = useState<Borrower[]>([]);
 
+ // CSV Import Handler
+ const handleCSVImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const file = e.target.files?.[0];
+   if (!file) return;
+   const reader = new FileReader();
+   reader.onload = (event) => {
+     const text = event.target?.result as string;
+     // Simple CSV parsing: expects "name,email" per line
+     const lines = text.split("\n").map(line => line.trim()).filter(Boolean);
+     const newBorrowers: Borrower[] = [];
+     for (const line of lines) {
+       const [name, email] = line.split(",").map(s => s.trim());
+       if (name && email) {
+         newBorrowers.push({ name, email, transactions: [] });
+       }
+     }
+     setBorrowers(prev => [...prev, ...newBorrowers]);
+   };
+   reader.readAsText(file);
+ };
+
 
  const [selectedBorrower, setSelectedBorrower] = useState<Borrower | null>(
    null
@@ -555,62 +576,98 @@ const Equipments = () => {
        )}
      </div>
 
-
-     {/* Add Modal */}
-     {isAddingNew && (
-       <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
-         <div className="text-black rounded-lg p-6 w-full max-w-md mx-auto bg-white">
-           <h2 className="text-2xl font-bold mb-4 text-center">
-             Add New Borrower
-           </h2>
-
-
-           <div className="mb-4">
-             <label className="block mb-1">Name:</label>
-             <input
-               type="text"
-               className="w-full p-2 text-black rounded border border-[#8C1931]"
-               value={newBorrower.name}
-               onChange={(e) =>
-                 setNewBorrower({ ...newBorrower, name: e.target.value })
-               }
-             />
-           </div>
-
-
-           <div className="mb-4">
-             <label className="block mb-1">Email:</label>
-             <input
-               type="email"
-               className="w-full p-2 text-black rounded border border-[#8C1931]"
-               value={newBorrower.email}
-               onChange={(e) =>
-                 setNewBorrower({ ...newBorrower, email: e.target.value })
-               }
-             />
-           </div>
-
-           <div className="flex justify-between items-center gap-2">
-            {/* CSV Import Button */}
-            <div>
-              <label
-                htmlFor="csv-upload"
-                className="inline-block px-4 py-2 bg-[#04543C] text-white rounded-lg cursor-pointer hover:bg-green-700"
+      {/* Add Modal */}
+      {isAddingNew && (
+        <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
+          <div
+            className="bg-white p-8 rounded-[20px] shadow-[0_0_16px_rgba(0,0,0,0.4)] w-[420px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Title container with matching background and text style */}
+            <div className="bg-[#83191c] py-2 px-4 rounded-[12px] mb-6 shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]">
+              <h2
+                className="text-3xl font-bold text-center text-white mb-0 font-jost"
+                style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}
               >
-                Import CSV
-              </label>
+                Add New Borrower
+              </h2>
+            </div>
+
+            <div className="mb-4">
+              <label className="block mb-1 text-black">Name:</label>
               <input
-                id="csv-upload"
-                type="file"
-                accept=".csv"
-                onChange={handleCSVUpload}
-                className="hidden"
+                type="text"
+                className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                          rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                          focus:ring-2 focus:ring-[#04543C] focus:outline-none 
+                          transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] 
+                          font-jost text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                value={newBorrower.name}
+                onChange={(e) =>
+                  setNewBorrower({ ...newBorrower, name: e.target.value })
+                }
               />
             </div>
-            <div className="flex gap-2">
+
+      <div className="mb-4">
+        <label className="block mb-1 text-black">Email (UP mail):</label>
+        <input
+          type="email"
+          className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                    rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                    focus:ring-2 focus:ring-[#04543C] focus:outline-none 
+                    transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] 
+                    font-jost text-base disabled:opacity-50 disabled:cursor-not-allowed"
+          value={newBorrower.email}
+          onChange={(e) =>
+            setNewBorrower({ ...newBorrower, email: e.target.value })
+          }
+        />
+      </div>
+
+      {/* CSV Import Button */}
+      <div className="mb-4">
+        <label className="block mb-1 text-black font-medium">Or Import CSV:</label>
+        <label
+          htmlFor="csv-upload"
+          className={`
+            inline-block px-6 py-2 rounded-[10px]
+            bg-[#04543C] text-white font-bold
+            text-center
+            transition-all duration-300 ease-in-out
+            shadow-[0_4px_8px_0px_rgba(0,0,0,0.3)]
+            hover:bg-green-700
+            hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.4)]
+            hover:scale-105
+            cursor-pointer
+          `}
+        >
+          Import CSV
+        </label>
+        <input
+          id="csv-upload"
+          type="file"
+          accept=".csv"
+          onChange={handleCSVImport}
+          className="hidden"
+        />
+      </div>
+        {errorMessage && (
+          <div className="text-red-600 mb-2 text-center">{errorMessage}</div>
+        )}
+           <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3 mt-6">
               <button
                 onClick={() => setIsAddingNew(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded"
+                className={`
+                  px-5 py-2 rounded-[10px]
+                  bg-gray-300 text-black font-medium
+                  transition-all duration-300 ease-in-out
+                  shadow-[0_4px_8px_0px_rgba(0,0,0,0.3)]
+                  hover:bg-gray-400
+                  hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.4)]
+                  hover:scale-105
+                `}
               >
                 Cancel
               </button>
@@ -619,7 +676,15 @@ const Equipments = () => {
                   handleAddBorrower();
                   handleSubmit();
                 }}
-                className="bg-[#04543C] text-white px-4 py-2 rounded hover:bg-green-700"
+                className={`
+                  px-5 py-2 rounded-[10px]
+                  bg-[#04543C] text-white font-bold
+                  transition-all duration-300 ease-in-out
+                  shadow-[0_4px_8px_0px_rgba(0,0,0,0.3)]
+                  hover:bg-green-700
+                  hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.4)]
+                  hover:scale-105
+                `}
               >
                 Save
               </button>
