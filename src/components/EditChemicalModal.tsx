@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const hazardTypeOptions = [
   { value: "No GHS", label: "No GHS" },
@@ -46,15 +46,26 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
   const [form, setForm] = useState<Chemical>(chemical);
   const [loading, setLoading] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const prevOpenRef = useRef(false);
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-      if (event.key === "Enter") handleSave();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [form]);
+
+    if (prevOpenRef.current !== false) {
+      document.body.style.overflow = false ? "hidden" : "unset";
+      prevOpenRef.current = false;
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "unset";
+    };
+  }, [onClose]);
 
   const handleMassChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
