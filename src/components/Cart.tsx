@@ -13,6 +13,7 @@ const Cart = () => {
   );
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
   console.log("Session:", session);
   const fetchCartData = async () => {
     try {
@@ -94,7 +95,8 @@ const Cart = () => {
       .filter((id: number | null) => id !== null);
 
     if (itemsToRemove.length === 0) {
-      alert("Please select items to remove.");
+      setShowWarning(true);
+      setTimeout(() => setShowWarning(false), 3000);
       return;
     }
 
@@ -330,6 +332,18 @@ const Cart = () => {
           </div>
         </div>
       )}
+      {showWarning && (
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+        <div className="bg-white/70 px-6 py-4 rounded-lg shadow-lg text-center backdrop-blur-sm">
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-3xl text-yellow-600 mb-2">!</span>
+            <p className="text-lg font-semibold text-black">
+              Please select items to remove
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
     </div>
   );
 };

@@ -104,24 +104,34 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onClick={onClose}
-    >
       <div
-        className="bg-white p-8 rounded-lg shadow-lg w-[420px]"
-        onClick={(e) => e.stopPropagation()}
+        className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
       >
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-4">
-          Add Chemical
-        </h2>
+        <div
+          className="bg-white p-8 rounded-[20px] shadow-[0_0_16px_rgba(0,0,0,0.4)] w-[420px]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Title container with matching background and text style */}
+          <div className="bg-[#83191c] py-2 px-4 rounded-[12px] mb-6 shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]">
+            <h2
+              className="text-3xl font-bold text-center text-white mb-0 font-jost"
+              style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}
+            >
+              Add Chemical
+            </h2>
+          </div>
 
         <input
           type="text"
           placeholder="Chemical Name"
           value={form.chemical_name}
           onChange={(e) => setForm({ ...form, chemical_name: e.target.value })}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
+          className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                    rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                    focus:ring-2 focus:ring-[#04543C] focus:outline-none 
+                    transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] 
+                    font-jost text-base disabled:opacity-50 disabled:cursor-not-allowed"
         />
 
         <input
@@ -129,7 +139,11 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
           placeholder="Brand Name"
           value={form.brand_name}
           onChange={(e) => setForm({ ...form, brand_name: e.target.value })}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
+          className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                    rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                    focus:ring-2 focus:ring-[#04543C] focus:outline-none 
+                    transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] 
+                    font-jost text-base disabled:opacity-50 disabled:cursor-not-allowed"
         />
 
         <input
@@ -137,14 +151,22 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
           placeholder="Mass (g)"
           value={form.mass}
           onChange={(e) => setForm({ ...form, mass: e.target.value })}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
+          className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                    rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                    focus:ring-2 focus:ring-[#04543C] focus:outline-none 
+                    transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] 
+                    font-jost text-base disabled:opacity-50 disabled:cursor-not-allowed"
         />
 
         <label className="block mb-2 font-semibold">Hazard Type</label>
         <select
           value={form.hazard_type}
           onChange={(e) => setForm({ ...form, hazard_type: e.target.value })}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
+          className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                    rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                    focus:ring-2 focus:ring-[#04543C] focus:outline-none 
+                    transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] 
+                    font-jost text-base disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {hazardTypeOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -153,54 +175,67 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
           ))}
         </select>
 
+      {/* CSV Import Button */}
+      <div className="mb-4">
+        <label className="block mb-1 font-medium">Or Import CSV:</label>
+        <label
+          htmlFor="csv-upload"
+          className={`
+            inline-block px-6 py-2 rounded-[10px]
+            bg-[#04543C] text-white font-bold
+            text-center
+            transition-all duration-300 ease-in-out
+            shadow-[0_4px_8px_0px_rgba(0,0,0,0.3)]
+            hover:bg-green-700
+            hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.4)]
+            hover:scale-105
+            cursor-pointer
+          `}
+        >
+          Import CSV
+        </label>
         <input
-          type="date"
-          placeholder="Expiration Date"
-          value={form.expiration_date}
-          onChange={(e) => setForm({ ...form, expiration_date: e.target.value })}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
+          id="csv-upload"
+          type="file"
+          accept=".csv"
+          onChange={handleCSVImport}
+          className="hidden"
         />
+      </div>
+        {errorMessage && (
+          <div className="text-red-600 mb-2 text-center">{errorMessage}</div>
+        )}
 
-        <input
-          type="text"
-          placeholder="Location"
-          value={form.location}
-          onChange={(e) => setForm({ ...form, location: e.target.value })}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#04543C]"
-        />
-
-
-        <div className="flex justify-between items-center gap-2">
-          <div>
-            <label
-              htmlFor="csv-upload"
-              className="inline-block px-4 py-2 bg-[#04543C] text-white rounded-lg cursor-pointer hover:bg-green-700"
-            >
-              Import CSV
-            </label>
-            <input
-              id="csv-upload"
-              type="file"
-              accept=".csv"
-              onChange={handleCSVUpload}
-              className="hidden"
-            />
-          </div>  
-          <div className="flex gap-2">
-            <button
-              onClick={onClose}
-              className="px-5 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              className="px-5 py-2 bg-[#04543C] text-white rounded-lg hover:bg-green-700"
-            >
-              Save
-            </button>
-          </div>
-        </div>  
+        <div className="flex justify-end gap-3 mt-6">
+        <button
+          onClick={onClose}
+          className={`
+            px-5 py-2 rounded-[10px]
+            bg-gray-300 text-black font-medium
+            transition-all duration-300 ease-in-out
+            shadow-[0_4px_8px_0px_rgba(0,0,0,0.3)]
+            hover:bg-gray-400
+            hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.4)]
+            hover:scale-105
+          `}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSave}
+          className={`
+            px-5 py-2 rounded-[10px]
+            bg-[#04543C] text-white font-bold
+            transition-all duration-300 ease-in-out
+            shadow-[0_4px_8px_0px_rgba(0,0,0,0.3)]
+            hover:bg-green-700
+            hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.4)]
+            hover:scale-105
+          `}
+        >
+          Save
+        </button>
+        </div>
       </div>
     </div>
   );
