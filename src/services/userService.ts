@@ -1,4 +1,5 @@
-const BASE_URL = "http://127.0.0.1:8000/user/user";
+const BASE_URL =
+  "https://borrowlogy-backend-production.up.railway.app/user/user";
 
 export const addUser = async (UserData: {
   name: string;

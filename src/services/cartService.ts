@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000/cart";
+const BASE_URL = "https://borrowlogy-backend-production.up.railway.app/cart";
 
 export const addtoCart = async (cartItemData: {
   user_id: number;

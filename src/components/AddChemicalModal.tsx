@@ -41,6 +41,8 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [form]);
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleSave = async () => {
     if (form.chemical_name.trim() && !isNaN(Number(form.mass))) {
       try {
@@ -104,23 +106,23 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
   };
 
   return (
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
-        className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
+        className="bg-white p-8 rounded-[20px] shadow-[0_0_16px_rgba(0,0,0,0.4)] w-[420px]"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className="bg-white p-8 rounded-[20px] shadow-[0_0_16px_rgba(0,0,0,0.4)] w-[420px]"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Title container with matching background and text style */}
-          <div className="bg-[#83191c] py-2 px-4 rounded-[12px] mb-6 shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]">
-            <h2
-              className="text-3xl font-bold text-center text-white mb-0 font-jost"
-              style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}
-            >
-              Add Chemical
-            </h2>
-          </div>
+        {/* Title container with matching background and text style */}
+        <div className="bg-[#83191c] py-2 px-4 rounded-[12px] mb-6 shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]">
+          <h2
+            className="text-3xl font-bold text-center text-white mb-0 font-jost"
+            style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}
+          >
+            Add Chemical
+          </h2>
+        </div>
 
         <input
           type="text"
@@ -175,12 +177,12 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
           ))}
         </select>
 
-      {/* CSV Import Button */}
-      <div className="mb-4">
-        <label className="block mb-1 font-medium">Or Import CSV:</label>
-        <label
-          htmlFor="csv-upload"
-          className={`
+        {/* CSV Import Button */}
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Or Import CSV:</label>
+          <label
+            htmlFor="csv-upload"
+            className={`
             inline-block px-6 py-2 rounded-[10px]
             bg-[#04543C] text-white font-bold
             text-center
@@ -191,25 +193,25 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
             hover:scale-105
             cursor-pointer
           `}
-        >
-          Import CSV
-        </label>
-        <input
-          id="csv-upload"
-          type="file"
-          accept=".csv"
-          onChange={handleCSVImport}
-          className="hidden"
-        />
-      </div>
+          >
+            Import CSV
+          </label>
+          <input
+            id="csv-upload"
+            type="file"
+            accept=".csv"
+            onChange={handleCSVUpload}
+            className="hidden"
+          />
+        </div>
         {errorMessage && (
           <div className="text-red-600 mb-2 text-center">{errorMessage}</div>
         )}
 
         <div className="flex justify-end gap-3 mt-6">
-        <button
-          onClick={onClose}
-          className={`
+          <button
+            onClick={onClose}
+            className={`
             px-5 py-2 rounded-[10px]
             bg-gray-300 text-black font-medium
             transition-all duration-300 ease-in-out
@@ -218,12 +220,12 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
             hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.4)]
             hover:scale-105
           `}
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleSave}
-          className={`
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            className={`
             px-5 py-2 rounded-[10px]
             bg-[#04543C] text-white font-bold
             transition-all duration-300 ease-in-out
@@ -232,9 +234,9 @@ const AddChemicalModal: React.FC<AddChemicalModalProps> = ({
             hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.4)]
             hover:scale-105
           `}
-        >
-          Save
-        </button>
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>

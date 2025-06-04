@@ -61,7 +61,7 @@ const Chemical = ({
   const handleDeleteChemical = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8000/api/chemicals/delete_chemical/",
+        "https://borrowlogy-backend-production.up.railway.app/api/chemicals/delete_chemical/",
         {
           method: "DELETE",
           headers: {
