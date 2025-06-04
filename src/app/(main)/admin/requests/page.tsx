@@ -2,10 +2,7 @@
 import { use, useEffect, useRef, useState } from "react";
 import { useHeader } from "@/utils/HeaderContext";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import {
-  viewAllHistory,
-  viewAllHistoryBorrower,
-} from "@/services/historyService";
+import { viewAllHistory } from "@/services/historyService";
 import { approveCart } from "@/services/cartService";
 
 import { get } from "http";
@@ -69,7 +66,7 @@ const Equipments = () => {
   }, [showModal, selectedItems]);
 
   const handleGetAllHistory = async () => {
-    const data = await viewAllHistory(); // Placeholder for user_id
+    const data = await viewAllHistory(""); // Placeholder for user_id
     setHistoryData(data);
     console.log(data);
   };
@@ -180,24 +177,25 @@ const Equipments = () => {
             </svg>
           </div>
 
-          {/* Seach Borrower text */}
-          <input
-            type="text"
-            placeholder="Search Borrower..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 pr-3 py-2 rounded-[20px] bg-[#E3E1DD] outline-none text-black w-full"
-            style={{
-              width: "650px",
-              boxShadow: "inset 0px 4px 4px rgba(0, 0, 0, 0.25)",
-            }}
-          />
+    {/* Seach Borrower text */}
+      <input
+        type="text"
+        placeholder="Search Borrower..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="pl-10 pr-3 py-2 rounded-[20px] bg-[#E3E1DD] outline-none text-black w-full"
+        style={{
+          width: "550px",   
+          boxShadow: 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
+        }}
+        />
         </div>
-        <select
-          className="ml-35 px-6 py-2 text-black rounded-[10px] transition duration-300 ease-in-out cursor-pointer"
-          style={{
-            backgroundColor: "#E3E1DD",
-            boxShadow: `
+      <select
+        className="ml-17 px-6 py-2 text-black rounded-[10px] transition duration-300 ease-in-out cursor-pointer"
+      style={{
+        backgroundColor: '#E3E1DD',
+        boxShadow: `
+
           inset 0px 3px 3px 0px rgba(0, 0, 0, 0.25), 
         `,
             fontFamily: "Jost, sans-serif",

@@ -22,17 +22,23 @@ interface Chemical {
 interface EditChemicalModalProps {
   chemical: Chemical;
   onClose: () => void;
-  onSave: (updatedChemical: Chemical) => void;  // Changed to accept the updated chemical
+  onSave: (updatedChemical: Chemical) => void; // Changed to accept the updated chemical
   onDelete: () => void;
 }
 
-const handleEditChemical = async (id: number, updatedData: Partial<Chemical>) => {
+const handleEditChemical = async (
+  id: number,
+  updatedData: Partial<Chemical>
+) => {
   try {
-    const response = await fetch("http://localhost:8000/api/chemicals/edit_chemical/", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pk: id, ...updatedData }),
-    });
+    const response = await fetch(
+      "https://borrowlogy-backend-production.up.railway.app/api/chemicals/chemicals/edit_chemical/",
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pk: id, ...updatedData }),
+      }
+    );
 
     if (!response.ok) throw new Error("Failed to update chemical.");
     return response.json();
@@ -42,7 +48,12 @@ const handleEditChemical = async (id: number, updatedData: Partial<Chemical>) =>
   }
 };
 
-const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose, onSave, onDelete }) => {
+const EditChemicalModal: React.FC<EditChemicalModalProps> = ({
+  chemical,
+  onClose,
+  onSave,
+  onDelete,
+}) => {
   const [form, setForm] = useState<Chemical>(chemical);
   const [loading, setLoading] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -82,7 +93,7 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
     setLoading(true);
     const updatedChemical = await handleEditChemical(chemical.id, form);
     if (updatedChemical) {
-      onSave({ ...form, id: chemical.id });  // Pass the updated chemical data back
+      onSave({ ...form, id: chemical.id }); // Pass the updated chemical data back
       onClose();
     }
     setLoading(false);
@@ -100,22 +111,46 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50" onClick={onClose}>
-        <div className="relative bg-white p-8 rounded-lg shadow-lg w-[450px]" onClick={(e) => e.stopPropagation()}>
-          <h2 className="text-2xl font-bold text-center text-gray-900 mb-4">Edit Chemical</h2>
+      <div
+        className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50"
+        onClick={onClose}
+      >
+        <div
+          className="relative bg-white p-8 rounded-[20px] shadow-[0_0_16px_rgba(0,0,0,0.24)] w-[420px] transition-all duration-300 ease-in-out"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Title container with background and padding */}
+          <div className="bg-[#83191c] py-2 px-4 rounded-[12px] mb-6 shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]">
+            <h2
+              className="text-3xl font-bold text-center text-white mb-0 font-jost"
+              style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}
+            >
+              Edit Chemical
+            </h2>
+          </div>
 
           <input
             type="text"
-            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                      rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                      focus:ring-2 focus:ring-[#8C1931] focus:outline-none 
+                      transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]
+                      font-jost"
             placeholder="Chemical Name"
             value={form.chemical_name}
-            onChange={(e) => setForm({ ...form, chemical_name: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, chemical_name: e.target.value })
+            }
             disabled={loading}
           />
 
           <input
             type="text"
-            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                      rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                      focus:ring-2 focus:ring-[#8C1931] focus:outline-none 
+                      transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]
+                      font-jost"
             placeholder="Brand Name"
             value={form.brand_name}
             onChange={(e) => setForm({ ...form, brand_name: e.target.value })}
@@ -124,7 +159,11 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
 
           <input
             type="text"
-            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                    rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                    focus:ring-2 focus:ring-[#8C1931] focus:outline-none 
+                    transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]
+                    font-jost"
             placeholder="Mass (g/ml)"
             value={form.mass === 0 ? "" : form.mass.toString()}
             onChange={handleMassChange}
@@ -133,7 +172,11 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
           />
 
           <select
-            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                    rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                    focus:ring-2 focus:ring-[#8C1931] focus:outline-none 
+                    transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]
+                    font-jost"
             value={form.hazard_type || ""}
             onChange={(e) => setForm({ ...form, hazard_type: e.target.value })}
             disabled={loading}
@@ -148,15 +191,25 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
 
           <input
             type="date"
-            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                    rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                    focus:ring-2 focus:ring-[#8C1931] focus:outline-none 
+                    transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]
+                    font-jost"
             value={form.expiration_date || ""}
-            onChange={(e) => setForm({ ...form, expiration_date: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, expiration_date: e.target.value })
+            }
             disabled={loading}
           />
 
           <input
             type="text"
-            className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#8C1931]"
+            className="w-full p-4 mb-2 bg-[#EEE9E5] text-black placeholder-gray-500 
+                    rounded-[12px] shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25)] 
+                    focus:ring-2 focus:ring-[#8C1931] focus:outline-none 
+                    transition-all duration-300 hover:bg-[#f5e4e0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]
+                    font-jost"
             placeholder="Location"
             value={form.location || ""}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
@@ -164,21 +217,55 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
           />
 
           <div className="flex justify-between mt-6">
-            <button 
-              onClick={handleDeleteClick} 
-              className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+            <button
+              onClick={handleDeleteClick}
               disabled={loading}
+              className={`
+              px-6 py-2 rounded-[10px]
+              bg-red-500 text-white font-bold
+              text-center
+              transition-all duration-300 ease-in-out
+              shadow-[0_4px_8px_0px_rgba(0,0,0,0.3)]
+              hover:bg-red-700
+              hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.4)]
+              hover:scale-105
+              disabled:opacity-50 disabled:cursor-not-allowed
+            `}
             >
               Delete
             </button>
             <div className="flex gap-3">
-              <button onClick={onClose} className="px-5 py-2 bg-gray-300 rounded-lg hover:bg-gray-400" disabled={loading}>
+              <button
+                onClick={onClose}
+                disabled={loading}
+                className={`
+              px-6 py-2 rounded-[10px]
+              bg-gray-300 text-gray-800 font-medium
+              border border-gray-300
+              shadow-[0_4px_8px_0px_rgba(0,0,0,0.2)]
+              hover:bg-gray-400 hover:text-black
+              hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.3)]
+              hover:scale-105
+              transition-all duration-300
+              disabled:opacity-50 disabled:cursor-not-allowed
+            `}
+              >
                 Cancel
               </button>
+
               <button
                 onClick={handleSave}
-                className="px-5 py-2 bg-[#8C1931] text-white rounded-lg hover:bg-[#6f1427]"
                 disabled={loading}
+                className={`
+              px-6 py-2 rounded-[10px]
+              bg-[#04543C] text-white font-bold
+              shadow-[0_4px_8px_0px_rgba(0,0,0,0.2)]
+              hover:bg-[#04743C]
+              hover:shadow-[0_6px_12px_0px_rgba(0,0,0,0.3)]
+              hover:scale-105
+              transition-all duration-300 ease-in-out
+              disabled:opacity-50 disabled:cursor-not-allowed
+            `}
               >
                 {loading ? "Saving..." : "Save"}
               </button>
@@ -189,25 +276,30 @@ const EditChemicalModal: React.FC<EditChemicalModalProps> = ({ chemical, onClose
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirmation && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 font-jost">
           <div
-            className="bg-white rounded-lg p-6 w-full max-w-md"
+            className="bg-white rounded-[20px] p-8 w-full max-w-md shadow-[3px_3px_6px_rgba(0,0,0,0.25)_inset]"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-2xl font-semibold mb-4 text-center">Confirm Deletion</h2>
-            <p className="text-center mb-6">Are you sure you want to delete this chemical?</p>
-            
+            <h2 className="text-3xl font-bold text-[#8C1931] text-center mb-4 drop-shadow-sm">
+              Confirm Deletion
+            </h2>
+            <p className="text-center text-gray-700 mb-6">
+              Are you sure you want to delete this chemical?
+            </p>
+
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => setShowDeleteConfirmation(false)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                className="px-6 py-2 rounded-lg font-semibold border border-[#8C1931] text-[#8C1931] bg-white shadow-sm hover:bg-[#8C1931] hover:text-white hover:shadow-md transition-all duration-300"
                 disabled={loading}
               >
                 Cancel
               </button>
+
               <button
                 onClick={handleConfirmDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                className="px-6 py-2 rounded-lg font-semibold bg-red-600 text-white shadow-sm hover:bg-red-700 hover:shadow-md transition-all duration-300"
                 disabled={loading}
               >
                 {loading ? "Deleting..." : "Delete"}

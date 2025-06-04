@@ -22,7 +22,7 @@ const Material = ({
   const handleDelete = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8000/api/equipment/delete_equipment/",
+        "https://borrowlogy-backend-production.up.railway.app/api/equipment/delete_equipment/",
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -54,7 +54,6 @@ const Material = ({
 
   const handleSave = async () => {
     if (quantity === null) return; // Prevent invalid submit
-
     try {
       const response = await addtoCart({
         user_id: session?.user?.id ? Number(session.user.id) : 1, // Use session user ID or default to 1
@@ -198,7 +197,6 @@ const Material = ({
           )}
         </div>
       </div>
-
 
       {/* Edit Modal */}
       {isModalOpen && (

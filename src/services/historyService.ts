@@ -1,4 +1,5 @@
-const BASE_URL = "http://127.0.0.1:8000/history/history";
+const BASE_URL =
+  "https://borrowlogy-backend-production.up.railway.app/history/history";
 
 export const addHistory = async (historydata: {
   user_id: any;
@@ -36,7 +37,7 @@ export const viewAllHistoryBorrower = async (user_id: number) => {
   }
 };
 
-export const viewAllHistory = async () => {
+export const viewAllHistory = async (email: string | undefined) => {
   try {
     const response = await fetch(`${BASE_URL}/get_all_history_borrower/`, {
       method: "POST",

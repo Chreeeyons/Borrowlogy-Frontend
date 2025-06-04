@@ -22,7 +22,7 @@ const History = () => {
   return (
     <div id="history">
       <div className="space-y-4">
-        {historyData.map((history: any, index: any) => (
+        {historyData?.map((history: any, index: any) => (
           <div
             key={index}
             style={{
