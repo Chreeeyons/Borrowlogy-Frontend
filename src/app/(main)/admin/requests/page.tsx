@@ -2,10 +2,7 @@
 import { use, useEffect, useRef, useState } from "react";
 import { useHeader } from "@/utils/HeaderContext";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import {
-  viewAllHistory,
-  viewAllHistoryBorrower,
-} from "@/services/historyService";
+import { viewAllHistory } from "@/services/historyService";
 import { approveCart } from "@/services/cartService";
 
 import { get } from "http";
@@ -69,7 +66,7 @@ const Equipments = () => {
   }, [showModal, selectedItems]);
 
   const handleGetAllHistory = async () => {
-    const data = await viewAllHistory(); // Placeholder for user_id
+    const data = await viewAllHistory(""); // Placeholder for user_id
     setHistoryData(data);
     console.log(data);
   };

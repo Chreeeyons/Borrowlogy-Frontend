@@ -38,3 +38,34 @@ export const getUsers = async () => {
     return null;
   }
 };
+
+export const updateHistory = async ({
+  items,
+  remarks,
+  transaction_id,
+  cart_id,
+}: {
+  items: any;
+  remarks: string;
+  transaction_id: number | null;
+  cart_id: number | null;
+}) => {
+  try {
+    const response = await fetch(`${BASE_URL}/update_history/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: items,
+        remarks: remarks,
+        transaction_id: transaction_id,
+        cart_id: cart_id,
+      }),
+    });
+
+    if (!response.ok) throw new Error("Failed to add to cart");
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding equipment:", error);
+    return null;
+  }
+};

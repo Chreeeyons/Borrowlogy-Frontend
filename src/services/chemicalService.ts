@@ -3,7 +3,9 @@ const BASE_URL = "http://127.0.0.1:8000/api/chemicals";
 export const getChemicals = async (hazardType?: string) => {
   try {
     const url = hazardType
-      ? `${BASE_URL}/get_chemicals/?hazard_type=${encodeURIComponent(hazardType)}`
+      ? `${BASE_URL}/get_chemicals/?hazard_type=${encodeURIComponent(
+          hazardType
+        )}`
       : `${BASE_URL}/get_chemicals/`;
 
     const response = await fetch(url);

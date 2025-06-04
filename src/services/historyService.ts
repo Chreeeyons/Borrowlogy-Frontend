@@ -36,7 +36,7 @@ export const viewAllHistoryBorrower = async (user_id: number) => {
   }
 };
 
-export const viewAllHistory = async () => {
+export const viewAllHistory = async (email: string | undefined) => {
   try {
     const response = await fetch(`${BASE_URL}/get_all_history_borrower/`, {
       method: "POST",
